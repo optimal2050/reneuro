@@ -21,7 +21,7 @@ library(reneuro)
 nreg <- function(level) formatC(.n[[level]], big.mark = ",", format = "d")
 ```
 
-# reneuro <a href="https://optimal2050.github.io/reneuro/r/"><img src="man/figures/logo.png" align="right" height="136" alt="reneuro website" /></a>
+# reneuro <a href="https://optimal2050.github.io/reneuro/"><img src="man/figures/logo.png" align="right" height="136" alt="reneuro website" /></a>
 
 **A European energy system optimization model with an R interface.**
 
@@ -58,7 +58,7 @@ hierarchy of European regions.
 its purpose is to have a country or study area at max granularity.
 
 Models are included in the package data and need neither Python nor a PyPSA-Eur clone to run. The
-[About](https://optimal2050.github.io/reneuro/r/articles/about.html) article
+[About](https://optimal2050.github.io/reneuro/articles/about.html) article
 covers how each was built, the four countries outside NUTS, and the region data
 that ships alongside.
 
@@ -108,11 +108,11 @@ without a solver installed.
 
 ## Documentation
 
-- [Getting started](https://optimal2050.github.io/reneuro/r/articles/reneuro.html)
+- [Getting started](https://optimal2050.github.io/reneuro/articles/reneuro.html)
   — a model end to end, and carving a local model out of NUTS3
-- [The data](https://optimal2050.github.io/reneuro/r/articles/data.html)
+- [The data](https://optimal2050.github.io/reneuro/articles/data.html)
   — what ships, and what changing spatial resolution does to it
-- [About](https://optimal2050.github.io/reneuro/r/articles/about.html)
+- [About](https://optimal2050.github.io/reneuro/articles/about.html)
   — how the models were built, solver benchmarks, references and licences
 
 ## Contributing
@@ -128,9 +128,9 @@ package follows the
 distribution of the two together is conveyed under AGPL-3. The shipped models
 inherit the licences of their inputs, chiefly ODbL-1.0 for OpenStreetMap
 transmission topology. Full detail, including data provenance, is in the
-[About](https://optimal2050.github.io/reneuro/r/articles/about.html) article and
+[About](https://optimal2050.github.io/reneuro/articles/about.html) article and
 in `NOTICE`.
 
 If you use `reneuro` in research, please cite it with `citation("reneuro")` and
 also cite PyPSA-Eur — see
-[References](https://optimal2050.github.io/reneuro/r/articles/about.html#references).
+[References](https://optimal2050.github.io/reneuro/articles/about.html#references).

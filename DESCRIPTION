@@ -1,8 +1,7 @@
 Package: reneuro
 Title: A European Energy System Model
 Version: 0.1.0.9000
-URL: https://optimal2050.github.io/reneuro/r/,
-    https://optimal2050.github.io/reneuro/,
+URL: https://optimal2050.github.io/reneuro/,
     https://github.com/optimal2050/reneuro
 BugReports: https://github.com/optimal2050/reneuro/issues
 Authors@R:

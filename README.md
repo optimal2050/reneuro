@@ -2,76 +2,45 @@
 <!-- README.md is generated from README.Rmd. Please edit that file, then run
      devtools::build_readme() or rmarkdown::render("README.Rmd"). -->
 
-# reneuro <a href="https://optimal2050.github.io/reneuro/r/"><img src="man/figures/logo.png" align="right" height="136" alt="reneuro website" /></a>
+# reneuro <a href="https://optimal2050.github.io/reneuro/"><img src="man/figures/logo.png" align="right" height="136" alt="reneuro website" /></a>
 
 **A European energy system optimization model with an R interface.**
 
 `r·en·euro` provides a European energy system model built on
 [energyRt](https://energyRt.org). It was developed as teaching material
-for a modelling course, and as a standalone working model.
-
-It currently reproduces [PyPSA-Eur](https://github.com/PyPSA/pypsa-eur),
-an established open model of the European power system, at several
-spatial resolutions — which gives a reference solution the R
-implementation can be verified against.
-
-## Models
-
-Eight models of the same European system, shipped ready to solve, from
-two different routes. All cover the full year (8,760 hourly snapshots)
-unless stated.
+for a modelling course, to replicate
+[PyPSA-Eur](https://github.com/PyPSA/pypsa-eur), an established open
+model of the European power system, at several spatial resolutions.
 
 **Built by PyPSA-Eur** — reduced by PyPSA-Eur’s own `cluster_network`
-workflow and read straight into energyRt, so each is directly comparable
-to a PyPSA-Eur run at the same size.
+workflow in Python and read straight into energyRt, so each is directly
+comparable to a PyPSA-Eur run at the same size.
 
-| model             | nodes | clustered by                   | period    |
-|-------------------|------:|--------------------------------|-----------|
-| `pypsa_eur_5`     |     5 | k-means, Belgium only          | one week  |
-| `pypsa_eur_5cp`   |     5 | as above, copperplate          | one week  |
-| `pypsa_eur_41`    |    41 | k-means                        | full year |
-| `pypsa_eur_250`   |   250 | k-means                        | full year |
-| `pypsa_eur_nuts3` | 1,035 | NUTS3 regions, **not** k-means | full year |
+| model           | nodes | clustered by          | period    |
+|-----------------|------:|-----------------------|-----------|
+| `pypsa_eur_5`   |     5 | k-means, Belgium only | one week  |
+| `pypsa_eur_5cp` |     5 | as above, copperplate | one week  |
+| `pypsa_eur_41`  |    41 | k-means               | full year |
+| `pypsa_eur_250` |   250 | k-means               | full year |
 
 **Aggregated in R** — derived from `pypsa_eur_nuts3` with
-`aggregate_pypsa()`, applying PyPSA’s own reduction strategies in
-seconds rather than a full rebuild from raw data.
+`aggregate_pypsa()`, reoroducing PyPSA’s reduction strategies in R.
+Prebuilt models by NUTS (Nomenclature des Unités Territoriales
+Statistiques), Eurostat’s official hierarchy of European regions.
 
-| model             | nodes | aggregated to    | build | period    |
-|-------------------|------:|------------------|------:|-----------|
-| `pypsa_eur_nuts0` |    36 | NUTS0, countries |  16 s | full year |
-| `pypsa_eur_nuts1` |   106 | NUTS1            |  34 s | full year |
-| `pypsa_eur_nuts2` |   289 | NUTS2            |  75 s | full year |
+| model             | nodes | aggregated to    |     build | period    |
+|-------------------|------:|------------------|----------:|-----------|
+| `pypsa_eur_nuts0` |    36 | NUTS0, countries |      16 s | full year |
+| `pypsa_eur_nuts1` |   106 | NUTS1            |      34 s | full year |
+| `pypsa_eur_nuts2` |   289 | NUTS2            |      75 s | full year |
+| `pypsa_eur_nuts3` | 1,035 | NUTS3 regions    | full year |           |
 
-The routes meet usefully: `pypsa_eur_nuts2` (289 nodes, aggregated in R)
-and `pypsa_eur_250` (PyPSA’s k-means) are the same system at nearly the
-same size by two independent methods, so one checks the other.
+`pypsa_eur_nuts3` is a **source** model rather than one to solve whole —
+its purpose is to have a country or study area at max granularity.
 
-*Nomenclature des Unités Territoriales Statistiques* (**NUTS**), the
-Nomenclature of Territorial Units for Statistics — is Eurostat’s
-official hierarchy of European regions, the one national statistics are
-published against. Four nested levels, each a complete partition of the
-territory:
-
-| level | what it is                            | regions | model nodes |
-|-------|---------------------------------------|--------:|------------:|
-| NUTS0 | countries                             |      36 |          36 |
-| NUTS1 | major socio-economic regions          |     109 |         106 |
-| NUTS2 | basic regions for regional policy     |     296 |         289 |
-| NUTS3 | small regions, for specific diagnoses |   1,477 |       1,035 |
-
-Nodes fall short of regions because a region containing no substation
-merges into a neighbour, keeping its demand and generation. Using an
-official classification rather than an algorithmic clustering is what
-lets a model be joined to published statistics — population, GDP,
-industrial output — without a crosswalk of one’s own.
-
-`pypsa_eur_250` is the recommended working model. `pypsa_eur_nuts3` is a
-**source** model rather than one to solve whole — its purpose is to have
-a country or study area lifted out of it at full granularity.
-
-Models are lazy-loaded and need neither Python nor a PyPSA-Eur clone.
-The [About](https://optimal2050.github.io/reneuro/r/articles/about.html)
+Models are included in the package data and need neither Python nor a
+PyPSA-Eur clone to run. The
+[About](https://optimal2050.github.io/reneuro/articles/about.html)
 article covers how each was built, the four countries outside NUTS, and
 the region data that ships alongside.
 
@@ -94,17 +63,27 @@ Julia/HiGHS or Pyomo/HiGHS:
 - [`en_setup()`](https://energyRt.org/reference/en_setup.html) —
   installs the Julia and Python dependencies from R
 
+HiGHS can be used to solve sampled models (timeslices and/or regions) on
+an standard laptop, while full resolution models require commercial
+solvers, such as CPLEX or Gurobi.
+
 ## Quick start
 
 ``` r
 library(reneuro)
 library(energyRt)
 
+# check the model
+report(pypsa_eur_5)
+
 scen <- interpolate_model(pypsa_eur_5, name = "be")
 scen <- write_script(scen, solver = solver_options$glpk)
 scen <- read_solution(solve_scenario(scen, wait = TRUE))
 
 getData(scen, "vObjective", merge = TRUE)$value
+
+# quick look at the results
+report(scen)
 ```
 
 The solved scenario also ships as `be_solved`, so the results can be
@@ -113,11 +92,11 @@ explored without a solver installed.
 ## Documentation
 
 - [Getting
-  started](https://optimal2050.github.io/reneuro/r/articles/reneuro.html)
+  started](https://optimal2050.github.io/reneuro/articles/reneuro.html)
   — a model end to end, and carving a local model out of NUTS3
-- [The data](https://optimal2050.github.io/reneuro/r/articles/data.html)
-  — what ships, and what changing spatial resolution does to it
-- [About](https://optimal2050.github.io/reneuro/r/articles/about.html) —
+- [The data](https://optimal2050.github.io/reneuro/articles/data.html) —
+  what ships, and what changing spatial resolution does to it
+- [About](https://optimal2050.github.io/reneuro/articles/about.html) —
   how the models were built, solver benchmarks, references and licences
 
 ## Contributing
@@ -134,9 +113,9 @@ AGPL-3, so a distribution of the two together is conveyed under AGPL-3.
 The shipped models inherit the licences of their inputs, chiefly
 ODbL-1.0 for OpenStreetMap transmission topology. Full detail, including
 data provenance, is in the
-[About](https://optimal2050.github.io/reneuro/r/articles/about.html)
+[About](https://optimal2050.github.io/reneuro/articles/about.html)
 article and in `NOTICE`.
 
 If you use `reneuro` in research, please cite it with
 `citation("reneuro")` and also cite PyPSA-Eur — see
-[References](https://optimal2050.github.io/reneuro/r/articles/about.html#references).
+[References](https://optimal2050.github.io/reneuro/articles/about.html#references).

@@ -1,7 +1,12 @@
-# pkgdown builds ONLY the R reference, into `docs/r/`, matching the sibling
-# packages in the stack. The project site occupies the repository root.
-url: https://optimal2050.github.io/reneuro/r/
-destination: docs/r
+# The site occupies `docs/` directly. The sibling *scales packages nest theirs
+# under `docs/r/` because they expect Python and C++ implementations alongside;
+# reneuro is an R package only, so there is nothing to disambiguate.
+#
+# GitHub Pages serves `docs/` from the default branch. The site is built locally
+# and committed -- there is no pkgdown workflow. Build it with
+# `Rscript pkgdown/build.R`, not `pkgdown::build_site()`: the script works
+# around an older installed `reneuro` shadowing this source tree.
+url: https://optimal2050.github.io/reneuro/
 
 template:
   bootstrap: 5
