@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "reneuro: A European Energy System Model"
+abstract: >-
+  A European energy system model built on energyRt, developed as teaching
+  material for a modelling training course. It reproduces PyPSA-Eur at several
+  spatial resolutions, importing pre-built networks, translating them into
+  energyRt model objects, and solving them through alternative back ends.
+type: software
+authors:
+  - family-names: Lugovoy
+    given-names: Oleg
+    email: olugovoy@optimalsolution.dev
+    orcid: "https://orcid.org/0000-0001-5546-9875"
+version: 0.0.0.9000
+license: Apache-2.0
+repository-code: "https://github.com/optimal2050/reneuro"
+url: "https://optimal2050.github.io/reneuro/"
+keywords:
+  - energy-system-modelling
+  - europe
+  - pypsa
+  - optimization
+  - r

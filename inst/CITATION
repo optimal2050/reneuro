@@ -1,0 +1,30 @@
+## `reneuro` reproduces PyPSA-Eur, so a citation of this package alone credits
+## only the translation. The footer points at the upstream model, which is where
+## the data and the system representation come from.
+
+## `as.Date(NULL)` is zero-length rather than an error, so a tryCatch on it
+## silently yields a "????" year on a DESCRIPTION with no Date field.
+year <- if (!is.null(meta$Date) && nzchar(meta$Date)) {
+  format(as.Date(meta$Date), "%Y")
+} else {
+  format(Sys.Date(), "%Y")
+}
+
+bibentry(
+  bibtype = "Manual",
+  title   = "reneuro: A European Energy System Model",
+  author  = person("Oleg", "Lugovoy",
+                   comment = c(ORCID = "0000-0001-5546-9875")),
+  year    = year,
+  note    = paste("R package version", meta$Version),
+  url     = "https://optimal2050.github.io/reneuro/",
+  header  = "To cite reneuro in publications, use:",
+  footer  = paste(
+    "Please also cite the model this package reproduces:",
+    "Hoersch, Hofmann, Schlachtberger and Brown (2018),",
+    "PyPSA-Eur: An open optimisation model of the European transmission system,",
+    "Energy Strategy Reviews 22, 207-215, doi:10.1016/j.esr.2018.08.012;",
+    "and the framework it is built on: Lugovoy and Potashnikov, energyRt,",
+    "https://energyRt.org."
+  )
+)

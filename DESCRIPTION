@@ -1,0 +1,45 @@
+Package: reneuro
+Title: A European Energy System Model
+Version: 0.1.0.9000
+URL: https://optimal2050.github.io/reneuro/r/,
+    https://optimal2050.github.io/reneuro/,
+    https://github.com/optimal2050/reneuro
+BugReports: https://github.com/optimal2050/reneuro/issues
+Authors@R:
+    person(given = "Oleg",
+           family = "Lugovoy",
+           role = c("aut", "cre"),
+           email = "olugovoy@optimalsolution.dev",
+           comment = c(ORCID = "0000-0001-5546-9875"))
+Description: An open, extensible model of the European energy system built on
+    'energyRt', with the data, assumptions and processing steps kept
+    inspectable. The current stage reproduces the core of the open PyPSA-Eur
+    model and the workflow around it: reading networks, translating them into
+    'energyRt' objects, sampling in space and time, solving, and comparing the
+    result against the source model. Planned extensions cover alternative
+    datasets, a review of the algorithms that turn raw data into model
+    parameters, further sectors, and links to other models.
+License: Apache License (>= 2)
+Encoding: UTF-8
+LazyData: true
+LazyDataCompression: xz
+Roxygen: list(markdown = TRUE)
+Depends:
+    R (>= 4.3)
+Imports:
+    energyRt
+Remotes:
+    optimal2050/energyRt,
+    optimal2050/geoscales
+Suggests:
+    dplyr,
+    geoscales,
+    ggplot2,
+    knitr,
+    rmarkdown,
+    sf,
+    testthat (>= 3.0.0)
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+Config/Needs/website: pkgdown, rmarkdown, energyRt, sf, geoscales, ggplot2, dplyr
+Config/roxygen2/version: 8.0.0

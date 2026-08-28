@@ -1,0 +1,48 @@
+# pkgdown builds ONLY the R reference, into `docs/r/`, matching the sibling
+# packages in the stack. The project site occupies the repository root.
+url: https://optimal2050.github.io/reneuro/r/
+destination: docs/r
+
+template:
+  bootstrap: 5
+  light-switch: true
+  # The stack differentiates siblings by one hue: timescales #31688E (time),
+  # geoscales #1F9E89 (space), reneuro #B12A90 (magma magenta -- the
+  # translation layer, not one of the two domains).
+  bslib:
+    primary: "#B12A90"
+    link-color: "#B12A90"
+
+# Pinned rather than `auto`: with `auto`, the first released version silently
+# switches pkgdown to devel mode and relocates the whole site into `r/dev/`.
+development:
+  mode: unreleased
+  version_label: danger
+
+# Convention: figures are built on a SOLID background -- transparent PNGs are
+# illegible in the site's dark mode. pkgdown/extra.scss then stops the dark
+# theme inverting them (see optimal2050 CONVENTIONS.md).
+figures:
+  bg: "white"
+
+home:
+  sidebar:
+    structure: [links, license, citation, toc]
+
+navbar:
+  structure:
+    left: [intro, reference, articles, news]
+    right: [search, lightswitch, github]
+
+# reference: is added as the package gains exported functions. pkgdown validates
+# both indexes for completeness, so an entry must exist for every exported topic
+# once there are any.
+#
+# vignettes/reneuro.Rmd is the intro ("Get started") by pkgdown convention --
+# named after the package -- so it is not listed here.
+articles:
+- title: Articles
+  navbar: ~
+  contents:
+  - about
+  - data

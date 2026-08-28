@@ -1,0 +1,8 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# solver working directories created by benchmark/example runs
+scenarios/
+README.html

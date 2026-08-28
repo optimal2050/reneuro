@@ -1,0 +1,55 @@
+reneuro
+Copyright 2026 Oleg Lugovoy
+
+This product includes software developed by
+Oleg Lugovoy (https://github.com/optimal2050).
+
+================================================================================
+THREE LICENCES APPLY TO DIFFERENT PARTS OF THIS PACKAGE
+================================================================================
+
+  the reneuro sources, standing alone .................... Apache-2.0
+  reneuro + energyRt installed together .................. AGPL-3 (see below)
+  the converted models in data/ .......................... ODbL-1.0
+
+--------------------------------------------------------------------------------
+1. The code
+--------------------------------------------------------------------------------
+
+All R sources in this package are original work, licensed under the Apache
+License, Version 2.0 (see LICENSE).
+
+No source is copied from 'energyRt'. The package uses 'energyRt' only through
+its exported API -- the newTechnology(), newTrade(), newACLine(),
+lossTranches(), ... constructors, plus getData() and load_scenario(). No S4
+class is defined or redefined here.
+
+--------------------------------------------------------------------------------
+2. IMPORTANT: reneuro does not run without an AGPL-3 dependency
+--------------------------------------------------------------------------------
+
+'energyRt' is licensed under AGPL-3, and reneuro lists it in Imports. R links
+imported namespaces into a single process, so a distribution of reneuro
+TOGETHER WITH 'energyRt' -- which is the only form in which reneuro is usable --
+is a combined work that must be conveyed under AGPL-3.
+
+Apache-2.0 is one-way compatible with AGPL-3, so that combination is lawful.
+But do not read "Apache-2.0" as "permissive in practice": it is not, for anyone
+shipping the working package.
+
+What the Apache-2.0 licence does buy is that the conversion code itself -- the
+PyPSA netCDF reader, the reimplementation of PyPSA's apply_line_types(), the
+Kirchhoff cycle-basis construction, and the piecewise-linear loss tranches --
+may be reused WITHOUT 'energyRt' under permissive terms.
+
+--------------------------------------------------------------------------------
+3. The data
+--------------------------------------------------------------------------------
+
+The converted models shipped in data/ derive from PyPSA-Eur
+(https://github.com/PyPSA/pypsa-eur) and are licensed under the Open Database
+License v1.0 (ODbL-1.0), required by the share-alike terms of the
+OpenStreetMap-derived inputs. This is independent of the code licence above.
+
+See inst/LICENSE.note for per-input provenance, including which inputs were
+excluded from the rebuild and which carry unclear upstream terms.

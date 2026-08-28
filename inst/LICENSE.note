@@ -1,0 +1,113 @@
+reneuro -- provenance of the shipped models
+================================================================================
+
+The models in data/ are converted from PyPSA-Eur (https://github.com/PyPSA/pypsa-eur)
+networks built at the ELECTRICITY-ONLY endpoint, `base_s_{N}_elec.nc`. The
+sector-coupling workflow was not run, which matters for licensing: several
+PyPSA-Eur inputs with restrictive terms are reachable only from
+`rules/build_sector.smk` and therefore never entered these models.
+
+CODE LICENCE: Apache-2.0 -- BUT THE WORKING PACKAGE IS AGPL-3
+--------------------------------------------------------------------------------
+All R sources here are original work under the Apache License 2.0. No 'energyRt'
+source is copied; only its exported API is called.
+
+However, 'energyRt' is AGPL-3 and reneuro lists it in Imports. R links imported
+namespaces into one process, so a distribution of reneuro TOGETHER WITH
+'energyRt' -- the only form in which reneuro is usable -- is a combined work
+that must be conveyed under AGPL-3. Apache-2.0 is one-way compatible with
+AGPL-3, so that combination is lawful.
+
+Do not read "Apache-2.0" as "permissive in practice". What it does buy is that
+the conversion code alone -- the netCDF reader, the reimplementation of PyPSA's
+apply_line_types(), the Kirchhoff cycle-basis construction, and the
+piecewise-linear loss tranches -- is reusable WITHOUT 'energyRt' under
+permissive terms.
+
+DATA LICENCE: ODbL-1.0
+--------------------------------------------------------------------------------
+Required by the share-alike terms of the OpenStreetMap-derived inputs (`osm`,
+`osm_boundaries`), which supply the transmission topology. ODbL propagates to
+the derived database, so the converted models carry it.
+
+This is independent of the code licence above.
+
+THE NUTS GEOSCALE CARRIES AN ADDITIONAL SOURCE
+--------------------------------------------------------------------------------
+`nuts_gs` is built from PyPSA-Eur's `nuts3_shapes.geojson`, which combines two
+sources beyond those listed below:
+
+  Eurostat NUTS 2021 ..... (c) European Union. Reuse is authorised under the
+                           Commission's reuse policy (2011/833/EU) provided the
+                           source is acknowledged. Boundary data is
+                           "administrative boundaries: (c) EuroGeographics".
+  OpenStreetMap adm1 ..... ODbL-1.0, for BA, MD, UA and XK, which NUTS does not
+                           cover.
+
+The ODbL terms already stated below therefore apply to `nuts_gs` as well, and
+the Eurostat attribution is required in addition.
+
+ATTRIBUTION REQUIRED
+--------------------------------------------------------------------------------
+  OpenStreetMap contributors ......... ODbL-1.0
+  European Environment Agency ........ CC-BY-4.0  (Natura 2000 protected areas)
+  Copernicus ......................... land cover
+  ECMWF / ERA5 ....................... reanalysis weather
+  PyPSA-Eur authors .................. workflow and assembled inputs
+  European Union / Eurostat .......... NUTS 2021 (nuts_gs only)
+  EuroGeographics .................... administrative boundaries (nuts_gs only)
+
+PyPSA-Eur's own per-input inventory is `doc/data_inventory.csv` upstream.
+
+WDPA IS ABSENT, AND THIS IS VERIFIED RATHER THAN ASSUMED
+--------------------------------------------------------------------------------
+The World Database on Protected Areas (protectedplanet.net, (c) UNEP-WCMC and
+IUCN) may not be redistributed "in whole or in part". It is the one input that
+could not be carried into a redistributable model, even in derived form.
+
+It is not present. In the build these models came from:
+
+  * `wdpa_available()` in rules/build_electricity.smk treats WDPA as OPTIONAL:
+    present -> used; absent -> the exclusion is skipped with a warning.
+  * Neither data/wdpa/WDPA.gpkg nor data/wdpa_marine/WDPA_WDOECM_marine.gpkg
+    exists in the source clone.
+  * Every determine_availability_matrix_MD_UA log records
+    "WDPA not available - skipping protected-area exclusion".
+
+CONSEQUENCE, stated because it is a real modelling caveat: WDPA is used in one
+place only -- excluding protected areas in Moldova and Ukraine, which Natura
+2000 does not cover. With it skipped, land available for wind and solar in MD
+and UA is OVERSTATED, and renewable potential with it. Natura 2000 coverage
+elsewhere -- including all EU nodes -- is unaffected.
+
+Note that PyPSA-Eur's `natura:` flag gates BOTH datasets. Disabling it to drop
+WDPA would also drop Natura 2000, which is CC-BY-4.0 and freely
+redistributable, degrading land availability across every node for no licensing
+benefit. It is left enabled.
+
+INPUTS WITH UNCLEAR UPSTREAM TERMS
+--------------------------------------------------------------------------------
+Two electricity-demand series are listed as licence "unknown" in PyPSA-Eur's own
+inventory:
+
+  opsd_electricity_demand    Open Power System Data
+  entsoe_electricity_demand  ENTSO-E
+
+Both feed the demand profiles in these models. The uncertainty is upstream and
+unresolved; it is recorded here rather than smoothed over. Anyone with a
+stricter redistribution requirement than ours should resolve those terms
+directly with the owners before relying on the shipped demand series.
+
+INPUTS DELIBERATELY OUT OF SCOPE
+--------------------------------------------------------------------------------
+Reachable only from the sector-coupling workflow, which was not run:
+
+  lau_regions             Eurostat  -- non-commercial download only
+  aquifer_data            BGR       -- no right to redistribute
+  bfs_road_vehicle_stock  Swiss FSO -- custom (open by ask)
+  bfs_gdp_and_population  Swiss FSO -- custom (open by ask)
+
+REGENERATION
+--------------------------------------------------------------------------------
+data-raw/ holds the scripts that rebuild every object in data/ from a PyPSA-Eur
+clone. They record the upstream commit and config used.
