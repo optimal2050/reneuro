@@ -15,7 +15,8 @@
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="The data">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<meta property="og:title" content="The data">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -25,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">reneuro</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.1.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.2.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,8 +40,9 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/about.html">About</a></li>
+<li><a class="dropdown-item" href="../articles/translation.html">Translation</a></li>
     <li><a class="dropdown-item" href="../articles/data.html">The data</a></li>
+    <li><a class="dropdown-item" href="../articles/about.html">About</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -133,13 +135,13 @@ become the atoms, and the levels above them are <strong>padded</strong>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">nuts0</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BA"</span>, <span class="st">"MD"</span>, <span class="st">"UA"</span>, <span class="st">"XK"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">nuts0</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>atoms <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, nuts1 <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/nth.html" class="external-link">first</a></span><span class="op">(</span><span class="va">nuts1</span><span class="op">)</span>, nuts2 <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/nth.html" class="external-link">first</a></span><span class="op">(</span><span class="va">nuts2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 4 × 4</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 4</span></span></span>
 <span><span class="co">#&gt;   nuts0 atoms nuts1 nuts2</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt;</span></span>
-<span><span class="co">#&gt; 1 BA        3 BA0   BA00 </span></span>
-<span><span class="co">#&gt; 2 MD       37 MD0   MD00 </span></span>
-<span><span class="co">#&gt; 3 UA       27 UA0   UA00 </span></span>
-<span><span class="co">#&gt; 4 XK        7 XK0   XK00</span></span></code></pre></div>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> BA        3 BA0   BA00 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> MD       37 MD0   MD00 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> UA       27 UA0   UA00 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> XK        7 XK0   XK00</span></span></code></pre></div>
 <p>PyPSA-Eur repeats the adm1 code at every level, which makes each such
 region its own parent. The derived hierarchy then contains pairs like
 <code>(MD-BA, MD-BA)</code>, and energyRt’s spatial roll-up becomes
@@ -290,14 +292,14 @@ the caller’s to make.</p>
 <span>            gdp_total_bn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">gdp_total</span><span class="op">)</span> <span class="op">*</span> <span class="fl">1e3</span> <span class="op">/</span> <span class="fl">1e9</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">gdp_total_bn</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 5 × 4</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 4</span></span></span>
 <span><span class="co">#&gt;   nuts0 plain_sum pop_weighted_mean gdp_total_bn</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;     &lt;dbl&gt;             &lt;dbl&gt;        &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 DE     15618746             41813         3475</span></span>
-<span><span class="co">#&gt; 2 GB      6887044             37577         2505</span></span>
-<span><span class="co">#&gt; 3 FR      2963348             36685         2391</span></span>
-<span><span class="co">#&gt; 4 IT      2929600             30056         1795</span></span>
-<span><span class="co">#&gt; 5 ES      1239705             26641         1193</span></span></code></pre></div>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> DE     15<span style="text-decoration: underline;">618</span>746             <span style="text-decoration: underline;">41</span>813         <span style="text-decoration: underline;">3</span>475</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> GB      6<span style="text-decoration: underline;">887</span>044             <span style="text-decoration: underline;">37</span>577         <span style="text-decoration: underline;">2</span>505</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> FR      2<span style="text-decoration: underline;">963</span>348             <span style="text-decoration: underline;">36</span>685         <span style="text-decoration: underline;">2</span>391</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> IT      2<span style="text-decoration: underline;">929</span>600             <span style="text-decoration: underline;">30</span>056         <span style="text-decoration: underline;">1</span>795</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ES      1<span style="text-decoration: underline;">239</span>705             <span style="text-decoration: underline;">26</span>641         <span style="text-decoration: underline;">1</span>193</span></span></code></pre></div>
 <p>Summing <code>gdp</code> over Germany gives 15.6 million, which is
 not a quantity. The population-weighted mean, ~41,800 EUR, is its GDP
 per capita. <code>gdp_total</code> is shipped to provide an extensive
@@ -314,15 +316,15 @@ money weight and gives ~3,475 bn EUR.</p>
 <span>                   \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1e3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">pot_onwind</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 5 × 7</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 7</span></span></span>
 <span><span class="co">#&gt;   nuts0 pot_onwind pot_solar pot_solar_hsat pot_offwind_ac pot_offwind_dc</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;          &lt;dbl&gt;          &lt;dbl&gt;          &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 FR           969      1683           1462             30              7</span></span>
-<span><span class="co">#&gt; 2 SE           942       234            203             64             22</span></span>
-<span><span class="co">#&gt; 3 ES           938      1095            951             13              0</span></span>
-<span><span class="co">#&gt; 4 UA           851      3046           2646             62             32</span></span>
-<span><span class="co">#&gt; 5 NO           790       302            263             45             15</span></span>
-<span><span class="co">#&gt; # ℹ 1 more variable: pot_offwind_float &lt;dbl&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> FR           969      <span style="text-decoration: underline;">1</span>683           <span style="text-decoration: underline;">1</span>462             30              7</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> SE           942       234            203             64             22</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ES           938      <span style="text-decoration: underline;">1</span>095            951             13              0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> UA           851      <span style="text-decoration: underline;">3</span>046           <span style="text-decoration: underline;">2</span>646             62             32</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> NO           790       302            263             45             15</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: pot_offwind_float &lt;dbl&gt;</span></span></span></code></pre></div>
 <p>These columns must not be summed. <code>pot_solar</code> and
 <code>pot_solar_hsat</code> are fixed-tilt and single-axis-tracking
 photovoltaics on the same land, and 313 of the 314 offshore regions
@@ -354,12 +356,12 @@ the neighbour it clusters with, rather than the region itself.</p>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>buses <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n_buses</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>level <span class="op">=</span> <span class="va">l</span>, groups <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, no_substation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">buses</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 3 × 3</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
 <span><span class="co">#&gt;   level groups no_substation</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;  &lt;int&gt;         &lt;int&gt;</span></span>
-<span><span class="co">#&gt; 1 nuts2    296             7</span></span>
-<span><span class="co">#&gt; 2 nuts1    109             3</span></span>
-<span><span class="co">#&gt; 3 nuts0     36             0</span></span></code></pre></div>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> nuts2    296             7</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> nuts1    109             3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> nuts0     36             0</span></span></code></pre></div>
 <p>Seven NUTS2 groups and three NUTS1 groups contain no substation.
 These are the regions lost when 296 NUTS2 regions become 289 model nodes
 and 109 NUTS1 become 106. A weight summing to zero over a group divides
@@ -367,7 +369,7 @@ by zero when averaging into it; the affected groups are recorded on the
 object rather than substituted:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">gs</span>, <span class="st">"weight_degeneracy"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "load_twh"   "cap_mw"     "pot_onwind" "pot_solar"</span></span></code></pre></div>
+<span><span class="co">#&gt; NULL</span></span></code></pre></div>
 <p>Two entries are degenerate for a different reason. <code>GBI3</code>
 (Inner London) has no generation and no land the availability rules
 admit for wind; <code>NO07</code> (Nord-Norge) has no solar potential,
@@ -410,12 +412,12 @@ Show code
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">level</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>regions <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>            max_abs_diff <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">load_twh_derived</span> <span class="op">-</span> <span class="va">load_twh_shipped</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</details><pre><code><span><span class="co">#&gt; # A tibble: 3 × 3</span></span>
+</details><pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
 <span><span class="co">#&gt;   level regions max_abs_diff</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;   &lt;int&gt;        &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 nuts0      36     1.42e-14</span></span>
-<span><span class="co">#&gt; 2 nuts1     109     7.11e-15</span></span>
-<span><span class="co">#&gt; 3 nuts2     296     7.11e-15</span></span></code></pre>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> nuts0      32     1.42<span style="color: #949494;">e</span><span style="color: #BB0000;">-14</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> nuts1     105     7.11<span style="color: #949494;">e</span><span style="color: #BB0000;">-15</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> nuts2     292     7.11<span style="color: #949494;">e</span><span style="color: #BB0000;">-15</span></span></span></code></pre>
 <p>The difference is zero at every level: the parts add to the whole,
 and no weight is involved.</p>
 </div>
@@ -439,13 +441,13 @@ Show code
 <span>         summed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">nuts_load</span><span class="op">$</span><span class="va">peak_gw</span><span class="op">[</span><span class="va">nuts_load</span><span class="op">$</span><span class="va">level</span> <span class="op">==</span> <span class="st">"nuts0"</span><span class="op">]</span><span class="op">)</span>,</span>
 <span>         coincident <span class="op">=</span> <span class="va">nuts_load</span><span class="op">$</span><span class="va">peak_gw</span><span class="op">[</span><span class="va">nuts_load</span><span class="op">$</span><span class="va">level</span> <span class="op">==</span> <span class="st">"europe"</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>overstated_pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">100</span> <span class="op">*</span> <span class="op">(</span><span class="va">summed</span> <span class="op">/</span> <span class="va">coincident</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</details><pre><code><span><span class="co">#&gt; # A tibble: 4 × 4</span></span>
+</details><pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 4</span></span></span>
 <span><span class="co">#&gt;   level  summed coincident overstated_pct</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;   &lt;dbl&gt;      &lt;dbl&gt;          &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 nuts2    580.       580.           0   </span></span>
-<span><span class="co">#&gt; 2 nuts1    580.       580.           0   </span></span>
-<span><span class="co">#&gt; 3 nuts0    580.       580.           0   </span></span>
-<span><span class="co">#&gt; 4 europe   580.       543.           6.81</span></span></code></pre>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> nuts2    551.       580.          -<span style="color: #BB0000;">5.12</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> nuts1    580.       580.           0   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> nuts0    580.       580.           0   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> europe   580.       543.           6.81</span></span></code></pre>
 <p>In general <code>peak(parent) &lt;= sum(peak(children))</code>, the
 gap being load diversity. Here the gap is zero within every country and
 appears only across Europe, at 6.8% (580 GW summed against 543 GW
@@ -622,13 +624,13 @@ inherited;</li>
 <span>         median_km <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">a</span><span class="op">$</span><span class="va">length_km</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>         median_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">a</span><span class="op">$</span><span class="va">x</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 4 × 5</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 5</span></span></span>
 <span><span class="co">#&gt;   level corridors    GW median_km median_x</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;     &lt;int&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 nuts0        65   356       459     28.8</span></span>
-<span><span class="co">#&gt; 2 nuts1       203  1357       253     16.0</span></span>
-<span><span class="co">#&gt; 3 nuts2       547  2518       154     13.2</span></span>
-<span><span class="co">#&gt; 4 nuts3      1789  5004        85     11.2</span></span></code></pre></div>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> nuts0        52   307       470     26.8</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> nuts1       189  <span style="text-decoration: underline;">1</span>308       253     15.4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> nuts2       530  <span style="text-decoration: underline;">2</span>468       151     12.6</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> nuts3      <span style="text-decoration: underline;">1</span>711  <span style="text-decoration: underline;">4</span>788        83     10.8</span></span></code></pre></div>
 <blockquote>
 <p>Checked against PyPSA-Eur’s own 41-cluster network, built by its
 <code>cluster_network</code> rule: the capacity crossing a country

@@ -1,5 +1,19 @@
 # reneuro 0.0.0.9000
 
+* `pypsa_eur_nuts3`: the NUTS3 network over the full year, 1,035 regions and
+  8,760 hourly snapshots. Its weather profiles ship as seven `wx_nuts3_*`
+  objects, since the model whole is 181 MB and past GitHub's file limit;
+  `attach_weather()` puts back the ones a study needs and
+  `weather_resources()` lists them.
+* `pypsa_eur_nuts3` carries `nuts_gs`, so the coarser NUTS levels are derived
+  rather than shipped: `energyRt::aggregate_model_regions(pypsa_eur_nuts3,
+  level = "nuts1")` gives 36 regions at NUTS0, 106 at NUTS1 and 289 at NUTS2.
+* `nuts_gs` is now keyed the way the models are. `convert_pypsa()` rewrites
+  every non-alphanumeric character, so the adm1 codes of Bosnia, Moldova,
+  Ukraine and Kosovo reach a model as `BA_BIH` where the geoscale had
+  `BA-BIH`. The two disagreed on 37 regions -- every region of those four
+  countries -- and aggregating a model against the geoscale dropped them.
+
 * `nuts_gs` now carries per-region demand, existing capacity and renewable
   potential alongside area, population and GDP, and declares seven of them as
   weights. Rebuilt by `data-raw/nuts_gs.R`.

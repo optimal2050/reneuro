@@ -25,6 +25,44 @@ solver is not required either.
 It covers four steps — pick a model, interpolate it, solve it, read the result —
 and then restricting a model to a subset of its regions.
 
+## Settings
+
+Four settings are worth knowing before the first solve. All are optional; the
+defaults work.
+
+**Where scenarios are written.** Every interpolation and solve writes files —
+solver input, logs, the solution. By default they land under the working
+directory; point that somewhere deliberate, especially if you keep model runs
+outside the project:
+
+```{r set-path, eval = FALSE}
+set_scenarios_path("~/energy-models/scenarios")
+get_scenarios_path()
+```
+
+**Which solver.** `solver_options` holds the ready-made back-end
+configurations; setting a default saves passing `solver =` to every call:
+
+```{r set-solver, eval = FALSE}
+names(solver_options)                       # what is configured
+set_default_solver(solver_options$glpk)     # GLPK for small models
+```
+
+**How much it tells you.** Verbosity is a level, not a flag: `0` silent, `1`
+progress, `2` and above increasingly detailed.
+
+```{r set-verbose, eval = FALSE}
+options(en.verbose = 1)     # or set_option("verbose", 1)
+isVerbose()                 # TRUE at level >= 1
+```
+
+**A progress bar** for the long steps — interpolation of a continental model
+takes minutes, and a bar is the difference between waiting and wondering:
+
+```{r set-progress, eval = FALSE}
+set_progress_bar(show = TRUE)
+```
+
 ## 1. Pick a model
 
 The models range from five nodes to a thousand, all of the same European
@@ -109,7 +147,7 @@ can be compared directly.
 
 ## 5. Carve out a local model
 
-`pypsa_eur_nuts3` is not intended to be solved at full resolution. Its use is
+The NUTS3 models are not intended to be solved at full resolution. Their use is
 to supply a study area at NUTS3 granularity, which the coarser models cannot:
 their aggregation has already averaged that detail away.
 
@@ -123,6 +161,10 @@ pt <- geoscales::geoscale_leaftable(nuts_gs) |>
 m <- attach_weather(pypsa_eur_nuts3, c("onwind", "solar", "ror")) |>
   subset_model_regions(region = pt)
 ```
+
+`pypsa_eur_nuts3` ships without its weather profiles, so `attach_weather()`
+puts back the ones the study needs. Use `pypsa_eur_1035` instead for the same
+regions on a four-day sample, which carries its weather already.
 
 The result is Portugal at 22 nodes — every NUTS3 region containing a
 substation, with the network between them intact. `region` accepts any subset of
@@ -151,6 +193,21 @@ geoscales::geoscale_leaftable(nuts_gs) |>
 The column used to aggregate or split by is a modelling choice. National
 demand divides by `load_twh` or `pop`, a wind target by `pot_onwind`; area is
 rarely the right weight for either.
+
+## Coarser models on demand
+
+The NUTS0 and NUTS1 models are not shipped: they are an aggregation of the
+NUTS3 one, so shipping them would store the same system twice more.
+
+```{r aggregate, eval = FALSE}
+m <- aggregate_model_regions(pypsa_eur_nuts3, level = "nuts1")
+```
+
+Capacities and demand are summed; efficiencies, availability factors and costs
+take a mean weighted by the object's capacity in each region, so they stay
+inside the range of the values they came from. Corridors that fall inside one
+region are dropped and the rest merge. It gives 36 regions at `"nuts0"`, 106 at
+`"nuts1"` and 289 at `"nuts2"`, in a few seconds.
 
 ## Where next
 

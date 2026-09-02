@@ -15,7 +15,8 @@
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="About">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<meta property="og:title" content="About">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -25,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">reneuro</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.1.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.2.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,8 +40,9 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/about.html">About</a></li>
+<li><a class="dropdown-item" href="../articles/translation.html">Translation</a></li>
     <li><a class="dropdown-item" href="../articles/data.html">The data</a></li>
+    <li><a class="dropdown-item" href="../articles/about.html">About</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -105,13 +107,9 @@ both.</p>
 <div class="section level2">
 <h2 id="models">Models<a class="anchor" aria-label="anchor" href="#models"></a>
 </h2>
-<p>The release ships a range of spatial resolutions over the same
-European system, all on the full year (8,760 hourly snapshots) unless
-stated, produced by two routes.</p>
-<p><strong>Built by PyPSA-Eur.</strong> Clustered by PyPSA-Eur’s
-<code>cluster_network</code> rule and read into energyRt without further
-reduction, so each is comparable to a PyPSA-Eur run at the same
-size.</p>
+<p>Six models ship, covering the same European system at resolutions
+from five nodes to a thousand. All are lazy-loaded and need neither
+Python nor a PyPSA-Eur clone.</p>
 <table style="width:100%;" class="table">
 <colgroup>
 <col width="23%">
@@ -122,87 +120,71 @@ size.</p>
 <thead><tr class="header">
 <th>model</th>
 <th align="right">nodes</th>
-<th>how it was clustered</th>
 <th>period</th>
+<th>how the regions were formed</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td><code>pypsa_eur_5</code></td>
 <td align="right">5</td>
-<td>k-means, Belgium only</td>
 <td>one week, 168 h</td>
+<td>PyPSA-Eur k-means, Belgium only</td>
 </tr>
 <tr class="even">
 <td><code>pypsa_eur_5cp</code></td>
 <td align="right">5</td>
-<td>as above, copperplate</td>
 <td>one week, 168 h</td>
+<td>as above, copperplated</td>
 </tr>
 <tr class="odd">
 <td><code>pypsa_eur_41</code></td>
 <td align="right">41</td>
-<td>k-means</td>
-<td>full year</td>
+<td>full year, 8,760 h</td>
+<td>PyPSA-Eur k-means</td>
 </tr>
 <tr class="even">
-<td><code>pypsa_eur_250</code></td>
-<td align="right">250</td>
-<td>k-means</td>
-<td>full year</td>
+<td><code>pypsa_eur_289</code></td>
+<td align="right">289</td>
+<td>full year, 8,760 h</td>
+<td>aggregated in R to NUTS2</td>
 </tr>
 <tr class="odd">
+<td><code>pypsa_eur_1035</code></td>
+<td align="right">1,035</td>
+<td>four days, 96 h</td>
+<td>NUTS3 regions, no clustering</td>
+</tr>
+<tr class="even">
 <td><code>pypsa_eur_nuts3</code></td>
 <td align="right">1,035</td>
-<td>NUTS3 busmap, <strong>not k-means</strong> †</td>
-<td>full year</td>
+<td>full year, 8,760 h</td>
+<td>as above, weather ships separately</td>
 </tr>
 </tbody>
 </table>
-<p>† <code>pypsa_eur_nuts3</code> uses the same PyPSA-Eur workflow on a
-busmap generated by this package (<code>data-raw/make_busmap.R</code>)
-rather than by k-means, so its regions are administrative. Everything
-downstream — renewable profiles, line aggregation, costs — is
-PyPSA-Eur’s.</p>
-<p><strong>Aggregated in R.</strong> Derived from
-<code>pypsa_eur_nuts3</code> with <code>aggregate_pypsa()</code>, which
-applies PyPSA’s reduction strategies without a second PyPSA-Eur run.
-Each takes seconds to minutes rather than a rebuild from raw data.</p>
-<table class="table">
-<thead><tr class="header">
-<th>model</th>
-<th align="right">nodes</th>
-<th>aggregated to</th>
-<th align="right">build</th>
-<th>period</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><code>pypsa_eur_nuts0</code></td>
-<td align="right">36</td>
-<td>NUTS0, countries</td>
-<td align="right">16 s</td>
-<td>full year</td>
-</tr>
-<tr class="even">
-<td><code>pypsa_eur_nuts1</code></td>
-<td align="right">106</td>
-<td>NUTS1</td>
-<td align="right">34 s</td>
-<td>full year</td>
-</tr>
-<tr class="odd">
-<td><code>pypsa_eur_nuts2</code></td>
-<td align="right">289</td>
-<td>NUTS2</td>
-<td align="right">75 s</td>
-<td>full year</td>
-</tr>
-</tbody>
-</table>
-<p><code>pypsa_eur_nuts2</code> (289 nodes, aggregated in R) and
-<code>pypsa_eur_250</code> (PyPSA’s k-means) are the same system at
-nearly the same size by two independent methods, so either can be used
-to check the other.</p>
+<p>Two routes produce them.</p>
+<p><strong>Built by PyPSA-Eur.</strong> <code>pypsa_eur_5</code>,
+<code>_5cp</code> and <code>_41</code> are clustered by PyPSA-Eur’s
+<code>cluster_network</code> rule and read into energyRt without further
+reduction, so each is comparable to a PyPSA-Eur run at the same
+size.</p>
+<p><code>pypsa_eur_1035</code> and <code>pypsa_eur_nuts3</code> take the
+same route but on a busmap generated by this package
+(<code>data-raw/make_busmap.R</code>) rather than by k-means, so their
+regions are administrative. Everything downstream — renewable profiles,
+line aggregation, costs — is PyPSA-Eur’s.</p>
+<p><strong>Aggregated in R.</strong> <code>pypsa_eur_289</code> is
+derived from the NUTS3 network with <code>aggregate_pypsa()</code>, the
+build-time tool in <code>data-raw/</code>, which applies PyPSA’s
+reduction strategies without a second PyPSA-Eur run: extensive
+quantities sum, intensive ones take a capacity-weighted mean and so stay
+within their members’ range, intra-cluster branches are dropped, and
+corridor lengths are recomputed from the new region centroids with
+impedance rescaled to follow. It takes 75 seconds rather than a
+Snakemake run.</p>
+<p>That makes the two routes a check on each other. A PyPSA k-means
+model at 250 nodes and <code>pypsa_eur_289</code> are the same system at
+nearly the same size by independent methods.</p>
 <p><strong>NUTS</strong> — <em>Nomenclature of Territorial Units for
 Statistics</em> — is Eurostat’s hierarchy of European regions, against
 which national statistics are published. It has four nested levels, each
@@ -251,24 +233,38 @@ industrial output — without a separate crosswalk.</p>
 Herzegovina, Moldova, Ukraine and Kosovo. They are filled from
 OpenStreetMap first-level administrative boundaries, so “NUTS1” and
 “NUTS2” for those four are stand-ins rather than real levels.</p>
-<p>The four NUTS models nest over the same system, so a result can be
-tested for sensitivity to spatial resolution with nothing else changed.
-Node counts fall short of region counts because a region without a
-substation merges into a neighbour, keeping its demand and generation:
-109 NUTS1 regions give 106 nodes, 296 NUTS2 give 289, and 1,477 NUTS3
-give 1,035. Every country has at least one substation, so NUTS0 is 36
-for 36.</p>
-<p><strong><code>pypsa_eur_250</code></strong> is the recommended
-working model. PyPSA-Eur is normally clustered to 50–250 nodes for
-computational reasons; its k-means is load-weighted and respects country
-boundaries.</p>
-<p><strong><code>aggregate_pypsa()</code></strong> applies PyPSA’s
-strategies: extensive quantities sum, intensive ones take a
-capacity-weighted mean and so stay within their members’ range,
-intra-cluster branches are dropped, and corridor lengths are recomputed
-from the new region centroids with impedance rescaled to follow. It does
-not re-run the clustering from raw data, which is why a NUTS2 model
-takes 75 seconds rather than a Snakemake run.</p>
+<p>The NUTS models nest over the same system, so a result can be tested
+for sensitivity to spatial resolution with nothing else changed. Node
+counts fall short of region counts because a region without a substation
+merges into a neighbour, keeping its demand and generation: 296 NUTS2
+regions give 289 nodes, and 1,477 NUTS3 give 1,035. Every country has at
+least one substation, so NUTS0 would be 36 for 36.</p>
+<p>Coarser levels are not shipped. NUTS0 and NUTS1 are a region
+aggregation of the NUTS3 model, so shipping them would store the same
+system twice more. They are built on demand instead, in a few
+seconds:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu">energyRt</span><span class="fu">::</span><span class="fu"><a href="https://energyRt.org/reference/aggregate_model_regions.html" class="external-link">aggregate_model_regions</a></span><span class="op">(</span><span class="va">pypsa_eur_nuts3</span>, level <span class="op">=</span> <span class="st">"nuts1"</span><span class="op">)</span></span></code></pre></div>
+<p><code>pypsa_eur_nuts3</code> carries <code>nuts_gs</code>, so no
+geoscale argument is needed. Extensive quantities — capacities, demand,
+supply availability — are summed over the regions of each parent.
+Intensive ones — efficiencies, availability factors, costs — take a mean
+weighted by the object’s own capacity in each region, so an aggregated
+value stays inside the range of the values it came from. Corridors whose
+endpoints land in one parent become internal and are dropped; the rest
+merge, their capacities adding and their loss factors taking the
+capacity-weighted mean.</p>
+<p>The counts are 36 regions at NUTS0, 106 at NUTS1 and 289 at NUTS2.
+That last figure is a check rather than a coincidence:
+<code>pypsa_eur_289</code> reaches the same 289 regions through PyPSA’s
+own aggregation of the network, and the two agree on every technology’s
+capacity except hydro. The hydro gap is 1.5%, and it comes from the
+order of operations — aggregating the network first merges some
+zero-duration storage units that conversion would otherwise exclude.</p>
+<p>One caveat on reading a coarser run. Aggregation does two opposing
+things: it removes transport constraints, which can only lower cost, and
+it averages efficiencies, which loses the ability to dispatch the best
+unit and can raise it. Neither direction is guaranteed in general.</p>
 </div>
 <div class="section level2">
 <h2 id="regions">Regions<a class="anchor" aria-label="anchor" href="#regions"></a>
@@ -289,7 +285,7 @@ regions that contain none.</p>
 modelling decision: national demand divides by <code>load_twh</code> or
 <code>pop</code>, a wind target by <code>pot_onwind</code>; area is
 rarely the right weight for either.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://optimal2050.github.io/reneuro/">reneuro</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
@@ -299,15 +295,15 @@ rarely the right weight for either.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>twh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">load_twh</span><span class="op">)</span>, wind_gw <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">pot_onwind</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1e3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">twh</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 3</span></span></span>
 <span><span class="co">#&gt;   nuts0   twh wind_gw</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 DE     509.    490.</span></span>
-<span><span class="co">#&gt; 2 FR     492.    969.</span></span>
-<span><span class="co">#&gt; 3 IT     316.    504.</span></span>
-<span><span class="co">#&gt; 4 GB     316.    439.</span></span>
-<span><span class="co">#&gt; 5 ES     246.    938.</span></span>
-<span><span class="co">#&gt; 6 UA     149.    851.</span></span></code></pre></div>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> DE     509.    490.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> FR     492.    969.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> IT     316.    504.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> GB     316.    439.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ES     246.    938.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> UA     149.    851.</span></span></code></pre></div>
 <p>The solar and offshore potentials overlap. Fixed-tilt and tracking
 photovoltaics occupy the same land, and 313 of the 314 offshore regions
 carry more than one offshore type on the same sea area, so these columns
@@ -316,30 +312,28 @@ are kept separate and never summed.</p>
 <div class="section level2">
 <h2 id="a-source-model">A source model<a class="anchor" aria-label="anchor" href="#a-source-model"></a>
 </h2>
-<p><code>pypsa_eur_nuts3</code> is not intended to be solved at full
+<p><code>pypsa_eur_1035</code> is not intended to be solved at full
 resolution. A full-year continental model at 1,035 nodes is beyond the
-open solvers this package targets: on a 96-hour sample it is 1.3 million
-LP rows and about 18 minutes, and at four weeks it is 9.4 million rows,
-where the interior-point method returns no solution. Use
-<code>pypsa_eur_250</code> or <code>pypsa_eur_nuts2</code> at
-continental scale.</p>
+open solvers this package targets: on the 96-hour sample it ships with
+it is 1.3 million LP rows and about 18 minutes, and at four weeks it is
+9.4 million rows, where the interior-point method returns no solution.
+Use <code>pypsa_eur_289</code> at continental scale.</p>
 <p>Its use is subsetting. It holds the finest granularity the underlying
 data supports, so a country or study area can be taken from it at full
 detail and solved on its own. The coarser models cannot supply that
 detail, having already averaged it away.</p>
 <details><summary>
 Show the code
-</summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">pt</span> <span class="op">&lt;-</span> <span class="fu">geoscales</span><span class="fu">::</span><span class="fu"><a href="https://optimal2050.github.io/geoscales/r/reference/geoscale_leaftable.html" class="external-link">geoscale_leaftable</a></span><span class="op">(</span><span class="va">nuts_gs</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">nuts0</span> <span class="op">==</span> <span class="st">"PT"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">region</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">intersect</a></span><span class="op">(</span><span class="fu"><a href="https://energyRt.org/reference/get_region.html" class="external-link">get_region</a></span><span class="op">(</span><span class="va">pypsa_eur_nuts3</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">intersect</a></span><span class="op">(</span><span class="fu"><a href="https://energyRt.org/reference/get_region.html" class="external-link">get_region</a></span><span class="op">(</span><span class="va">pypsa_eur_1035</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu">attach_weather</span><span class="op">(</span><span class="va">pypsa_eur_nuts3</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"onwind"</span>, <span class="st">"solar"</span>, <span class="st">"ror"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">energyRt</span><span class="fu">::</span><span class="fu"><a href="https://energyRt.org/reference/subset_model_regions.html" class="external-link">subset_model_regions</a></span><span class="op">(</span>region <span class="op">=</span> <span class="va">pt</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu">energyRt</span><span class="fu">::</span><span class="fu"><a href="https://energyRt.org/reference/subset_model_regions.html" class="external-link">subset_model_regions</a></span><span class="op">(</span><span class="va">pypsa_eur_1035</span>, region <span class="op">=</span> <span class="va">pt</span><span class="op">)</span></span></code></pre></div>
 </details><p>The result is Portugal at 22 nodes: every NUTS3 region containing a
 substation, with the network between them intact. <code>region</code>
 accepts any subset of the model’s regions, so a study area need not
@@ -349,12 +343,18 @@ drops the corridors crossing the boundary and reports each. Without
 replacement the model is islanded and must meet demand from its own
 resources, so its cost is an upper bound; <code>boundary_prices</code>
 replaces the dropped routes with priced import/export stubs.</p>
-<p>The weather series are the bulk of the model. They ship as separate
-objects by resource — <code>wx_nuts3_onwind</code>,
-<code>wx_nuts3_solar</code> and so on — and are attached on demand:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu">attach_weather</span><span class="op">(</span><span class="va">pypsa_eur_nuts3</span><span class="op">)</span>                  <span class="co"># all resources</span></span>
-<span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu">attach_weather</span><span class="op">(</span><span class="va">pypsa_eur_nuts3</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"onwind"</span>, <span class="st">"solar"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>The weather series are the bulk of the model: seven hourly profiles
+over 1,035 regions are 69% of its size. <code>pypsa_eur_1035</code>
+keeps them, which is affordable on a four-day sample. The full-year
+<code>pypsa_eur_nuts3</code> cannot — whole, it saves to 181 MB, past
+GitHub’s 100 MB limit — so its profiles ship as separate objects, none
+over 48 MB, attached on demand:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attach_weather.html">attach_weather</a></span><span class="op">(</span><span class="va">pypsa_eur_nuts3</span><span class="op">)</span>                    <span class="co"># all seven</span></span>
+<span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attach_weather.html">attach_weather</a></span><span class="op">(</span><span class="va">pypsa_eur_nuts3</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"onwind"</span>, <span class="st">"solar"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>A model must have the profiles its technologies reference before it
+is interpolated. Attaching only what a study uses keeps it small: solar
+and onshore wind load 75 MB rather than 182 MB.</p>
 <p>Models are lazy-loaded and require neither Python nor a PyPSA-Eur
 clone, and each carries its provenance as an attribute.
 <code>data-raw/</code> holds the scripts that rebuild every object from
@@ -410,7 +410,7 @@ rows after presolve, where the interior-point method returns no
 solution. First-order (<code>pdlp</code>) and dual simplex methods have
 not been tested at that size.</p>
 <p>Reproduce with <a href="reference/benchmark_solvers.html"><code>benchmark_solvers()</code></a>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scen</span> <span class="op">&lt;-</span> <span class="fu">energyRt</span><span class="fu">::</span><span class="fu"><a href="https://energyRt.org/reference/interpolate_model.html" class="external-link">interpolate_model</a></span><span class="op">(</span><span class="va">pypsa_eur_5</span>, name <span class="op">=</span> <span class="st">"be"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/benchmark_solvers.html">benchmark_solvers</a></span><span class="op">(</span><span class="va">scen</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -497,7 +497,7 @@ Zenodo, <a href="https://doi.org/10.5281/zenodo.3946412" class="external-link">1
 and <a href="https://doi.org/10.5281/zenodo.3520874" class="external-link">10.5281/zenodo.3520874</a>
 respectively. Cite the version used.</p>
 <p><strong>Citing <code>reneuro</code></strong></p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"reneuro"</span><span class="op">)</span></span></code></pre></div>
 <p>Machine-readable metadata is in <code>CITATION.cff</code>.</p>
 </div>

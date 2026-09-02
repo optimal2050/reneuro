@@ -31,36 +31,58 @@ modelling course, to replicate [PyPSA-Eur](https://github.com/PyPSA/pypsa-eur), 
 established open model of the European power system, at several spatial
 resolutions.
 
-**Built by PyPSA-Eur** — reduced by PyPSA-Eur's own `cluster_network` workflow in Python
-and read straight into energyRt, so each is directly comparable to a PyPSA-Eur
-run at the same size.
+Six models ship with the package, ready to solve. They need neither Python nor
+a PyPSA-Eur clone, and are lazy-loaded, so they cost nothing until touched.
 
-| model | nodes | clustered by | period |
+| model | nodes | period | how the regions were formed |
 |---|---:|---|---|
-| `pypsa_eur_5` | 5 | k-means, Belgium only | one week |
-| `pypsa_eur_5cp` | 5 | as above, copperplate | one week |
-| `pypsa_eur_41` | 41 | k-means | full year |
-| `pypsa_eur_250` | 250 | k-means | full year |
+| `pypsa_eur_5` | 5 | one week (168 h) | PyPSA-Eur k-means, Belgium only |
+| `pypsa_eur_5cp` | 5 | one week (168 h) | as above, copperplated |
+| `pypsa_eur_41` | 41 | full year | PyPSA-Eur k-means |
+| `pypsa_eur_289` | 289 | full year | aggregated in R to NUTS2 |
+| `pypsa_eur_1035` | 1,035 | four days (96 h) | NUTS3 regions, no clustering |
+| `pypsa_eur_nuts3` | 1,035 | full year | as above, weather ships separately |
 
-**Aggregated in R** — derived from `pypsa_eur_nuts3` with `aggregate_pypsa()`,
-reoroducing PyPSA's reduction strategies in R. Prebuilt models by NUTS 
-(Nomenclature des Unités Territoriales Statistiques), Eurostat's official
-hierarchy of European regions.
+Two routes produce them. `pypsa_eur_5`, `_5cp` and `_41` are reduced by
+PyPSA-Eur's own `cluster_network` workflow and read straight into energyRt, so
+each is directly comparable to a PyPSA-Eur run at the same size. `pypsa_eur_289`
+is aggregated in R from the NUTS3 network instead, reproducing PyPSA's reduction
+strategies — which makes the two routes a check on each other at a similar size.
 
-| model | nodes | aggregated to | build | period |
-|---|---:|---|---:|---|
-| `pypsa_eur_nuts0` | 36 | NUTS0, countries | 16 s | full year |
-| `pypsa_eur_nuts1` | 106 | NUTS1 | 34 s | full year |
-| `pypsa_eur_nuts2` | 289 | NUTS2 | 75 s | full year |
-| `pypsa_eur_nuts3` | 1,035 | NUTS3 regions | full year |
+The NUTS3 models follow **NUTS** — *Nomenclature des Unités Territoriales
+Statistiques*, Eurostat's hierarchy of European regions — rather than an
+algorithmic clustering, which is what lets a model be joined to published
+statistics. They are **source** models rather than ones to solve whole: their
+purpose is to supply a country or study area at full granularity.
+`pypsa_eur_nuts3` covers the full year; its hourly weather is most of its size,
+so it ships as separate objects that `attach_weather()` puts back.
 
-`pypsa_eur_nuts3` is a **source** model rather than one to solve whole —
-its purpose is to have a country or study area at max granularity.
+### Coarser levels are derived, not shipped
 
-Models are included in the package data and need neither Python nor a PyPSA-Eur clone to run. The
-[About](https://optimal2050.github.io/reneuro/articles/about.html) article
-covers how each was built, the four countries outside NUTS, and the region data
-that ships alongside.
+NUTS0 and NUTS1 are a region aggregation of the NUTS3 model, so shipping them
+would store the same system twice more. `pypsa_eur_nuts3` carries `nuts_gs`, so
+one call builds either:
+
+```r
+m <- energyRt::aggregate_model_regions(pypsa_eur_nuts3, level = "nuts1")
+```
+
+Capacities and demand are summed, efficiencies and costs take a
+capacity-weighted mean, and corridors that fall inside one region are dropped.
+It takes a few seconds and gives 36 regions at NUTS0, 106 at NUTS1 and 289 at
+NUTS2 — the last matching `pypsa_eur_289`, which was built independently
+through PyPSA.
+
+### Planned
+
+| | |
+|---|---|
+| rename `_289` → `_nuts2` | names describe the regions, not a node count |
+| `pypsa_eur_250` | PyPSA k-means at the size normally used for continental studies |
+
+The [About](https://optimal2050.github.io/reneuro/articles/about.html) article
+covers how each model was built, the four countries outside NUTS, and the region
+data that ships alongside.
 
 ## Installation
 

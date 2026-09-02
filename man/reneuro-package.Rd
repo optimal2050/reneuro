@@ -13,7 +13,6 @@ An open, extensible model of the European energy system built on 'energyRt', wit
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://optimal2050.github.io/reneuro/r/}
   \item \url{https://optimal2050.github.io/reneuro/}
   \item \url{https://github.com/optimal2050/reneuro}
   \item Report bugs at \url{https://github.com/optimal2050/reneuro/issues}

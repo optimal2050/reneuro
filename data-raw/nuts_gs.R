@@ -172,6 +172,18 @@ if (length(degeneracy)) {
 }
 
 # ---- assemble ----------------------------------------------------------------
+# Key the geoscale the way the MODELS are keyed. energyRt set elements must be
+# letters, digits and underscores, so convert_pypsa() rewrites every other
+# character; the adm1 codes of BA, MD, UA and XK carry a hyphen ("BA-BIH") and
+# reach a model as "BA_BIH". Without this the geoscale and the models disagree
+# on 37 regions -- every region of those four countries -- and aggregating a
+# model against it would drop them.
+#
+# It runs here, after every merge above has joined on the network's own codes.
+for (f in c("region", "nuts0", "nuts1", "nuts2", "nuts3")) {
+  ltd[[f]] <- gsub("[^A-Za-z0-9]+", "_", ltd[[f]])
+}
+
 # Geometry is passed back in leaftable order, which the merges preserve
 # (sort = FALSE on every one); the check below is the guard on that.
 if (length(geom) != nrow(ltd)) stop("geometry no longer matches the leaftable")
