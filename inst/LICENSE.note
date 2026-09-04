@@ -51,13 +51,46 @@ ATTRIBUTION REQUIRED
 --------------------------------------------------------------------------------
   OpenStreetMap contributors ......... ODbL-1.0
   European Environment Agency ........ CC-BY-4.0  (Natura 2000 protected areas)
-  Copernicus ......................... land cover
-  ECMWF / ERA5 ....................... reanalysis weather
+  Copernicus ......................... CC-BY-4.0  (land cover)
+  ECMWF / Copernicus C3S / ERA5 ...... CC-BY-4.0  (reanalysis weather)
+  EUMETSAT CM SAF / SARAH-3 .......... CC-BY-4.0  (surface solar radiation)
   PyPSA-Eur authors .................. workflow and assembled inputs
   European Union / Eurostat .......... NUTS 2021 (nuts_gs only)
   EuroGeographics .................... administrative boundaries (nuts_gs only)
 
 PyPSA-Eur's own per-input inventory is `doc/data_inventory.csv` upstream.
+
+THE WEATHER SOURCES ARE NOT IN THAT INVENTORY
+--------------------------------------------------------------------------------
+`doc/data_inventory.csv` has 55 entries and covers neither ERA5 nor SARAH-3 nor
+the cutouts built from them, so their terms were resolved directly rather than
+inherited from PyPSA-Eur. Both are CC-BY-4.0, which permits redistribution of
+derived products with attribution -- and the shipped capacity factors
+(`pypsa_eur_*` weather objects and the `wx_nuts3_*` series) are exactly that:
+products derived from both sources by `atlite`.
+
+  ERA5      Until 2 July 2025 the Climate Data Store issued ERA5 under the
+            "Licence to use Copernicus Products"; that licence was replaced by
+            CC-BY on that date. Required notice for modified products:
+
+              "Contains modified Copernicus Climate Change Service
+               information [year]"
+
+            DOI 10.24381/cds.adbb2d47.
+
+  SARAH-3   CC-BY-4.0. All intellectual property rights in the CM SAF products
+            belong to EUMETSAT, and the copyright credit must be shown. Cite:
+
+              Pfeifroth, U., Kothe, S., Druecke, J., Trentmann, J.,
+              Schroeder, M., Selbach, N., Hollmann, R. (2023): Surface
+              Radiation Data Set - Heliosat (SARAH) - Edition 3, Satellite
+              Application Facility on Climate Monitoring,
+              DOI:10.5676/EUM_SAF_CM/SARAH/V003
+
+            SARAH-3's climate data record runs 1983-2020. From 2021 the record
+            continues as the Interim Climate Data Record (ICDR), same algorithm
+            at 2-5 day latency. A model built on a 2021-or-later weather year
+            therefore rests on the ICDR rather than the CDR.
 
 WDPA IS ABSENT, AND THIS IS VERIFIED RATHER THAN ASSUMED
 --------------------------------------------------------------------------------

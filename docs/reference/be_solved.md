@@ -17,20 +17,20 @@ An [energyRt](https://energyRt.org/reference/energyRt-package.html)
 
 ## Source
 
-Solved by `data-raw/make_be_solved.R`. Same data licence and provenance
-as
+[pypsa_eur_5](https://optimal2050.github.io/reneuro/reference/pypsa_eur_models.md)
+interpolated and solved with GLPK. Same data licence and provenance as
 [pypsa_eur_models](https://optimal2050.github.io/reneuro/reference/pypsa_eur_models.md).
 
 ## Details
 
-The objective is `164664296.503735`. That figure is a regression gate
-rather than a curiosity: `data-raw/make_be_solved.R` refuses to save a
-scenario that does not reproduce it, so this object cannot silently
-drift.
+The objective is `164899752.517096`. That figure is a regression gate
+rather than a curiosity: the build
+(`reneuro.dev/data-raw/make_be_solved.R`) refuses to save a scenario
+that does not reproduce it, so this object cannot silently drift.
 
-The value corresponds to the six-tranche loss default. Converting the
-same network with `tranches = NULL` – a single flat loss rate, rung 1 of
-the transmission ladder – gives `164899752.517096` instead.
+The value corresponds to the current flat single-loss-rate corridors.
+The retired six-tranche default gave `164664296.503735`; converting with
+`tranches = 6` still reproduces that rung of the transmission ladder.
 
 ## Examples
 

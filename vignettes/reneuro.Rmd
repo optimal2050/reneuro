@@ -44,9 +44,14 @@ get_scenarios_path()
 configurations; setting a default saves passing `solver =` to every call:
 
 ```{r set-solver, eval = FALSE}
-names(solver_options)                       # what is configured
-set_default_solver(solver_options$glpk)     # GLPK for small models
+names(solver_options)                            # what is configured
+set_default_solver(solver_options$julia_highs)   # or $pyomo_highs
 ```
+
+HiGHS through Julia or Python is the one to set. GLPK will solve the five-node
+models this article uses — and does, below — but it does not scale: at 41 nodes
+it was still iterating after ten minutes on a problem the HiGHS barrier closes
+in under four. `open_solvers()` reports what this machine has.
 
 **How much it tells you.** Verbosity is a level, not a flag: `0` silent, `1`
 progress, `2` and above increasingly detailed.
@@ -110,8 +115,11 @@ scen <- write_script(scen, solver = solver_options$glpk)
 scen <- read_solution(solve_scenario(scen, wait = TRUE))
 ```
 
-GLPK is sufficient at this size. Past a few dozen regions, use Julia/HiGHS or
-Pyomo/HiGHS; `vignette("about")` has the measured times, and
+GLPK is named here because it is what produced `be_solved`, and at five nodes
+it is the quickest way to a result. It is the exception rather than the habit:
+use Julia/HiGHS or Pyomo/HiGHS for anything larger. `vignette("about")` has the
+measured times -- 10 s against 24 s at five nodes, 2,158 s against 79 s at
+sixty-nine -- and
 [`benchmark_solvers()`](../reference/benchmark_solvers.html) repeats them on
 another machine.
 
@@ -163,8 +171,7 @@ m <- attach_weather(pypsa_eur_nuts3, c("onwind", "solar", "ror")) |>
 ```
 
 `pypsa_eur_nuts3` ships without its weather profiles, so `attach_weather()`
-puts back the ones the study needs. Use `pypsa_eur_1035` instead for the same
-regions on a four-day sample, which carries its weather already.
+puts back the ones the study needs.
 
 The result is Portugal at 22 nodes — every NUTS3 region containing a
 substation, with the network between them intact. `region` accepts any subset of

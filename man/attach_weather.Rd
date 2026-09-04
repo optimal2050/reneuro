@@ -4,21 +4,27 @@
 \alias{attach_weather}
 \title{Attach weather profiles to a model}
 \usage{
-attach_weather(mod, resources = NULL)
+attach_weather(mod, resources = NULL, from = NULL)
 }
 \arguments{
-\item{mod}{A \code{model}, normally \code{pypsa_eur_nuts3}.}
+\item{mod}{A \code{model}, normally \code{pypsa_eur_nuts3} or a \verb{pypsa_eur_41_<year>}.}
 
 \item{resources}{Resource names to attach, from \code{\link[=weather_resources]{weather_resources()}}.
-\code{NULL} (default) attaches all of them.}
+\code{NULL} (default) attaches all of them. Ignored when \code{from} is given.}
+
+\item{from}{A \code{model} to copy the \code{weather} objects from instead of the
+\verb{wx_nuts3_*} datasets — \code{pypsa_eur_41} for the horizon series.}
 }
 \value{
 \code{mod} with the requested \code{weather} objects added.
 }
 \description{
-\code{pypsa_eur_nuts3} ships without its hourly weather profiles, which are most
-of its size. Its technologies still reference them by name, so the profiles
-a run needs must be attached before it is interpolated.
+\code{pypsa_eur_nuts3} and the horizon series \code{pypsa_eur_41_2025} ...
+\code{pypsa_eur_41_2050} ship without their hourly weather profiles, which are
+most of their size (the six horizon models share \code{pypsa_eur_41}'s profiles
+bit-for-bit, so shipping them six more times would store nothing new).
+Their technologies still reference the profiles by name, so a model must
+have them attached before it is interpolated.
 }
 \details{
 Attaching only what a study uses keeps the model small: a solar-and-onshore
@@ -28,5 +34,7 @@ analysis loads 75 MB rather than 182 MB.
 \donttest{
 m <- attach_weather(pypsa_eur_nuts3, c("onwind", "solar"))
 names(energyRt::getObject(m, class = "weather"))
+
+m25 <- attach_weather(pypsa_eur_41_2025, from = pypsa_eur_41)
 }
 }

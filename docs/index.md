@@ -8,35 +8,52 @@ for a modelling course, to replicate
 [PyPSA-Eur](https://github.com/PyPSA/pypsa-eur), an established open
 model of the European power system, at several spatial resolutions.
 
-Six models ship with the package, ready to solve. They need neither
-Python nor a PyPSA-Eur clone, and are lazy-loaded, so they cost nothing
-until touched.
+Eleven models ship with the package, ready to solve — all built on
+**2025 weather and load** (the `europe-2025-sarah3-era5` cutout;
+measured ENTSO-E demand). They need neither Python nor a PyPSA-Eur
+clone, and are lazy-loaded, so they cost nothing until touched.
 
-| model             | nodes | period           | how the regions were formed        |
-|-------------------|------:|------------------|------------------------------------|
-| `pypsa_eur_5`     |     5 | one week (168 h) | PyPSA-Eur k-means, Belgium only    |
-| `pypsa_eur_5cp`   |     5 | one week (168 h) | as above, copperplated             |
-| `pypsa_eur_41`    |    41 | full year        | PyPSA-Eur k-means                  |
-| `pypsa_eur_289`   |   289 | full year        | aggregated in R to NUTS2           |
-| `pypsa_eur_1035`  | 1,035 | four days (96 h) | NUTS3 regions, no clustering       |
-| `pypsa_eur_nuts3` | 1,035 | full year        | as above, weather ships separately |
+Four span spatial resolutions. Each models a **single planning year** —
+2050 costs, the 2025 fleet as existing stock — resolved hour by hour
+within it:
 
-Two routes produce them. `pypsa_eur_5`, `_5cp` and `_41` are reduced by
-PyPSA-Eur’s own `cluster_network` workflow and read straight into
-energyRt, so each is directly comparable to a PyPSA-Eur run at the same
-size. `pypsa_eur_289` is aggregated in R from the NUTS3 network instead,
-reproducing PyPSA’s reduction strategies — which makes the two routes a
-check on each other at a similar size.
+| model | nodes | snapshots | how the regions were formed |
+|----|---:|----|----|
+| `pypsa_eur_5` | 5 | one week (168 h) | PyPSA-Eur k-means, Belgium only |
+| `pypsa_eur_5cp` | 5 | one week (168 h) | as above, copperplated |
+| `pypsa_eur_41` | 41 | full year (8,760 h) | PyPSA-Eur k-means |
+| `pypsa_eur_nuts3` | 1,035 | full year (8,760 h) | NUTS3 regions, weather ships separately |
 
-The NUTS3 models follow **NUTS** — *Nomenclature des Unités
+`pypsa_eur_5`, `_5cp` and `_41` are reduced by PyPSA-Eur’s own
+`cluster_network` workflow and read straight into energyRt, so each is
+directly comparable to a PyPSA-Eur run at the same size.
+
+`pypsa_eur_nuts3` follows **NUTS** — *Nomenclature des Unités
 Territoriales Statistiques*, Eurostat’s hierarchy of European regions —
-rather than an algorithmic clustering, which is what lets a model be
-joined to published statistics. They are **source** models rather than
-ones to solve whole: their purpose is to supply a country or study area
-at full granularity. `pypsa_eur_nuts3` covers the full year; its hourly
-weather is most of its size, so it ships as separate objects that
+rather than an algorithmic clustering, which is what lets the model be
+joined to published statistics. It is a **source** model rather than one
+to solve whole: its purpose is to supply a country or study area at full
+granularity, or a coarser continental model by aggregation. It covers
+the full year; its hourly weather is most of its size, so it ships as
+separate objects that
 [`attach_weather()`](https://optimal2050.github.io/reneuro/reference/attach_weather.md)
 puts back.
+
+### Planning across years
+
+Seven more models take the 41-node system through 2050. Their calendar
+is the same full hourly year; what varies is the **planning horizon**:
+
+| model | planning horizon | what changes |
+|----|----|----|
+| `pypsa_eur_41_2025` … `_2050` | one year each, 2025–2050 | that horizon’s costs; the fleet aged by announced and assumed retirement |
+| `pypsa_eur_41v` | six five-year milestones, optimized together | one model; the existing fleet split into 17 build-year vintages, plus an investable path per carrier |
+
+The `_YYYY` series answers “what does the system look like solved *at* a
+horizon”; `pypsa_eur_41v` optimizes the whole pathway at once, with
+per-vintage efficiency and retirement. All seven ship **without
+weather** — `attach_weather(m, from = pypsa_eur_41)` puts
+`pypsa_eur_41`’s profiles back, the same pattern `pypsa_eur_nuts3` uses.
 
 ### Coarser levels are derived, not shipped
 
@@ -52,15 +69,15 @@ m <- energyRt::aggregate_model_regions(pypsa_eur_nuts3, level = "nuts1")
 Capacities and demand are summed, efficiencies and costs take a
 capacity-weighted mean, and corridors that fall inside one region are
 dropped. It takes a few seconds and gives 36 regions at NUTS0, 106 at
-NUTS1 and 289 at NUTS2 — the last matching `pypsa_eur_289`, which was
-built independently through PyPSA.
+NUTS1 and 289 at NUTS2.
 
 ### Planned
 
 |  |  |
 |----|----|
-| rename `_289` → `_nuts2` | names describe the regions, not a node count |
+| `pypsa_eur_nuts3v` | the vintaged build at NUTS3 resolution — next in line |
 | `pypsa_eur_250` | PyPSA k-means at the size normally used for continental studies |
+| transmission expansion | the converter already maps extendable corridors (`expand_transmission = TRUE`); a shipped scenario is pending |
 
 The [About](https://optimal2050.github.io/reneuro/articles/about.html)
 article covers how each model was built, the four countries outside
@@ -75,9 +92,9 @@ pak::pak("optimal2050/reneuro")
 ```
 
 [`energyRt`](https://energyRt.org) is not on CRAN; `pak` installs it
-from GitHub alongside `reneuro`. A solver is also required — GLPK is
-enough for the smallest models, while continental scale needs
-Julia/HiGHS or Pyomo/HiGHS:
+from GitHub alongside `reneuro`. A solver is also required, and **HiGHS
+through Julia or Python is the one to install** — GLPK solves the
+five-node models below, but does not scale past them:
 
 - [energyRt.org](https://energyRt.org) — documentation, reference and
   articles
@@ -101,6 +118,8 @@ library(energyRt)
 report(pypsa_eur_5)
 
 scen <- interpolate_model(pypsa_eur_5, name = "be")
+# GLPK at five nodes: this is the call that produced `be_solved`.
+# Use solver_options$julia_highs (or $pyomo_highs) for anything larger.
 scen <- write_script(scen, solver = solver_options$glpk)
 scen <- read_solution(solve_scenario(scen, wait = TRUE))
 
@@ -120,6 +139,10 @@ explored without a solver installed.
   — a model end to end, and carving a local model out of NUTS3
 - [The data](https://optimal2050.github.io/reneuro/articles/data.html) —
   what ships, and what changing spatial resolution does to it
+- [Data
+  sources](https://optimal2050.github.io/reneuro/articles/data-sources.html)
+  — the upstream inputs as maps and figures, with the source and licence
+  table
 - [About](https://optimal2050.github.io/reneuro/articles/about.html) —
   how the models were built, solver benchmarks, references and licences
 

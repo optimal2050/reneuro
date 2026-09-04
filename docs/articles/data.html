@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">reneuro</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.2.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.3.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,6 +42,9 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/translation.html">Translation</a></li>
     <li><a class="dropdown-item" href="../articles/data.html">The data</a></li>
+    <li><a class="dropdown-item" href="../articles/data-sources.html">The data sources</a></li>
+    <li><a class="dropdown-item" href="../articles/report-model.html">Model report</a></li>
+    <li><a class="dropdown-item" href="../articles/report-scenario.html">Scenario report</a></li>
     <li><a class="dropdown-item" href="../articles/about.html">About</a></li>
   </ul>
 </li>
@@ -85,7 +88,8 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://optimal2050.github.io/reneuro/">reneuro</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
 <p>This article uses only shipped data. It needs no PyPSA-Eur clone and
-no solver.</p>
+no solver. For what the <em>sources</em> look like – the weather cutout,
+the measured demand, the plant fleet – see the data-sources article.</p>
 <p>Three datasets describe the regions the models are built on:
 <code>nuts_gs</code> (the geography and the data attached to it),
 <code>nuts_load</code> (demand) and <code>nuts_lines</code>
@@ -94,7 +98,7 @@ coarser levels and gives the arithmetic used, which differs by quantity:
 capacities sum, per-capita values take a weighted mean, and peaks and
 impedances have to be recomputed rather than combined.</p>
 <div class="section level2">
-<h2 id="geography-five-nested-levels">1. Geography: five nested levels<a class="anchor" aria-label="anchor" href="#geography-five-nested-levels"></a>
+<h2 id="geography-nested-levels">1. Geography: nested levels<a class="anchor" aria-label="anchor" href="#geography-nested-levels"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gs</span> <span class="op">&lt;-</span> <span class="va">nuts_gs</span></span>
@@ -112,7 +116,15 @@ continental commodity balance can be declared.
 allowance or gas market; without it the coarsest balance is per country,
 i.e. 36 separate markets.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">energyRt</span><span class="fu">::</span><span class="fu"><a href="https://energyRt.org/reference/plot_geoscale.html" class="external-link">plot_geoscale</a></span><span class="op">(</span><span class="va">gs</span>, type <span class="op">=</span> <span class="st">"stack"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://optimal2050.github.io/geoscales/r/" class="external-link">geoscales</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">lt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://optimal2050.github.io/geoscales/r/reference/geoscale_leaftable.html" class="external-link">geoscale_leaftable</a></span><span class="op">(</span><span class="va">nuts_gs</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># d  &lt;- lt[, c("nuts3", "pot_onwind")]      # atom key + value column</span></span>
+<span></span>
+<span><span class="fu"><a href="https://optimal2050.github.io/geoscales/r/reference/geoscale_autoplot.html" class="external-link">geoscale_autoplot</a></span><span class="op">(</span><span class="va">nuts_gs</span>, type <span class="op">=</span> <span class="st">"stack"</span>, direction <span class="op">=</span> <span class="st">"down"</span>,</span>
+<span>                  view <span class="op">=</span> <span class="st">"oblique"</span>, colour <span class="op">=</span> <span class="cn">NA</span>, </span>
+<span>                  frame <span class="op">=</span> <span class="cn">T</span>, frame_fill <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/alpha.html" class="external-link">alpha</a></span><span class="op">(</span><span class="st">"grey60"</span>, <span class="fl">0.12</span><span class="op">)</span>,</span>
+<span>                  data <span class="op">=</span> <span class="va">lt</span>, z <span class="op">=</span> <span class="st">"cap_mw"</span>, rule <span class="op">=</span> <span class="st">"share"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="data_files/figure-html/stack-1.png" class="r-plt" alt="" width="672"></p>
 <p>The same hierarchy as an icicle plot:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -660,7 +672,8 @@ aggregated model contains:</p>
 <details><summary>
 Show code
 </summary><div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">nets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">LEVELS</span>, <span class="kw">function</span><span class="op">(</span><span class="va">l</span><span class="op">)</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu">agg_lines</span><span class="op">(</span><span class="va">l</span><span class="op">)</span>, level <span class="op">=</span> <span class="va">l</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">nets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">LEVELS</span>, <span class="kw">function</span><span class="op">(</span><span class="va">l</span><span class="op">)</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu">agg_lines</span><span class="op">(</span><span class="va">l</span><span class="op">)</span>, </span>
+<span>                                                    level <span class="op">=</span> <span class="va">l</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">nets</span><span class="op">$</span><span class="va">level</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">nets</span><span class="op">$</span><span class="va">level</span>, levels <span class="op">=</span> <span class="va">LEVELS</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># white lines alone drown on plasma's bright end -- case them in dark grey</span></span>

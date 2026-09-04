@@ -19,11 +19,16 @@
 - [`pypsa_eur_41_gs`](https://optimal2050.github.io/reneuro/reference/pypsa_eur_41_gs.md)
   : Map of the 41-region European system
 - [`pypsa_eur_nuts3`](https://optimal2050.github.io/reneuro/reference/pypsa_eur_models.md)
-  [`pypsa_eur_289`](https://optimal2050.github.io/reneuro/reference/pypsa_eur_models.md)
-  [`pypsa_eur_1035`](https://optimal2050.github.io/reneuro/reference/pypsa_eur_models.md)
   [`pypsa_eur_41`](https://optimal2050.github.io/reneuro/reference/pypsa_eur_models.md)
   [`pypsa_eur_5`](https://optimal2050.github.io/reneuro/reference/pypsa_eur_models.md)
   [`pypsa_eur_5cp`](https://optimal2050.github.io/reneuro/reference/pypsa_eur_models.md)
+  [`pypsa_eur_41v`](https://optimal2050.github.io/reneuro/reference/pypsa_eur_models.md)
+  [`pypsa_eur_41_2025`](https://optimal2050.github.io/reneuro/reference/pypsa_eur_models.md)
+  [`pypsa_eur_41_2030`](https://optimal2050.github.io/reneuro/reference/pypsa_eur_models.md)
+  [`pypsa_eur_41_2035`](https://optimal2050.github.io/reneuro/reference/pypsa_eur_models.md)
+  [`pypsa_eur_41_2040`](https://optimal2050.github.io/reneuro/reference/pypsa_eur_models.md)
+  [`pypsa_eur_41_2045`](https://optimal2050.github.io/reneuro/reference/pypsa_eur_models.md)
+  [`pypsa_eur_41_2050`](https://optimal2050.github.io/reneuro/reference/pypsa_eur_models.md)
   : Converted PyPSA-Eur models
 - [`reneuro_example()`](https://optimal2050.github.io/reneuro/reference/reneuro_example.md)
   : Path to an example PyPSA-Eur file shipped with reneuro

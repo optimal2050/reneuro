@@ -7,7 +7,8 @@ library(dplyr)
 ```
 
 This article uses only shipped data. It needs no PyPSA-Eur clone and no
-solver.
+solver. For what the *sources* look like – the weather cutout, the
+measured demand, the plant fleet – see the data-sources article.
 
 Three datasets describe the regions the models are built on: `nuts_gs`
 (the geography and the data attached to it), `nuts_load` (demand) and
@@ -17,7 +18,7 @@ differs by quantity: capacities sum, per-capita values take a weighted
 mean, and peaks and impedances have to be recomputed rather than
 combined.
 
-## 1. Geography: five nested levels
+## 1. Geography: nested levels
 
 ``` r
 
@@ -40,7 +41,15 @@ is per country, i.e. 36 separate markets.
 
 ``` r
 
-energyRt::plot_geoscale(gs, type = "stack")
+library(geoscales)
+
+lt <- as.data.frame(geoscale_leaftable(nuts_gs))
+# d  <- lt[, c("nuts3", "pot_onwind")]      # atom key + value column
+
+geoscale_autoplot(nuts_gs, type = "stack", direction = "down",
+                  view = "oblique", colour = NA, 
+                  frame = T, frame_fill = ggplot2::alpha("grey60", 0.12),
+                  data = lt, z = "cap_mw", rule = "share")
 ```
 
 ![](data_files/figure-html/stack-1.png)
@@ -583,7 +592,8 @@ Show code
 
 ``` r
 
-nets <- bind_rows(lapply(LEVELS, function(l) mutate(agg_lines(l), level = l)))
+nets <- bind_rows(lapply(LEVELS, function(l) mutate(agg_lines(l), 
+                                                    level = l)))
 nets$level <- factor(nets$level, levels = LEVELS)
 
 # white lines alone drown on plasma's bright end -- case them in dark grey

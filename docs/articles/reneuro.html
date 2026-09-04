@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">reneuro</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.2.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.3.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,6 +42,9 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/translation.html">Translation</a></li>
     <li><a class="dropdown-item" href="../articles/data.html">The data</a></li>
+    <li><a class="dropdown-item" href="../articles/data-sources.html">The data sources</a></li>
+    <li><a class="dropdown-item" href="../articles/report-model.html">Model report</a></li>
+    <li><a class="dropdown-item" href="../articles/report-scenario.html">Scenario report</a></li>
     <li><a class="dropdown-item" href="../articles/about.html">About</a></li>
   </ul>
 </li>
@@ -106,8 +109,13 @@ especially if you keep model runs outside the project:</p>
 ready-made back-end configurations; setting a default saves passing
 <code>solver =</code> to every call:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">solver_options</span><span class="op">)</span>                       <span class="co"># what is configured</span></span>
-<span><span class="fu"><a href="https://energyRt.org/reference/default_solver.html" class="external-link">set_default_solver</a></span><span class="op">(</span><span class="va">solver_options</span><span class="op">$</span><span class="va">glpk</span><span class="op">)</span>     <span class="co"># GLPK for small models</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">solver_options</span><span class="op">)</span>                            <span class="co"># what is configured</span></span>
+<span><span class="fu"><a href="https://energyRt.org/reference/default_solver.html" class="external-link">set_default_solver</a></span><span class="op">(</span><span class="va">solver_options</span><span class="op">$</span><span class="va">julia_highs</span><span class="op">)</span>   <span class="co"># or $pyomo_highs</span></span></code></pre></div>
+<p>HiGHS through Julia or Python is the one to set. GLPK will solve the
+five-node models this article uses — and does, below — but it does not
+scale: at 41 nodes it was still iterating after ten minutes on a problem
+the HiGHS barrier closes in under four. <code><a href="../reference/open_solvers.html">open_solvers()</a></code>
+reports what this machine has.</p>
 <p><strong>How much it tells you.</strong> Verbosity is a level, not a
 flag: <code>0</code> silent, <code>1</code> progress, <code>2</code> and
 above increasingly detailed.</p>
@@ -173,10 +181,13 @@ model interpolates to roughly ten million parameter rows.</p>
 </h2>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://energyRt.org/reference/write.html" class="external-link">write_script</a></span><span class="op">(</span><span class="va">scen</span>, solver <span class="op">=</span> <span class="va">solver_options</span><span class="op">$</span><span class="va">glpk</span><span class="op">)</span></span>
-<span><span class="va">scen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://energyRt.org/reference/read.html" class="external-link">read_solution</a></span><span class="op">(</span><span class="fu"><a href="https://energyRt.org/reference/solve_model.html" class="external-link">solve_scenario</a></span><span class="op">(</span><span class="va">scen</span>, wait <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>GLPK is sufficient at this size. Past a few dozen regions, use
-Julia/HiGHS or Pyomo/HiGHS; <code><a href="../articles/about.html">vignette("about")</a></code> has the
-measured times, and <a href="../reference/benchmark_solvers.html"><code>benchmark_solvers()</code></a>
+<span><span class="va">scen</span> <span class="op">&lt;-</span> <span class="fu">read_solution</span><span class="op">(</span><span class="fu"><a href="https://energyRt.org/reference/solve_model.html" class="external-link">solve_scenario</a></span><span class="op">(</span><span class="va">scen</span>, wait <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>GLPK is named here because it is what produced
+<code>be_solved</code>, and at five nodes it is the quickest way to a
+result. It is the exception rather than the habit: use Julia/HiGHS or
+Pyomo/HiGHS for anything larger. <code><a href="../articles/about.html">vignette("about")</a></code> has the
+measured times – 10 s against 24 s at five nodes, 2,158 s against 79 s
+at sixty-nine – and <a href="../reference/benchmark_solvers.html"><code>benchmark_solvers()</code></a>
 repeats them on another machine.</p>
 <p>Those two chunks produced <code>be_solved</code>, which ships with
 the package:</p>
@@ -235,9 +246,7 @@ detail away.</p>
 <span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/attach_weather.html">attach_weather</a></span><span class="op">(</span><span class="va">pypsa_eur_nuts3</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"onwind"</span>, <span class="st">"solar"</span>, <span class="st">"ror"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://energyRt.org/reference/subset_model_regions.html" class="external-link">subset_model_regions</a></span><span class="op">(</span>region <span class="op">=</span> <span class="va">pt</span><span class="op">)</span></span></code></pre></div>
 <p><code>pypsa_eur_nuts3</code> ships without its weather profiles, so
-<code><a href="../reference/attach_weather.html">attach_weather()</a></code> puts back the ones the study needs. Use
-<code>pypsa_eur_1035</code> instead for the same regions on a four-day
-sample, which carries its weather already.</p>
+<code><a href="../reference/attach_weather.html">attach_weather()</a></code> puts back the ones the study needs.</p>
 <p>The result is Portugal at 22 nodes — every NUTS3 region containing a
 substation, with the network between them intact. <code>region</code>
 accepts any subset of the model’s regions, so a study area need not

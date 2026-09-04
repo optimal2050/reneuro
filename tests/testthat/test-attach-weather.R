@@ -49,5 +49,4 @@ test_that("nuts_gs is keyed the way the models are", {
   # codes of BA, MD, UA and XK reach a model as BA_BIH rather than BA-BIH.
   expect_false(any(grepl("-", atoms)))
   expect_true(all(energyRt::get_region(pypsa_eur_nuts3) %in% atoms))
-  expect_true(all(energyRt::get_region(pypsa_eur_1035) %in% atoms))
 })

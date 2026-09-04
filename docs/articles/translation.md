@@ -130,10 +130,13 @@ Capacity belongs to the trade object rather than to a route, so each bus
 pair becomes its own object and parallel lines on a pair are merged by
 summing `s_nom` — indistinguishable in a transport model in any case.
 
-Quadratic AC losses are linearised. With `tranches = NULL` the corridor
-gets one flat `teff` evaluated at a chosen loading; the default splits
-it into equal capacity tranches with rising loss rates, which
-approximates the curve without integer variables.
+Quadratic AC losses are linearised. The default gives each corridor one
+flat `teff` evaluated at a chosen loading; `tranches = n` splits it into
+`n` equal capacity tranches with rising loss rates instead,
+approximating the curve without integer variables. Tranches were the
+default once, which is why `pypsa_eur_5` still carries six of them – at
+continental scale they cost a generated constraint per corridor, tranche
+and timeslice, which is why the larger models are flat.
 
 ## Availability leaves the technology object
 

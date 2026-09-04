@@ -40,7 +40,10 @@ if (inherits(init, "try-error")) {
 
 # `reneuro` is the intro ("Get started") by pkgdown convention, being named
 # after the package; the rest are articles.
-for (a in c("reneuro", "data", "translation", "about")) {
+# The two report articles live in vignettes/articles/ -- they are website-only
+# (they embed docs/reports/) and are named by their path.
+for (a in c("reneuro", "data", "translation", "articles/report-model",
+            "articles/report-scenario", "about")) {
   r <- try(pkgdown::build_article(a, pkg = ".", new_process = FALSE),
            silent = TRUE)
   failed <- inherits(r, "try-error")
@@ -62,6 +65,15 @@ for (nm in names(steps)) {
     message("  ", nm, " FAILED: ", conditionMessage(attr(r, "condition")))
     ok <- FALSE
   }
+}
+
+# Rendered example reports are committed under pkgdown/assets/reports/ and
+# copied to docs/reports/ by init_site(); the report articles link them. They
+# are built by data-raw/example_reports.R rather than here -- a scenario report
+# needs a solve, which does not belong in a site build.
+if (!dir.exists("docs/reports")) {
+  message("  MISSING after build: docs/reports (the report articles link it)")
+  ok <- FALSE
 }
 
 # GitHub Pages runs Jekyll unless told not to. `build_site()` would write

@@ -8,8 +8,8 @@
 An \link[energyRt:energyRt]{energyRt} \code{scenario} object with its solution attached.
 }
 \source{
-Solved by \code{data-raw/make_be_solved.R}. Same data licence and
-provenance as \link{pypsa_eur_models}.
+\link{pypsa_eur_5} interpolated and solved with GLPK. Same data licence
+and provenance as \link{pypsa_eur_models}.
 }
 \usage{
 be_solved
@@ -19,13 +19,14 @@ be_solved
 can show results without requiring a solver at build time.
 }
 \details{
-The objective is \code{164664296.503735}. That figure is a regression gate rather
-than a curiosity: \code{data-raw/make_be_solved.R} refuses to save a scenario that
-does not reproduce it, so this object cannot silently drift.
+The objective is \code{164899752.517096}. That figure is a regression gate rather
+than a curiosity: the build (\code{reneuro.dev/data-raw/make_be_solved.R})
+refuses to save a scenario that does not reproduce it, so this object cannot
+silently drift.
 
-The value corresponds to the six-tranche loss default. Converting the same
-network with \code{tranches = NULL} -- a single flat loss rate, rung 1 of the
-transmission ladder -- gives \code{164899752.517096} instead.
+The value corresponds to the current flat single-loss-rate corridors.
+The retired six-tranche default gave \code{164664296.503735}; converting with
+\code{tranches = 6} still reproduces that rung of the transmission ladder.
 }
 \examples{
 attr(be_solved, "reneuro_provenance")$objective

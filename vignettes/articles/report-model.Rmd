@@ -1,0 +1,32 @@
+---
+title: "Model report"
+---
+
+A model report documents what goes **into** a run: the regions, horizon and
+calendar, an inventory of commodities, supplies, demands and trade, and then
+every technology and storage in turn with its diagram and parameters. It
+describes assumptions, not results — `vignette("report-scenario")` is the
+counterpart for a solved run.
+
+The one below is `pypsa_eur_41`, 41 nodes over the full year. Deriving it is one
+call, and takes about five seconds:
+
+```{r derive, eval = FALSE}
+library(energyRt)
+library(reneuro)
+
+report(pypsa_eur_41)
+```
+
+Without arguments the report lands in `get_reports_path()` and opens in the
+browser. `template = "summary"` drops the per-process sections; `format =`
+also accepts `"pdf"`, `"tex"` and `"docx"`; `name = "E_CCGT"` narrows the whole
+thing to a datasheet for one process. `?report` covers the rest.
+
+<p><a href="../reports/pypsa_eur_41_model.html" target="_blank"><strong>Open the
+report in its own tab</strong></a></p>
+
+<iframe src="../reports/pypsa_eur_41_model.html"
+        title="pypsa_eur_41 model report"
+        style="width:100%; height:900px; border:1px solid #ccc; border-radius:4px;">
+</iframe>

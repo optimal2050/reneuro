@@ -1,9 +1,12 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://optimal2050.github.io/reneuro/404.html</loc></url>
 <url><loc>https://optimal2050.github.io/reneuro/articles/about.html</loc></url>
+<url><loc>https://optimal2050.github.io/reneuro/articles/data-sources.html</loc></url>
 <url><loc>https://optimal2050.github.io/reneuro/articles/data.html</loc></url>
 <url><loc>https://optimal2050.github.io/reneuro/articles/index.html</loc></url>
 <url><loc>https://optimal2050.github.io/reneuro/articles/reneuro.html</loc></url>
+<url><loc>https://optimal2050.github.io/reneuro/articles/report-model.html</loc></url>
+<url><loc>https://optimal2050.github.io/reneuro/articles/report-scenario.html</loc></url>
 <url><loc>https://optimal2050.github.io/reneuro/articles/translation.html</loc></url>
 <url><loc>https://optimal2050.github.io/reneuro/authors.html</loc></url>
 <url><loc>https://optimal2050.github.io/reneuro/index.html</loc></url>
@@ -17,6 +20,8 @@
 <url><loc>https://optimal2050.github.io/reneuro/reference/nuts_lines.html</loc></url>
 <url><loc>https://optimal2050.github.io/reneuro/reference/nuts_load.html</loc></url>
 <url><loc>https://optimal2050.github.io/reneuro/reference/open_solvers.html</loc></url>
+<url><loc>https://optimal2050.github.io/reneuro/reference/pypsa_eur_1035.html</loc></url>
+<url><loc>https://optimal2050.github.io/reneuro/reference/pypsa_eur_289.html</loc></url>
 <url><loc>https://optimal2050.github.io/reneuro/reference/pypsa_eur_41_gs.html</loc></url>
 <url><loc>https://optimal2050.github.io/reneuro/reference/pypsa_eur_models.html</loc></url>
 <url><loc>https://optimal2050.github.io/reneuro/reference/reneuro-package.html</loc></url>
@@ -24,5 +29,7 @@
 <url><loc>https://optimal2050.github.io/reneuro/reference/reneuro_example_geo.html</loc></url>
 <url><loc>https://optimal2050.github.io/reneuro/reference/weather_resources.html</loc></url>
 <url><loc>https://optimal2050.github.io/reneuro/reference/wx_nuts3.html</loc></url>
+<url><loc>https://optimal2050.github.io/reneuro/reports/pypsa_eur_41_model.html</loc></url>
+<url><loc>https://optimal2050.github.io/reneuro/reports/pypsa_eur_41_scenario.html</loc></url>
 </urlset>
 

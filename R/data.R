@@ -1,6 +1,6 @@
 # Documentation for the shipped models ----------------------------------------
 #
-# All four objects are DERIVED. data-raw/ holds the scripts that rebuild them
+# All model objects are DERIVED. data-raw/ holds the scripts that rebuild them
 # and records the upstream commit; each object also carries a
 # `reneuro_provenance` attribute, so an .rda taken out of context can still say
 # where it came from:
@@ -9,15 +9,14 @@
 
 #' Converted PyPSA-Eur models
 #'
-#' Three unsolved [energyRt] models converted from PyPSA-Eur networks, spanning
-#' the range this package is built for: a full European system, a small one that
-#' runs in seconds, and a copperplate reference for it.
+#' Unsolved [energyRt] models converted from PyPSA-Eur networks, spanning the
+#' range this package is built for: the European system at several spatial
+#' resolutions, a small Belgian model that runs in seconds with its copperplate
+#' reference, a one-year horizon series, and a vintaged 2025-2050 pathway
+#' model. All are built on 2025 weather and measured ENTSO-E 2025 load, and
+#' are loaded lazily, so they cost nothing until touched.
 #'
 #' @details
-#' `pypsa_eur_41` is a 41-region European electricity system over a full year.
-#' It is the realistic case, and at 12.6 MB it is by far the largest object
-#' here; it is loaded lazily, so it costs nothing until touched.
-#'
 #' `pypsa_eur_5` is PyPSA-Eur's own Belgium example: five regions, one week
 #' (168 hourly snapshots). It is small enough to solve in seconds, which makes
 #' it the model every example and test uses.
@@ -27,39 +26,65 @@
 #' for what the network representation costs: a copperplate cannot be more
 #' expensive than any bounded version of itself, so it is the floor.
 #'
-#' `pypsa_eur_289` is the working model at continental scale. PyPSA-Eur is
-#' normally clustered to 50-250 nodes for computational reasons; this sits at
-#' the top of that range, aggregating the NUTS3 network to NUTS2 over the full
-#' year. 296 NUTS2 regions yield 289 AC nodes: seven contain no substation of
-#' their own and merge into a neighbour, **retaining their demand and
-#' generation** in the cluster they join. Aggregation uses
-#' `aggregate_pypsa()` -- capacities sum, intensive quantities take
-#' capacity-weighted means, intra-cluster branches are dropped, and corridor
-#' lengths are recomputed from cluster centroids.
+#' `pypsa_eur_41` is PyPSA-Eur's own k-means clustering at 41 nodes over the
+#' full year, so it is directly comparable to a PyPSA-Eur run at that size. Its
+#' corridors carry a single flat loss rate: the six-tranche version it replaced
+#' produced 224,640 generated constraints on a 288-slice calendar, which no
+#' open solver generates in reasonable time. It is also the first model built
+#' with the fuel price separated -- `varom` holds the true VOM and each fuel's
+#' supply carries its price -- so a gas-price sensitivity is a change to one
+#' number rather than a re-conversion.
 #'
-#' `pypsa_eur_1035` is the NUTS3 network, **experimental**, on a four-day
-#' seasonal sample (96 of 8,760 hourly snapshots). It is the finest resolution
-#' the data supports and is intended as the starting point for aggregation
-#' work in R, rather than as a model to solve routinely. NUTS3 yields 1,035 AC
-#' nodes rather than 1,477 because 442 regions contain no substation and merge
-#' into neighbours; as above, their consumption is retained. Trade uses one
-#' flat loss rate per corridor and a transport formulation without Kirchhoff's
-#' voltage law, which is what keeps it solvable at all. It interpolates to
-#' roughly 10 million parameter rows and a linear programme of 1.3 million rows
-#' after presolve -- see [benchmark_solvers()] for what that costs.
+#' `pypsa_eur_nuts3` is the NUTS3 network over the **full year** (8,760
+#' hourly snapshots) -- the finest resolution the data supports, intended as
+#' the starting point for aggregation and study-area work in R rather than as
+#' a model to solve whole. NUTS3 yields 1,035 AC nodes rather than 1,477
+#' because 442 regions contain no substation and merge into neighbours,
+#' **retaining their demand and generation** in the region they join. Trade
+#' uses one flat loss rate per corridor and a transport formulation without
+#' Kirchhoff's voltage law. Its hourly weather profiles are seven eighths of
+#' its size, so they ship as separate `wx_nuts3_*` objects and are put back
+#' with [attach_weather()] -- a model without them cannot be interpolated,
+#' because its technologies reference them by name. It carries [nuts_gs], so
+#' `energyRt::aggregate_model_regions(pypsa_eur_nuts3, level = "nuts2")` needs
+#' no second argument; the coarser NUTS levels (289 regions at NUTS2, 106 at
+#' NUTS1, 36 at NUTS0) are derived that way rather than shipped.
 #'
-#' `pypsa_eur_nuts3` is the same NUTS3 network over the **full year** (8,760
-#' hourly snapshots). Its hourly weather profiles are seven eighths of its
-#' size, so they ship as separate `wx_nuts3_*` objects and are put back with
-#' [attach_weather()] -- a model without them cannot be interpolated, because
-#' its technologies reference them by name. It carries [nuts_gs], so
-#' `energyRt::aggregate_model_regions(pypsa_eur_nuts3, level = "nuts1")` needs
-#' no second argument; the coarser NUTS levels are derived that way rather than
-#' shipped.
+#' `pypsa_eur_41_2025` ... `pypsa_eur_41_2050` are the **one-year horizon
+#' series**: the 41-node system rebuilt per planning horizon in five-year
+#' steps. Weather, load and network are identical to `pypsa_eur_41`; what
+#' changes with the horizon is the cost vintage (technology-data v0.14.0 for
+#' that year) and the existing fleet, aged by two rules kept separable in
+#' provenance -- announced `DateOut` schedules (114 GW, mostly coal and
+#' lignite phase-outs) and assumed carrier-lifetime retirement, which
+#' reproduces what PyPSA's myopic mode does between horizons (its overnight
+#' mode does no ageing at all). `attr(m, "reneuro_provenance")$retirement`
+#' holds the per-carrier split, so the assumed half can be identified and
+#' discounted. The series ships **without weather**: all six share
+#' `pypsa_eur_41`'s profiles, so attach them before interpolating --
+#' `attach_weather(pypsa_eur_41_2030, from = pypsa_eur_41)`.
 #'
-#' All were converted with `cost_source = "network"`, taking costs from the
-#' network rather than from a separate cost assumption, so they agree with the
-#' PyPSA solve they can be compared against.
+#' `pypsa_eur_41v` is the **vintaged multi-year model**: one model over the
+#' 2025--2050 horizon (five-year milestones) where each carrier is a single
+#' technology whose existing fleet is split into build-year vintages -- the
+#' 17 `grouping_years_power` bins PyPSA's myopic mode uses -- each with its
+#' own efficiency (from that bin's cost table, clamped to 2025) and a
+#' milestone-by-milestone surviving-stock series from the same two retirement
+#' rules as the horizon series. Alongside the closed bins, each investable
+#' carrier has one open path with year-keyed investment costs from the six
+#' horizon cost tables, so build-year economics are endogenous. Carriers with
+#' no existing fleet (solar-hsat, offwind DC and floating) stay un-vintaged
+#' and investable. Demand is flat at 2025; like the horizon series it ships
+#' without weather -- `attach_weather(pypsa_eur_41v, from = pypsa_eur_41)`.
+#' `energyRt::getVariants()` and `energyRt::variantSummary()` list the
+#' vintages; `attr(m, "reneuro_provenance")` records the bin table and the
+#' announced/assumed retirement split.
+#'
+#' The continental models are built on **2025 weather and load** (ENTSO-E
+#' measured demand; the `europe-2025-sarah3-era5` cutout). All were converted
+#' with `cost_source = "network"`, taking costs from the network rather than
+#' from a separate cost assumption, so they agree with the PyPSA solve they
+#' can be compared against.
 #'
 #' @format An [energyRt] `model` object.
 #'
@@ -78,24 +103,31 @@
 #' Moldova and Ukraine is overstated as a result). The same file records that
 #' the OPSD and ENTSO-E demand series carry unclear upstream terms.
 #'
-#' Regenerated by `data-raw/make_models.R`.
+#' The build scripts live in two places. This package's `data-raw/` holds
+#' `pypsa_eur_41.R`, `pypsa_eur_nuts3.R`, `pypsa_eur_41_years.R` and
+#' `pypsa_eur_41v.R`; `pypsa_eur_5` and `pypsa_eur_5cp` are built by the
+#' converter workspace's `reneuro.dev/data-raw/make_models.R`, from the network
+#' also bundled as `reneuro_example("BE_base_s_5_elec.nc")`. All shipped
+#' models were rebuilt 2026-09-03 with the corrected calendar chronology:
+#' the converter used to emit the timetable hour-major, which chained the
+#' storage balance across days at the same wall-clock hour -- storage could
+#' not carry noon into evening. The Belgian pair now also carries the
+#' current defaults (flat corridors, sanitised calendar names), and
+#' `be_solved`'s objective gate moved accordingly (verified +0.386% above
+#' PyPSA's own solve of the same network, the documented
+#' transport-relaxation class of difference).
 #'
 #' @examples
 #' # Provenance travels with the object.
 #' str(attr(pypsa_eur_5, "reneuro_provenance"), max.level = 1)
 #' @name pypsa_eur_models
-#' @aliases pypsa_eur_1035 pypsa_eur_289 pypsa_eur_41 pypsa_eur_5 pypsa_eur_5cp
-#'   pypsa_eur_nuts3
+#' @aliases pypsa_eur_41 pypsa_eur_5 pypsa_eur_5cp
+#'   pypsa_eur_nuts3 pypsa_eur_41_2025 pypsa_eur_41_2030 pypsa_eur_41_2035
+#'   pypsa_eur_41_2040 pypsa_eur_41_2045 pypsa_eur_41_2050 pypsa_eur_41v
 NULL
 
 #' @rdname pypsa_eur_models
 "pypsa_eur_nuts3"
-
-#' @rdname pypsa_eur_models
-"pypsa_eur_289"
-
-#' @rdname pypsa_eur_models
-"pypsa_eur_1035"
 
 #' @rdname pypsa_eur_models
 "pypsa_eur_41"
@@ -106,23 +138,45 @@ NULL
 #' @rdname pypsa_eur_models
 "pypsa_eur_5cp"
 
+#' @rdname pypsa_eur_models
+"pypsa_eur_41v"
+
+#' @rdname pypsa_eur_models
+"pypsa_eur_41_2025"
+
+#' @rdname pypsa_eur_models
+"pypsa_eur_41_2030"
+
+#' @rdname pypsa_eur_models
+"pypsa_eur_41_2035"
+
+#' @rdname pypsa_eur_models
+"pypsa_eur_41_2040"
+
+#' @rdname pypsa_eur_models
+"pypsa_eur_41_2045"
+
+#' @rdname pypsa_eur_models
+"pypsa_eur_41_2050"
+
 #' A solved Belgium scenario
 #'
 #' [pypsa_eur_5] interpolated and solved with GLPK. It ships so the vignettes
 #' can show results without requiring a solver at build time.
 #'
 #' @details
-#' The objective is `164664296.503735`. That figure is a regression gate rather
-#' than a curiosity: `data-raw/make_be_solved.R` refuses to save a scenario that
-#' does not reproduce it, so this object cannot silently drift.
+#' The objective is `164899752.517096`. That figure is a regression gate rather
+#' than a curiosity: the build (`reneuro.dev/data-raw/make_be_solved.R`)
+#' refuses to save a scenario that does not reproduce it, so this object cannot
+#' silently drift.
 #'
-#' The value corresponds to the six-tranche loss default. Converting the same
-#' network with `tranches = NULL` -- a single flat loss rate, rung 1 of the
-#' transmission ladder -- gives `164899752.517096` instead.
+#' The value corresponds to the current flat single-loss-rate corridors.
+#' The retired six-tranche default gave `164664296.503735`; converting with
+#' `tranches = 6` still reproduces that rung of the transmission ladder.
 #'
 #' @format An [energyRt] `scenario` object with its solution attached.
-#' @source Solved by `data-raw/make_be_solved.R`. Same data licence and
-#'   provenance as [pypsa_eur_models].
+#' @source [pypsa_eur_5] interpolated and solved with GLPK. Same data licence
+#'   and provenance as [pypsa_eur_models].
 #' @examples
 #' attr(be_solved, "reneuro_provenance")$objective
 "be_solved"

@@ -36,7 +36,7 @@ library(reneuro)
 library(dplyr)
 ```
 
-This article uses only shipped data. It needs no PyPSA-Eur clone and no solver.
+This article uses only shipped data. It needs no PyPSA-Eur clone and no solver. For what the *sources* look like -- the weather cutout, the measured demand, the plant fleet -- see the data-sources article.
 
 Three datasets describe the regions the models are built on: `nuts_gs` (the
 geography and the data attached to it), `nuts_load` (demand) and `nuts_lines`
@@ -45,13 +45,18 @@ levels and gives the arithmetic used, which differs by quantity: capacities sum,
 per-capita values take a weighted mean, and peaks and impedances have to be
 recomputed rather than combined.
 
-## 1. Geography: five nested levels
+## 1. Geography: nested levels
 
 ```{r frames, eval = HAS_GEO}
 gs <- nuts_gs
 vapply(geoscales::geoscale_geoframes(gs),
        function(f) length(geoscales::geoscale_regions(gs, f)), 0L)
 ```
+
+```{r}
+
+```
+
 
 1,477 NUTS3 atoms group into 296 NUTS2, 109 NUTS1, 36 countries and a single
 `europe` root. Every finer code has exactly one parent; the build asserts this
@@ -62,8 +67,17 @@ can be declared. `newCommodity(geoframe = "europe")` gives one Europe-wide CO2
 allowance or gas market; without it the coarsest balance is per country, i.e. 36
 separate markets.
 
-```{r stack, eval = MAPS, fig.height = 6}
-energyRt::plot_geoscale(gs, type = "stack")
+```{r stack, eval = MAPS, fig.height = 7}
+library(geoscales)
+
+lt <- as.data.frame(geoscale_leaftable(nuts_gs))
+# d  <- lt[, c("nuts3", "pot_onwind")]      # atom key + value column
+
+geoscale_autoplot(nuts_gs, type = "stack", direction = "down",
+                  view = "oblique", colour = NA, 
+                  frame = T, frame_fill = ggplot2::alpha("grey60", 0.12),
+                  data = lt, z = "cap_mw", rule = "share")
+
 ```
 
 The same hierarchy as an icicle plot:
@@ -362,7 +376,7 @@ load_map <- function(lv) {
 BOX <- list(xlim = c(-11, 32), ylim = c(34, 71))   # crop overseas territories
 ```
 
-```{r load-maps, eval = MAPS, fig.height = 7, fold = TRUE}
+```{r load-maps, eval = MAPS, fig.height = 6, fold = TRUE}
 # rbind.sf, not bind_rows: the data-frame route drops the CRS and coord_sf()
 # then fails inside the projection step.
 LEVELS <- c("nuts0", "nuts1", "nuts2", "nuts3")
@@ -483,7 +497,8 @@ Straight chords between region centroids, which is what the aggregated model
 contains:
 
 ```{r net-maps, eval = MAPS, fig.height = 7, fold = TRUE}
-nets <- bind_rows(lapply(LEVELS, function(l) mutate(agg_lines(l), level = l)))
+nets <- bind_rows(lapply(LEVELS, function(l) mutate(agg_lines(l), 
+                                                    level = l)))
 nets$level <- factor(nets$level, levels = LEVELS)
 
 # white lines alone drown on plasma's bright end -- case them in dark grey

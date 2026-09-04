@@ -3,10 +3,13 @@ pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   about: about.html
+  articles/data-sources: data-sources.html
   data: data.html
   reneuro: reneuro.html
+  articles/report-model: report-model.html
+  articles/report-scenario: report-scenario.html
   translation: translation.html
-last_built: 2026-09-02T01:17Z
+last_built: 2026-09-04T11:57Z
 urls:
   reference: https://optimal2050.github.io/reneuro/reference
   article: https://optimal2050.github.io/reneuro/articles

@@ -9,7 +9,7 @@ can show results without requiring a solver at build time."><meta property="og:i
 
     <a class="navbar-brand me-2" href="../index.html">reneuro</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.2.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.3.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,6 +23,9 @@ can show results without requiring a solver at build time."><meta property="og:i
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/translation.html">Translation</a></li>
     <li><a class="dropdown-item" href="../articles/data.html">The data</a></li>
+    <li><a class="dropdown-item" href="../articles/data-sources.html">The data sources</a></li>
+    <li><a class="dropdown-item" href="../articles/report-model.html">Model report</a></li>
+    <li><a class="dropdown-item" href="../articles/report-scenario.html">Scenario report</a></li>
     <li><a class="dropdown-item" href="../articles/about.html">About</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -63,17 +66,18 @@ can show results without requiring a solver at build time.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
-    <p>Solved by <code>data-raw/make_be_solved.R</code>. Same data licence and
-provenance as <a href="pypsa_eur_models.html">pypsa_eur_models</a>.</p>
+    <p><a href="pypsa_eur_models.html">pypsa_eur_5</a> interpolated and solved with GLPK. Same data licence
+and provenance as <a href="pypsa_eur_models.html">pypsa_eur_models</a>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The objective is <code>164664296.503735</code>. That figure is a regression gate rather
-than a curiosity: <code>data-raw/make_be_solved.R</code> refuses to save a scenario that
-does not reproduce it, so this object cannot silently drift.</p>
-<p>The value corresponds to the six-tranche loss default. Converting the same
-network with <code>tranches = NULL</code> – a single flat loss rate, rung 1 of the
-transmission ladder – gives <code>164899752.517096</code> instead.</p>
+    <p>The objective is <code>164899752.517096</code>. That figure is a regression gate rather
+than a curiosity: the build (<code>reneuro.dev/data-raw/make_be_solved.R</code>)
+refuses to save a scenario that does not reproduce it, so this object cannot
+silently drift.</p>
+<p>The value corresponds to the current flat single-loss-rate corridors.
+The retired six-tranche default gave <code>164664296.503735</code>; converting with
+<code>tranches = 6</code> still reproduces that rung of the transmission ladder.</p>
     </div>
 
     <div class="section level2">

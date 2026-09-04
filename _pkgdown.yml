@@ -65,4 +65,7 @@ articles:
   - reneuro
   - translation
   - data
+  - articles/data-sources
+  - articles/report-model
+  - articles/report-scenario
   - about

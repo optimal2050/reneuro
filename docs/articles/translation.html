@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">reneuro</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.2.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.3.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,6 +42,9 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/translation.html">Translation</a></li>
     <li><a class="dropdown-item" href="../articles/data.html">The data</a></li>
+    <li><a class="dropdown-item" href="../articles/data-sources.html">The data sources</a></li>
+    <li><a class="dropdown-item" href="../articles/report-model.html">Model report</a></li>
+    <li><a class="dropdown-item" href="../articles/report-scenario.html">Scenario report</a></li>
     <li><a class="dropdown-item" href="../articles/about.html">About</a></li>
   </ul>
 </li>
@@ -290,10 +293,14 @@ interpolation restores the cycle constraints where that matters.</p>
 bus pair becomes its own object and parallel lines on a pair are merged
 by summing <code>s_nom</code> — indistinguishable in a transport model
 in any case.</p>
-<p>Quadratic AC losses are linearised. With <code>tranches = NULL</code>
-the corridor gets one flat <code>teff</code> evaluated at a chosen
-loading; the default splits it into equal capacity tranches with rising
-loss rates, which approximates the curve without integer variables.</p>
+<p>Quadratic AC losses are linearised. The default gives each corridor
+one flat <code>teff</code> evaluated at a chosen loading;
+<code>tranches = n</code> splits it into <code>n</code> equal capacity
+tranches with rising loss rates instead, approximating the curve without
+integer variables. Tranches were the default once, which is why
+<code>pypsa_eur_5</code> still carries six of them – at continental
+scale they cost a generated constraint per corridor, tranche and
+timeslice, which is why the larger models are flat.</p>
 </div>
 <div class="section level2">
 <h2 id="availability-leaves-the-technology-object">Availability leaves the technology object<a class="anchor" aria-label="anchor" href="#availability-leaves-the-technology-object"></a>

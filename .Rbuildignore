@@ -17,4 +17,9 @@
 ^\.lintr$
 ^CITATION\.cff$
 ^scenarios$
+^reports$
+^drafts$
+^levcosts$
 ^README\.html$
+^vignettes/articles$
+^vignettes/scenarios$

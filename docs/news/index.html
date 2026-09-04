@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">reneuro</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.2.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.3.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,6 +21,9 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/translation.html">Translation</a></li>
     <li><a class="dropdown-item" href="../articles/data.html">The data</a></li>
+    <li><a class="dropdown-item" href="../articles/data-sources.html">The data sources</a></li>
+    <li><a class="dropdown-item" href="../articles/report-model.html">Model report</a></li>
+    <li><a class="dropdown-item" href="../articles/report-scenario.html">Scenario report</a></li>
     <li><a class="dropdown-item" href="../articles/about.html">About</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -46,7 +49,21 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.0.9000" id="reneuro-0009000">reneuro 0.0.0.9000<a class="anchor" aria-label="anchor" href="#reneuro-0009000"></a></h2>
-<ul><li><p><code>pypsa_eur_nuts3</code>: the NUTS3 network over the full year, 1,035 regions and 8,760 hourly snapshots. Its weather profiles ship as seven <code>wx_nuts3_*</code> objects, since the model whole is 181 MB and past GitHub’s file limit; <code><a href="../reference/attach_weather.html">attach_weather()</a></code> puts back the ones a study needs and <code><a href="../reference/weather_resources.html">weather_resources()</a></code> lists them.</p></li>
+<ul><li><p><code>pypsa_eur_289</code> and <code>pypsa_eur_1035</code> are no longer shipped. The coarser NUTS levels are derived from <code>pypsa_eur_nuts3</code> with <code><a href="https://energyRt.org/reference/aggregate_model_regions.html" class="external-link">energyRt::aggregate_model_regions()</a></code>, and subsetting starts from <code>pypsa_eur_nuts3</code> directly.</p></li>
+<li><p>All shipped models are rebuilt with corrected calendar chronology: converter-built calendars ordered timeslices hour-major, so storage could not carry energy from one hour to the next. The converted Belgium model now reproduces PyPSA’s solution within 0.02%. <code>be_solved</code> solves to a new objective gate (164,899,752.517).</p></li>
+<li><p><code>convert_pypsa()</code> gains <code>expand_transmission</code>: corridors become investable at PyPSA’s line costs, for comparing against networks solved with transmission expansion.</p></li>
+<li><p>All four continental models are rebuilt on <strong>2025 weather and load</strong> (ENTSO-E measured demand, the <code>europe-2025-sarah3-era5</code> cutout). Regions, object names and the existing fleet are unchanged from the 2013 build; the demand year total moves from 3,356 to 3,163 TWh.</p></li>
+<li><p>New one-year horizon series <code>pypsa_eur_41_2025</code> … <code>pypsa_eur_41_2050</code>: per-horizon cost vintages and a fleet aged by announced <code>DateOut</code> schedules plus assumed carrier lifetimes, recorded separately in provenance. The series ships without weather; <code>attach_weather(m, from = pypsa_eur_41)</code> restores it.</p></li>
+<li><p>New vintaged multi-year model <code>pypsa_eur_41v</code>: the 41-node system over 2025-2050 milestones, existing fleet split into build-year vintages with per-vintage efficiency and retirement, plus one investable path per carrier with year-keyed costs. Ships without weather, like the horizon series.</p></li>
+<li><p><code><a href="../reference/attach_weather.html">attach_weather()</a></code> gains <code>from =</code>, to copy weather objects from another model.</p></li>
+<li><p>Every model carries a <code>reneuro_provenance</code> attribute recording the upstream commit and the weather, load, capacity and cost years; the build scripts refuse to save without it.</p></li>
+<li><p><code>pypsa_eur_41</code> is rebuilt. Its corridors are flat: the six loss tranches it carried – the converter’s default when it was built – became 224,640 generated constraints on a 288-slice calendar, 91% of the solver exchange files, and no open solver generated them in reasonable time. Every other continental model was already <code>tranches = NULL</code>.</p></li>
+<li><p><code>pypsa_eur_41</code> also has its fuel costs separated: <code>varom</code> holds the true VOM and each fuel’s supply carries its price, taken from the cost table the network was built from. The objective is unchanged – the split is exact – and the fuel price is now a number you can vary. Its regions, object names and technology stock are unchanged; only trade and the cost split differ.</p></li>
+<li><p>Every technology and storage port carries its commodity’s unit.</p></li>
+<li><p><code>data-raw/pypsa_eur_41.R</code> builds it, so all six shipped models now have a build script. The docs name where each lives: this package’s <code>data-raw/</code> for the continental models, <code>reneuro.dev/data-raw/</code> for the Belgian ones.</p></li>
+<li><p>A data-sources article shows the upstream inputs – the weather cutout, measured ENTSO-E demand, the plant fleet, the network – as maps and figures, with a source/licence table.</p></li>
+<li><p>Two website articles show what <code><a href="https://energyRt.org/reference/report.html" class="external-link">report()</a></code> produces: a model report for <code>pypsa_eur_41</code> and a scenario report for the same model solved on a sampled calendar. Each gives the call that derives it and then embeds the rendered report, built by <code>data-raw/example_reports.R</code>.</p></li>
+<li><p><code>pypsa_eur_nuts3</code>: the NUTS3 network over the full year, 1,035 regions and 8,760 hourly snapshots. Its weather profiles ship as seven <code>wx_nuts3_*</code> objects, since the model whole is 181 MB and past GitHub’s file limit; <code><a href="../reference/attach_weather.html">attach_weather()</a></code> puts back the ones a study needs and <code><a href="../reference/weather_resources.html">weather_resources()</a></code> lists them.</p></li>
 <li><p><code>pypsa_eur_nuts3</code> carries <code>nuts_gs</code>, so the coarser NUTS levels are derived rather than shipped: <code>energyRt::aggregate_model_regions(pypsa_eur_nuts3, level = "nuts1")</code> gives 36 regions at NUTS0, 106 at NUTS1 and 289 at NUTS2.</p></li>
 <li><p><code>nuts_gs</code> is now keyed the way the models are. <code>convert_pypsa()</code> rewrites every non-alphanumeric character, so the adm1 codes of Bosnia, Moldova, Ukraine and Kosovo reach a model as <code>BA_BIH</code> where the geoscale had <code>BA-BIH</code>. The two disagreed on 37 regions – every region of those four countries – and aggregating a model against the geoscale dropped them.</p></li>
 <li><p><code>nuts_gs</code> now carries per-region demand, existing capacity and renewable potential alongside area, population and GDP, and declares seven of them as weights. Rebuilt by <code>data-raw/nuts_gs.R</code>.</p></li>

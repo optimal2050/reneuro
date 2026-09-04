@@ -24,7 +24,7 @@
 suppressMessages(devtools::load_all("C:/Users/admin/Documents/R/useR/reneuro.dev",
                                     quiet = TRUE))
 suppressMessages(library(energyRt))
-NC <- "C:/Users/admin/source/pypsa-eur-v2026/resources/entsoe-all/networks/base_s_1035_elec.nc"
+NC <- "C:/Users/admin/source/pypsa-eur-v2026/resources/entsoe-2025/networks/base_s_1035_elec.nc"
 
 n <- suppressWarnings(read_pypsa(NC))
 b <- convert_pypsa(n, cost_source = "network", tranches = NULL,
@@ -49,6 +49,19 @@ if (length(wx) == 0L) stop("no weather objects to split")
 
 m@data[[1]]@data <- objs[cls != "weather"]
 pypsa_eur_nuts3 <- m
+# Carry provenance on the object itself, so a user holding only the .rda can
+# still say where it came from and which years it was built on. Weather and
+# load are the 2025 snapshots. Existing
+# renewables enter as cap.lo floors from the powerplantmatching plant database
+# (attach_renewable_powerplants); IRENASTAT is not used, so no single capacity
+# reference year applies.
+source(file.path("data-raw", "globals.R"))
+attr(pypsa_eur_nuts3, "reneuro_provenance") <- reneuro_provenance(
+  object = "pypsa_eur_nuts3", source_nc = NC,
+  convert_args = list(cost_source = "network", tranches = NULL, transmission = "transport"),
+  weather_year = 2025L, capacity_year = NA_integer_, cost_year = 2050L)
+stop_if_no_provenance(pypsa_eur_nuts3, "pypsa_eur_nuts3")
+
 usethis::use_data(pypsa_eur_nuts3, overwrite = TRUE, compress = "xz")
 
 # One object per resource, named for the resource rather than for the object it

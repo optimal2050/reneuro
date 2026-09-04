@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">reneuro</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.2.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.3.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,6 +45,9 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="articles/translation.html">Translation</a></li>
     <li><a class="dropdown-item" href="articles/data.html">The data</a></li>
+    <li><a class="dropdown-item" href="articles/data-sources.html">The data sources</a></li>
+    <li><a class="dropdown-item" href="articles/report-model.html">Model report</a></li>
+    <li><a class="dropdown-item" href="articles/report-scenario.html">Scenario report</a></li>
     <li><a class="dropdown-item" href="articles/about.html">About</a></li>
   </ul>
 </li>
@@ -78,18 +81,19 @@
 </div>
 <p><strong>A European energy system optimization model with an R interface.</strong></p>
 <p><code>r·en·euro</code> provides a European energy system model built on <a href="https://energyRt.org" class="external-link">energyRt</a>. It was developed as teaching material for a modelling course, to replicate <a href="https://github.com/PyPSA/pypsa-eur" class="external-link">PyPSA-Eur</a>, an established open model of the European power system, at several spatial resolutions.</p>
-<p>Six models ship with the package, ready to solve. They need neither Python nor a PyPSA-Eur clone, and are lazy-loaded, so they cost nothing until touched.</p>
-<table style="width:100%;" class="table">
+<p>Eleven models ship with the package, ready to solve — all built on <strong>2025 weather and load</strong> (the <code>europe-2025-sarah3-era5</code> cutout; measured ENTSO-E demand). They need neither Python nor a PyPSA-Eur clone, and are lazy-loaded, so they cost nothing until touched.</p>
+<p>Four span spatial resolutions. Each models a <strong>single planning year</strong> — 2050 costs, the 2025 fleet as existing stock — resolved hour by hour within it:</p>
+<table class="table">
 <colgroup>
-<col width="23%">
-<col width="30%">
-<col width="23%">
-<col width="23%">
+<col width="25%">
+<col width="25%">
+<col width="25%">
+<col width="25%">
 </colgroup>
 <thead><tr>
 <th>model</th>
 <th align="right">nodes</th>
-<th>period</th>
+<th>snapshots</th>
 <th>how the regions were formed</th>
 </tr></thead>
 <tbody>
@@ -108,38 +112,58 @@
 <tr>
 <td><code>pypsa_eur_41</code></td>
 <td align="right">41</td>
-<td>full year</td>
+<td>full year (8,760 h)</td>
 <td>PyPSA-Eur k-means</td>
-</tr>
-<tr>
-<td><code>pypsa_eur_289</code></td>
-<td align="right">289</td>
-<td>full year</td>
-<td>aggregated in R to NUTS2</td>
-</tr>
-<tr>
-<td><code>pypsa_eur_1035</code></td>
-<td align="right">1,035</td>
-<td>four days (96 h)</td>
-<td>NUTS3 regions, no clustering</td>
 </tr>
 <tr>
 <td><code>pypsa_eur_nuts3</code></td>
 <td align="right">1,035</td>
-<td>full year</td>
-<td>as above, weather ships separately</td>
+<td>full year (8,760 h)</td>
+<td>NUTS3 regions, weather ships separately</td>
 </tr>
 </tbody>
 </table>
-<p>Two routes produce them. <code>pypsa_eur_5</code>, <code>_5cp</code> and <code>_41</code> are reduced by PyPSA-Eur’s own <code>cluster_network</code> workflow and read straight into energyRt, so each is directly comparable to a PyPSA-Eur run at the same size. <code>pypsa_eur_289</code> is aggregated in R from the NUTS3 network instead, reproducing PyPSA’s reduction strategies — which makes the two routes a check on each other at a similar size.</p>
-<p>The NUTS3 models follow <strong>NUTS</strong> — <em>Nomenclature des Unités Territoriales Statistiques</em>, Eurostat’s hierarchy of European regions — rather than an algorithmic clustering, which is what lets a model be joined to published statistics. They are <strong>source</strong> models rather than ones to solve whole: their purpose is to supply a country or study area at full granularity. <code>pypsa_eur_nuts3</code> covers the full year; its hourly weather is most of its size, so it ships as separate objects that <code><a href="reference/attach_weather.html">attach_weather()</a></code> puts back.</p>
+<p><code>pypsa_eur_5</code>, <code>_5cp</code> and <code>_41</code> are reduced by PyPSA-Eur’s own <code>cluster_network</code> workflow and read straight into energyRt, so each is directly comparable to a PyPSA-Eur run at the same size.</p>
+<p><code>pypsa_eur_nuts3</code> follows <strong>NUTS</strong> — <em>Nomenclature des Unités Territoriales Statistiques</em>, Eurostat’s hierarchy of European regions — rather than an algorithmic clustering, which is what lets the model be joined to published statistics. It is a <strong>source</strong> model rather than one to solve whole: its purpose is to supply a country or study area at full granularity, or a coarser continental model by aggregation. It covers the full year; its hourly weather is most of its size, so it ships as separate objects that <code><a href="reference/attach_weather.html">attach_weather()</a></code> puts back.</p>
+<div class="section level3">
+<h3 id="planning-across-years">Planning across years<a class="anchor" aria-label="anchor" href="#planning-across-years"></a>
+</h3>
+<p>Seven more models take the 41-node system through 2050. Their calendar is the same full hourly year; what varies is the <strong>planning horizon</strong>:</p>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr>
+<th>model</th>
+<th>planning horizon</th>
+<th>what changes</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+<code>pypsa_eur_41_2025</code> … <code>_2050</code>
+</td>
+<td>one year each, 2025–2050</td>
+<td>that horizon’s costs; the fleet aged by announced and assumed retirement</td>
+</tr>
+<tr>
+<td><code>pypsa_eur_41v</code></td>
+<td>six five-year milestones, optimized together</td>
+<td>one model; the existing fleet split into 17 build-year vintages, plus an investable path per carrier</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>_YYYY</code> series answers “what does the system look like solved <em>at</em> a horizon”; <code>pypsa_eur_41v</code> optimizes the whole pathway at once, with per-vintage efficiency and retirement. All seven ship <strong>without weather</strong> — <code>attach_weather(m, from = pypsa_eur_41)</code> puts <code>pypsa_eur_41</code>’s profiles back, the same pattern <code>pypsa_eur_nuts3</code> uses.</p>
+</div>
 <div class="section level3">
 <h3 id="coarser-levels-are-derived-not-shipped">Coarser levels are derived, not shipped<a class="anchor" aria-label="anchor" href="#coarser-levels-are-derived-not-shipped"></a>
 </h3>
 <p>NUTS0 and NUTS1 are a region aggregation of the NUTS3 model, so shipping them would store the same system twice more. <code>pypsa_eur_nuts3</code> carries <code>nuts_gs</code>, so one call builds either:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu">energyRt</span><span class="fu">::</span><span class="fu"><a href="https://energyRt.org/reference/aggregate_model_regions.html" class="external-link">aggregate_model_regions</a></span><span class="op">(</span><span class="va">pypsa_eur_nuts3</span>, level <span class="op">=</span> <span class="st">"nuts1"</span><span class="op">)</span></span></code></pre></div>
-<p>Capacities and demand are summed, efficiencies and costs take a capacity-weighted mean, and corridors that fall inside one region are dropped. It takes a few seconds and gives 36 regions at NUTS0, 106 at NUTS1 and 289 at NUTS2 — the last matching <code>pypsa_eur_289</code>, which was built independently through PyPSA.</p>
+<p>Capacities and demand are summed, efficiencies and costs take a capacity-weighted mean, and corridors that fall inside one region are dropped. It takes a few seconds and gives 36 regions at NUTS0, 106 at NUTS1 and 289 at NUTS2.</p>
 </div>
 <div class="section level3">
 <h3 id="planned">Planned<a class="anchor" aria-label="anchor" href="#planned"></a>
@@ -151,13 +175,16 @@
 </colgroup>
 <tbody>
 <tr>
-<td>rename <code>_289</code> → <code>_nuts2</code>
-</td>
-<td>names describe the regions, not a node count</td>
+<td><code>pypsa_eur_nuts3v</code></td>
+<td>the vintaged build at NUTS3 resolution — next in line</td>
 </tr>
 <tr>
 <td><code>pypsa_eur_250</code></td>
 <td>PyPSA k-means at the size normally used for continental studies</td>
+</tr>
+<tr>
+<td>transmission expansion</td>
+<td>the converter already maps extendable corridors (<code>expand_transmission = TRUE</code>); a shipped scenario is pending</td>
 </tr>
 </tbody>
 </table>
@@ -169,7 +196,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"optimal2050/reneuro"</span><span class="op">)</span></span></code></pre></div>
-<p><a href="https://energyRt.org" class="external-link"><code>energyRt</code></a> is not on CRAN; <code>pak</code> installs it from GitHub alongside <code>reneuro</code>. A solver is also required — GLPK is enough for the smallest models, while continental scale needs Julia/HiGHS or Pyomo/HiGHS:</p>
+<p><a href="https://energyRt.org" class="external-link"><code>energyRt</code></a> is not on CRAN; <code>pak</code> installs it from GitHub alongside <code>reneuro</code>. A solver is also required, and <strong>HiGHS through Julia or Python is the one to install</strong> — GLPK solves the five-node models below, but does not scale past them:</p>
 <ul>
 <li>
 <a href="https://energyRt.org" class="external-link">energyRt.org</a> — documentation, reference and articles</li>
@@ -191,8 +218,10 @@
 <span><span class="fu"><a href="https://energyRt.org/reference/report.html" class="external-link">report</a></span><span class="op">(</span><span class="va">pypsa_eur_5</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">scen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://energyRt.org/reference/interpolate_model.html" class="external-link">interpolate_model</a></span><span class="op">(</span><span class="va">pypsa_eur_5</span>, name <span class="op">=</span> <span class="st">"be"</span><span class="op">)</span></span>
+<span><span class="co"># GLPK at five nodes: this is the call that produced `be_solved`.</span></span>
+<span><span class="co"># Use solver_options$julia_highs (or $pyomo_highs) for anything larger.</span></span>
 <span><span class="va">scen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://energyRt.org/reference/write.html" class="external-link">write_script</a></span><span class="op">(</span><span class="va">scen</span>, solver <span class="op">=</span> <span class="va">solver_options</span><span class="op">$</span><span class="va">glpk</span><span class="op">)</span></span>
-<span><span class="va">scen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://energyRt.org/reference/read.html" class="external-link">read_solution</a></span><span class="op">(</span><span class="fu"><a href="https://energyRt.org/reference/solve_model.html" class="external-link">solve_scenario</a></span><span class="op">(</span><span class="va">scen</span>, wait <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">scen</span> <span class="op">&lt;-</span> <span class="fu">read_solution</span><span class="op">(</span><span class="fu"><a href="https://energyRt.org/reference/solve_model.html" class="external-link">solve_scenario</a></span><span class="op">(</span><span class="va">scen</span>, wait <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://energyRt.org/reference/getData.html" class="external-link">getData</a></span><span class="op">(</span><span class="va">scen</span>, <span class="st">"vObjective"</span>, merge <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">value</span></span>
 <span></span>
@@ -208,6 +237,8 @@
 <a href="https://optimal2050.github.io/reneuro/articles/reneuro.html">Getting started</a> — a model end to end, and carving a local model out of NUTS3</li>
 <li>
 <a href="https://optimal2050.github.io/reneuro/articles/data.html">The data</a> — what ships, and what changing spatial resolution does to it</li>
+<li>
+<a href="https://optimal2050.github.io/reneuro/articles/data-sources.html">Data sources</a> — the upstream inputs as maps and figures, with the source and licence table</li>
 <li>
 <a href="https://optimal2050.github.io/reneuro/articles/about.html">About</a> — how the models were built, solver benchmarks, references and licences</li>
 </ul>
