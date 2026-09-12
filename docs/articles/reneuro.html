@@ -216,17 +216,17 @@ index columns resolved to names.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>GWh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1e3</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">GWh</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">8</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 8 × 2</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 2</span></span></span>
 <span><span class="co">#&gt;   process        GWh</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;        &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 E_CCGT       668. </span></span>
-<span><span class="co">#&gt; 2 E_NUCLEAR    511  </span></span>
-<span><span class="co">#&gt; 3 E_SOLAR      256. </span></span>
-<span><span class="co">#&gt; 4 E_OFFWIND_AC 142. </span></span>
-<span><span class="co">#&gt; 5 E_SOLAR_HSAT  63  </span></span>
-<span><span class="co">#&gt; 6 E_ONWIND      55.3</span></span>
-<span><span class="co">#&gt; 7 E_WASTE       44.6</span></span>
-<span><span class="co">#&gt; 8 E_BIOMASS     18.6</span></span></code></pre></div>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> E_CCGT       668. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> E_NUCLEAR    511  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> E_SOLAR      256. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> E_OFFWIND_AC 142. </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> E_SOLAR_HSAT  63  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> E_ONWIND      55.3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> E_WASTE       44.6</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> E_BIOMASS     18.6</span></span></code></pre></div>
 <p>Gas and nuclear supply most of the week, followed by solar and
 offshore wind. The same quantities are available from a PyPSA solve of
 the network, so the mix can be compared directly.</p>
@@ -272,14 +272,14 @@ demand, existing capacity and renewable potential.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>twh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">load_twh</span><span class="op">)</span>, wind_gw <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">pot_onwind</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1e3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">twh</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 5 × 3</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span></span>
 <span><span class="co">#&gt;   nuts0   twh wind_gw</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 DE     509.    490.</span></span>
-<span><span class="co">#&gt; 2 FR     492.    969.</span></span>
-<span><span class="co">#&gt; 3 IT     316.    504.</span></span>
-<span><span class="co">#&gt; 4 GB     316.    439.</span></span>
-<span><span class="co">#&gt; 5 ES     246.    938.</span></span></code></pre></div>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> DE     509.    490.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> FR     492.    969.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> IT     316.    504.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> GB     316.    439.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ES     246.    938.</span></span></code></pre></div>
 <p>The column used to aggregate or split by is a modelling choice.
 National demand divides by <code>load_twh</code> or <code>pop</code>, a
 wind target by <code>pot_onwind</code>; area is rarely the right weight

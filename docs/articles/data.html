@@ -233,26 +233,26 @@ buildable potential (<code>cap.up</code>):</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">stock_GW</span> <span class="op">+</span> <span class="va">floor_GW</span> <span class="op">+</span> <span class="va">potential_GW</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="va">is.numeric</span><span class="op">)</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="va">stock_GW</span>, <span class="va">floor_GW</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 17 × 4</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 17 × 4</span></span></span>
 <span><span class="co">#&gt;    tech            stock_GW floor_GW potential_GW</span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;              &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt;  1 E_ONWIND             0      236.         9718.</span></span>
-<span><span class="co">#&gt;  2 E_CCGT               0      227.            0 </span></span>
-<span><span class="co">#&gt;  3 E_SOLAR              0      189.        14163.</span></span>
-<span><span class="co">#&gt;  4 E_NUCLEAR          140.       0             0 </span></span>
-<span><span class="co">#&gt;  5 E_HYDRO            109.       0             0 </span></span>
-<span><span class="co">#&gt;  6 E_COAL              77.4      0             0 </span></span>
-<span><span class="co">#&gt;  7 E_LIGNITE           61.8      0             0 </span></span>
-<span><span class="co">#&gt;  8 E_OFFWIND_AC         0       48.7         525.</span></span>
-<span><span class="co">#&gt;  9 E_ROR               47.3      0             0 </span></span>
-<span><span class="co">#&gt; 10 E_BIOMASS           25.1      0             0 </span></span>
-<span><span class="co">#&gt; 11 E_OIL               17.1      0             0 </span></span>
-<span><span class="co">#&gt; 12 E_WASTE              8.1      0             0 </span></span>
-<span><span class="co">#&gt; 13 E_OCGT               0        6.1           0 </span></span>
-<span><span class="co">#&gt; 14 E_GEOTHERMAL         0.9      0             0 </span></span>
-<span><span class="co">#&gt; 15 E_OFFWIND_DC         0        0           290 </span></span>
-<span><span class="co">#&gt; 16 E_OFFWIND_FLOAT      0        0          2348 </span></span>
-<span><span class="co">#&gt; 17 E_SOLAR_HSAT         0        0         12302</span></span></code></pre></div>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> E_ONWIND             0      236.         <span style="text-decoration: underline;">9</span>718.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> E_CCGT               0      227.            0 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> E_SOLAR              0      189.        <span style="text-decoration: underline;">14</span>163.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> E_NUCLEAR          140.       0             0 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> E_HYDRO            109.       0             0 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> E_COAL              77.4      0             0 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> E_LIGNITE           61.8      0             0 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> E_OFFWIND_AC         0       48.7         525.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> E_ROR               47.3      0             0 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> E_BIOMASS           25.1      0             0 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> E_OIL               17.1      0             0 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> E_WASTE              8.1      0             0 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> E_OCGT               0        6.1           0 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> E_GEOTHERMAL         0.9      0             0 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> E_OFFWIND_DC         0        0           290 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> E_OFFWIND_FLOAT      0        0          <span style="text-decoration: underline;">2</span>348 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> E_SOLAR_HSAT         0        0         <span style="text-decoration: underline;">12</span>302</span></span></code></pre></div>
 <p>Potentials are flat area sums (eligible km² × deployment density) —
 the <a href="data-sources.html">data-sources article</a> documents how
 they and the profiles are made, and the known caveats.</p>

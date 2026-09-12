@@ -281,15 +281,15 @@ rarely the right weight for either.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>twh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">load_twh</span><span class="op">)</span>, wind_gw <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">pot_onwind</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1e3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">twh</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 3</span></span></span>
 <span><span class="co">#&gt;   nuts0   twh wind_gw</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 DE     509.    490.</span></span>
-<span><span class="co">#&gt; 2 FR     492.    969.</span></span>
-<span><span class="co">#&gt; 3 IT     316.    504.</span></span>
-<span><span class="co">#&gt; 4 GB     316.    439.</span></span>
-<span><span class="co">#&gt; 5 ES     246.    938.</span></span>
-<span><span class="co">#&gt; 6 UA     149.    851.</span></span></code></pre></div>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> DE     509.    490.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> FR     492.    969.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> IT     316.    504.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> GB     316.    439.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ES     246.    938.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> UA     149.    851.</span></span></code></pre></div>
 <p>The solar and offshore potentials overlap. Fixed-tilt and tracking
 photovoltaics occupy the same land, and 313 of the 314 offshore regions
 carry more than one offshore type on the same sea area, so these columns
