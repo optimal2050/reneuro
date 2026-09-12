@@ -66,19 +66,24 @@
 #'
 #' `pypsa_eur_41v` is the **vintaged multi-year model**: one model over the
 #' 2025--2050 horizon (five-year milestones) where each carrier is a single
-#' technology whose existing fleet is split into build-year vintages -- the
-#' 17 `grouping_years_power` bins PyPSA's myopic mode uses -- each with its
-#' own efficiency (from that bin's cost table, clamped to 2025) and a
-#' milestone-by-milestone surviving-stock series from the same two retirement
-#' rules as the horizon series. Alongside the closed bins, each investable
-#' carrier has one open path with year-keyed investment costs from the six
-#' horizon cost tables, so build-year economics are endogenous. Carriers with
-#' no existing fleet (solar-hsat, offwind DC and floating) stay un-vintaged
-#' and investable. Demand is flat at 2025; like the horizon series it ships
-#' without weather -- `attach_weather(pypsa_eur_41v, from = pypsa_eur_41)`.
+#' technology with a `STOCK` vintage carrying the existing fleet's
+#' milestone-by-milestone surviving-stock series (announced retirements plus
+#' assumed lifetime aging, summed over PyPSA's build-year bins -- the bins
+#' themselves are parameter-flat under the 2025 cost-table clamp, so they are
+#' aggregated away) and, for investable carriers, open paths: where the
+#' assumption tables move a real parameter across the horizon (gas
+#' efficiency), one `NEW<year>` vintage window per assumption year with that
+#' table's efficiency, lifetime and annuity frozen -- year-keyed efficiency
+#' inside a single open path would let standing capacity retrofit itself for
+#' free -- and where only cost varies (VRE), a single `NEW` path with
+#' year-keyed investment costs, so build-year economics stay endogenous.
+#' Carriers with no existing fleet (solar-hsat, offwind DC and floating) stay
+#' un-vintaged and investable. Demand is flat at 2025; like the horizon
+#' series it ships without weather --
+#' `attach_weather(pypsa_eur_41v, from = pypsa_eur_41)`.
 #' `energyRt::getVariants()` and `energyRt::variantSummary()` list the
-#' vintages; `attr(m, "reneuro_provenance")` records the bin table and the
-#' announced/assumed retirement split.
+#' vintages; `attr(m, "reneuro_provenance")` records the retirement-rule
+#' split and the aggregation.
 #'
 #' The continental models are built on **2025 weather and load** (ENTSO-E
 #' measured demand; the `europe-2025-sarah3-era5` cutout). All were converted
@@ -529,3 +534,39 @@ NULL
 
 #' @rdname wx_nuts3
 "wx_nuts3_ror"
+
+#' TYNDP 2024 electricity-demand growth factors
+#'
+#' Growth factors for electricity demand by country, scenario and
+#' milestone year (2025-2050, 5-year steps), anchored at 2025 = 1 --
+#' the measured ENTSO-E load keeps the level, TYNDP 2024 moves it.
+#' Scenarios: `"NT"` (National Trends+, from the market-modelling
+#' outputs' native demand; extrapolated beyond 2040), `"DE"`
+#' (Distributed Energy) and `"GA"` (Global Ambition), which follow the
+#' NT path to 2030 and then their own trajectories. `method` records
+#' whether a value comes from the source series, an extrapolation, or
+#' the perimeter-average fill for countries the sources lack.
+#' Apply with [scale_demand()].
+#'
+#' @format A data frame: `scenario`, `country`, `year`, `factor`,
+#'   `method`.
+#' @source TYNDP 2024 Scenarios (ENTSO-E/ENTSOG), CC-BY 4.0;
+#'   \url{https://2024.entsos-tyndp-scenarios.eu/download/}. Built by
+#'   `data-raw/tyndp_demand.R`.
+"tyndp_demand"
+
+#' Power-sector CO2 cap trajectories
+#'
+#' Three cap paths as factors relative to 2025 emissions, for building
+#' carbon-cap scenarios (see the Scenarios article): `current_policy`
+#' (the EU ETS cap shape under the Fit-for-55 linear reduction factors,
+#' zero around 2039), `ndc` (the EU's economy-wide pledges -- -55% 2030,
+#' the 2035 NDC midpoint, -90% 2040, neutrality 2050 -- mapped to
+#' 2025-relative factors) and `nz2050` (linear to zero at 2050).
+#' Multiply by a base-year emission level (the model's own solved 2025
+#' emissions) to obtain cap right-hand sides.
+#'
+#' @format A data frame: `scenario`, `year`, `factor`, `method`.
+#' @source Directive (EU) 2023/959; the EU NDC (Nov 2025) and 2040
+#'   target; EEA GHG inventory. Built by `data-raw/policy_paths.R`.
+"policy_paths"

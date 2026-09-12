@@ -27,8 +27,11 @@ NC   <- file.path(ROOT, "networks/base_s_41_elec.nc")
 CS   <- file.path(ROOT, "costs_2050_processed.csv")
 
 n <- suppressWarnings(read_pypsa(NC))
+# @name is a solver-set identifier: CAPITALS (house rule for every @name
+# stored in model sets). The R object / .rda symbol stays lowercase.
 b <- convert_pypsa(n, cost_source = "network", tranches = NULL,
-                   transmission = "transport", costs = CS, verbose = FALSE)
+                   transmission = "transport", costs = CS,
+                   name = "PYPSA_EUR_41", verbose = FALSE)
 pypsa_eur_41 <- b$model
 
 # Guards on the two properties this rebuild exists for.

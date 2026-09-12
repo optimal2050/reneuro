@@ -74,3 +74,12 @@ main h2 {
   --bs-btn-hover-border-color: #E6B800;
   --bs-btn-hover-color: #003399;
 }
+
+/* Dark-mode logo swap: the light mark stays in light mode; the night-
+   lights variant replaces it when the dark theme is active. The path is
+   relative to this stylesheet (docs/extra.css), so it resolves from any
+   page depth. `content: url()` on <img> is supported in all current
+   browsers (Firefox since 113). */
+[data-bs-theme="dark"] img[src$="logo.png"] {
+  content: url("reference/figures/logo-dark.png");
+}

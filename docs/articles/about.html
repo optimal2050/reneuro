@@ -41,10 +41,12 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/translation.html">Translation</a></li>
-    <li><a class="dropdown-item" href="../articles/data.html">The data</a></li>
-    <li><a class="dropdown-item" href="../articles/data-sources.html">The data sources</a></li>
+    <li><a class="dropdown-item" href="../articles/data.html">Data in PyPSA-Eur 41-node</a></li>
+    <li><a class="dropdown-item" href="../articles/data-sources.html">Data sources</a></li>
+    <li><a class="dropdown-item" href="../articles/scenarios.html">Scenarios</a></li>
     <li><a class="dropdown-item" href="../articles/report-model.html">Model report</a></li>
     <li><a class="dropdown-item" href="../articles/report-scenario.html">Scenario report</a></li>
+    <li><a class="dropdown-item" href="../articles/gpu-solving.html">Solving models on GPUs via Hugging Face</a></li>
     <li><a class="dropdown-item" href="../articles/about.html">About</a></li>
   </ul>
 </li>
@@ -279,15 +281,15 @@ rarely the right weight for either.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>twh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">load_twh</span><span class="op">)</span>, wind_gw <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">pot_onwind</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1e3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">twh</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 3</span></span></span>
+<span><span class="co">#&gt; # A tibble: 6 × 3</span></span>
 <span><span class="co">#&gt;   nuts0   twh wind_gw</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> DE     509.    490.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> FR     492.    969.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> IT     316.    504.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> GB     316.    439.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ES     246.    938.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> UA     149.    851.</span></span></code></pre></div>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 DE     509.    490.</span></span>
+<span><span class="co">#&gt; 2 FR     492.    969.</span></span>
+<span><span class="co">#&gt; 3 IT     316.    504.</span></span>
+<span><span class="co">#&gt; 4 GB     316.    439.</span></span>
+<span><span class="co">#&gt; 5 ES     246.    938.</span></span>
+<span><span class="co">#&gt; 6 UA     149.    851.</span></span></code></pre></div>
 <p>The solar and offshore potentials overlap. Fixed-tilt and tracking
 photovoltaics occupy the same land, and 313 of the 314 offshore regions
 carry more than one offshore type on the same sea area, so these columns
@@ -538,7 +540,28 @@ for each object, including inputs excluded as non-redistributable.</p>
 
 
 
-
-
-  </body>
+  <script> document.addEventListener("DOMContentLoaded", function () {
+  var n = 0, ids = {};
+  document.querySelectorAll("div.figure, figure").forEach(function (fg) {
+    var img = fg.querySelector("img");
+    var cap = fg.querySelector(".caption, figcaption");
+    if (!img || !cap) return;
+    n += 1;
+    var src = (img.getAttribute("src") || "").split("/").pop();
+    var dot = src.lastIndexOf(".");
+    if (dot > 0) src = src.slice(0, dot);
+    var base = src.replace(/[^a-zA-Z0-9_-]/g, "-");
+    if (base && !fg.id) fg.id = "fig-" + base;
+    ids[fg.id] = n;
+    var tag = document.createElement("span");
+    tag.className = "fig-number";
+    tag.textContent = "Figure " + n + ": ";
+    cap.insertBefore(tag, cap.firstChild);
+  });
+  document.querySelectorAll('a[href^="#fig-"]').forEach(function (a) {
+    var k = a.getAttribute("href").slice(1);
+    if (ids[k]) a.textContent = "Figure " + ids[k];
+  });
+}); </script>
+</body>
 </html>

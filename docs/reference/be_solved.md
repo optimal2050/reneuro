@@ -36,5 +36,5 @@ The retired six-tranche default gave `164664296.503735`; converting with
 
 ``` r
 attr(be_solved, "reneuro_provenance")$objective
-#> [1] 164664297
+#> [1] 164899753
 ```

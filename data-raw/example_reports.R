@@ -38,7 +38,7 @@ set_scenarios_path(ROOT)
 # its full-year calendar and only this scenario is restricted. The sample
 # shortens the solve, not the interpolation -- parameters are interpolated and
 # only then filtered to the declared timeslices.
-cal <- calendars$d365_h24_subset_1day_per_month
+cal <- calendars$d365_h24_1dpm
 message("interpolating on the sampled calendar (~35 s) ...")
 scen <- interpolate_model(pypsa_eur_41, cal, name = "eur41_m12")
 

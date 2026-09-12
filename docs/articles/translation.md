@@ -185,6 +185,54 @@ the other scales by the efficiency: `capacity = p_nom * eff`, and
 maps to `@invcost$eac`, not to `invcost` — supplying it as `invcost`
 would annuitise a second time.
 
+## Revised assumptions
+
+Everything above translates PyPSA-Eur faithfully — same data, same
+assumptions, verified against the source model’s own solutions. Two
+assumption families are also *revised* in separate model versions, so
+the faithful model and the revised one can be solved side by side and
+the difference read as the effect of the assumption, never of the
+translation.
+
+### Economic retirement
+
+The overnight convention treats the existing fleet asymmetrically:
+non-extendable capacity survives to the planning year whole and free,
+while extendable carriers are implicitly retired in full and must be
+rebuilt at least to today’s size. The revised version replaces both
+halves with one consistent rule set:
+
+- **Long-lived, non-replicable assets** — nuclear, geothermal, and the
+  hydro chain (reservoir, run-of-river, pumped storage’s sibling dam) —
+  keep their capacity with no investment option, paying explicit fixed
+  O&M.
+- **Everything else in the fleet can retire economically.** Fixed O&M is
+  split out of PyPSA’s `capital_cost` annuity (which includes it), so
+  the solver may retire capacity whose O&M exceeds its value
+  (`optimizeRetirement`), and new builds pay the pure annuity plus the
+  same O&M without double-counting. The fossil floors are gone: existing
+  gas is free stock that can retire, not a rebuild obligation.
+- **Carbon-free floors stay.** Wind, solar and offshore keep `cap.lo` =
+  today’s capacity — a no-backsliding assumption — and pumped-hydro and
+  battery storage join them, rebuilt at the cost table’s annuities.
+  Reinvested capacity lives its technology lifetime.
+
+### Demand
+
+The measured 2025 load is a level, not a forecast: solved against 2050
+costs it understates what a 2050 system must build. The revision keeps
+the measured hourly shapes and levels at 2025 and grows them by the
+**TYNDP 2024 scenarios** (ENTSO-E/ENTSOG, CC-BY 4.0): National Trends+
+(national plans; extrapolated beyond its 2040 horizon), and the
+carbon-neutrality pathways Distributed Energy and Global Ambition, which
+follow the National Trends path to 2030 and then diverge — the
+scenarios’ own construction. Growth factors are per country and
+milestone year (`tyndp_demand`), anchored so 2025 equals the measured
+load exactly; countries the TYNDP perimeter lacks take the average
+factor, marked as such. `scale_demand()` applies a scenario to any
+shipped model — one year for an overnight solve, all milestones for the
+multi-year models.
+
 ## What the translation does not do
 
 The conversion reports rather than repairs. A parameter that cannot be

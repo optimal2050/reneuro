@@ -181,8 +181,8 @@ str(attr(pypsa_eur_5, "reneuro_provenance"), max.level = 1)
 #>  $ commit      : chr "d6383ebf602767b1adbb676fe8a16e37a6e9f932"
 #>  $ describe    : chr "v2026.02.0"
 #>  $ dirty       : logi TRUE
-#>  $ built_on    : chr "2026-08-25"
-#>  $ reneuro     : chr "0.1.0"
+#>  $ built_on    : chr "2026-09-03"
+#>  $ reneuro     : chr "0.3.0.9000"
 #>  $ object      : chr "pypsa_eur_5"
 #>  $ source      : chr "base_s_5_elec.nc"
 #>  $ convert_args:List of 1

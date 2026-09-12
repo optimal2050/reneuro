@@ -16,7 +16,7 @@ making the solve tractable:
 library(energyRt)
 library(reneuro)
 
-cal  <- calendars$d365_h24_subset_1day_per_month
+cal  <- calendars$d365_h24_1dpm
 scen <- interpolate_model(pypsa_eur_41, cal, name = "eur41_m12")
 scen <- write_script(scen, solver = solver_options$julia_highs_barrier)
 scen <- read_solution(solve_scenario(scen, wait = TRUE))

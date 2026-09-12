@@ -49,6 +49,8 @@ open_solvers(check = FALSE)
 #> 11           julia_glpk  JuMP        GLPK
 #> 12  julia_highs_simplex  JuMP       HiGHS
 #> 13 julia_highs_parallel  JuMP       HiGHS
-#> 14         gams_csv_cbc  GAMS         CBC
-#> 15         gams_gdx_cbc  GAMS         CBC
+#> 14     julia_highs_pdlp  JuMP       HiGHS
+#> 15   julia_highs_hipdlp  JuMP       HiGHS
+#> 16         gams_csv_cbc  GAMS         CBC
+#> 17         gams_gdx_cbc  GAMS         CBC
 ```

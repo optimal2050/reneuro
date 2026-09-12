@@ -44,10 +44,12 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="articles/translation.html">Translation</a></li>
-    <li><a class="dropdown-item" href="articles/data.html">The data</a></li>
-    <li><a class="dropdown-item" href="articles/data-sources.html">The data sources</a></li>
+    <li><a class="dropdown-item" href="articles/data.html">Data in PyPSA-Eur 41-node</a></li>
+    <li><a class="dropdown-item" href="articles/data-sources.html">Data sources</a></li>
+    <li><a class="dropdown-item" href="articles/scenarios.html">Scenarios</a></li>
     <li><a class="dropdown-item" href="articles/report-model.html">Model report</a></li>
     <li><a class="dropdown-item" href="articles/report-scenario.html">Scenario report</a></li>
+    <li><a class="dropdown-item" href="articles/gpu-solving.html">Solving models on GPUs via Hugging Face</a></li>
     <li><a class="dropdown-item" href="articles/about.html">About</a></li>
   </ul>
 </li>
@@ -80,152 +82,77 @@
 </h1>
 </div>
 <p><strong>A European energy system optimization model with an R interface.</strong></p>
+<blockquote>
+<p><strong>Note:</strong> the repository is under an update — expected <strong>September 25</strong>.</p>
+</blockquote>
 <p><code>r·en·euro</code> provides a European energy system model built on <a href="https://energyRt.org" class="external-link">energyRt</a>. It was developed as teaching material for a modelling course, to replicate <a href="https://github.com/PyPSA/pypsa-eur" class="external-link">PyPSA-Eur</a>, an established open model of the European power system, at several spatial resolutions.</p>
 <p>Eleven models ship with the package, ready to solve — all built on <strong>2025 weather and load</strong> (the <code>europe-2025-sarah3-era5</code> cutout; measured ENTSO-E demand). They need neither Python nor a PyPSA-Eur clone, and are lazy-loaded, so they cost nothing until touched.</p>
-<p>Four span spatial resolutions. Each models a <strong>single planning year</strong> — 2050 costs, the 2025 fleet as existing stock — resolved hour by hour within it:</p>
 <table class="table">
 <colgroup>
-<col width="25%">
-<col width="25%">
-<col width="25%">
-<col width="25%">
+<col width="33%">
+<col width="33%">
+<col width="33%">
 </colgroup>
 <thead><tr>
 <th>model</th>
 <th align="right">nodes</th>
-<th>snapshots</th>
-<th>how the regions were formed</th>
-</tr></thead>
-<tbody>
-<tr>
-<td><code>pypsa_eur_5</code></td>
-<td align="right">5</td>
-<td>one week (168 h)</td>
-<td>PyPSA-Eur k-means, Belgium only</td>
-</tr>
-<tr>
-<td><code>pypsa_eur_5cp</code></td>
-<td align="right">5</td>
-<td>one week (168 h)</td>
-<td>as above, copperplated</td>
-</tr>
-<tr>
-<td><code>pypsa_eur_41</code></td>
-<td align="right">41</td>
-<td>full year (8,760 h)</td>
-<td>PyPSA-Eur k-means</td>
-</tr>
-<tr>
-<td><code>pypsa_eur_nuts3</code></td>
-<td align="right">1,035</td>
-<td>full year (8,760 h)</td>
-<td>NUTS3 regions, weather ships separately</td>
-</tr>
-</tbody>
-</table>
-<p><code>pypsa_eur_5</code>, <code>_5cp</code> and <code>_41</code> are reduced by PyPSA-Eur’s own <code>cluster_network</code> workflow and read straight into energyRt, so each is directly comparable to a PyPSA-Eur run at the same size.</p>
-<p><code>pypsa_eur_nuts3</code> follows <strong>NUTS</strong> — <em>Nomenclature des Unités Territoriales Statistiques</em>, Eurostat’s hierarchy of European regions — rather than an algorithmic clustering, which is what lets the model be joined to published statistics. It is a <strong>source</strong> model rather than one to solve whole: its purpose is to supply a country or study area at full granularity, or a coarser continental model by aggregation. It covers the full year; its hourly weather is most of its size, so it ships as separate objects that <code><a href="reference/attach_weather.html">attach_weather()</a></code> puts back.</p>
-<div class="section level3">
-<h3 id="planning-across-years">Planning across years<a class="anchor" aria-label="anchor" href="#planning-across-years"></a>
-</h3>
-<p>Seven more models take the 41-node system through 2050. Their calendar is the same full hourly year; what varies is the <strong>planning horizon</strong>:</p>
-<table class="table">
-<colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
-</colgroup>
-<thead><tr>
-<th>model</th>
 <th>planning horizon</th>
-<th>what changes</th>
 </tr></thead>
 <tbody>
 <tr>
 <td>
+<code>pypsa_eur_5</code>, <code>_5cp</code>
+</td>
+<td align="right">5</td>
+<td>single year, one week (Belgium; <code>_5cp</code> copperplated)</td>
+</tr>
+<tr>
+<td><code>pypsa_eur_41</code></td>
+<td align="right">41</td>
+<td>single year, full hourly year</td>
+</tr>
+<tr>
+<td>
 <code>pypsa_eur_41_2025</code> … <code>_2050</code>
 </td>
-<td>one year each, 2025–2050</td>
-<td>that horizon’s costs; the fleet aged by announced and assumed retirement</td>
+<td align="right">41</td>
+<td>one year per horizon, fleet aged by retirement</td>
 </tr>
 <tr>
 <td><code>pypsa_eur_41v</code></td>
-<td>six five-year milestones, optimized together</td>
-<td>one model; the existing fleet split into 17 build-year vintages, plus an investable path per carrier</td>
+<td align="right">41</td>
+<td>2025–2050 in five-year milestones, vintaged fleet</td>
+</tr>
+<tr>
+<td><code>pypsa_eur_nuts3</code></td>
+<td align="right">1,035</td>
+<td>single year, full hourly year</td>
 </tr>
 </tbody>
 </table>
-<p>The <code>_YYYY</code> series answers “what does the system look like solved <em>at</em> a horizon”; <code>pypsa_eur_41v</code> optimizes the whole pathway at once, with per-vintage efficiency and retirement. All seven ship <strong>without weather</strong> — <code>attach_weather(m, from = pypsa_eur_41)</code> puts <code>pypsa_eur_41</code>’s profiles back, the same pattern <code>pypsa_eur_nuts3</code> uses.</p>
-</div>
-<div class="section level3">
-<h3 id="coarser-levels-are-derived-not-shipped">Coarser levels are derived, not shipped<a class="anchor" aria-label="anchor" href="#coarser-levels-are-derived-not-shipped"></a>
-</h3>
-<p>NUTS0 and NUTS1 are a region aggregation of the NUTS3 model, so shipping them would store the same system twice more. <code>pypsa_eur_nuts3</code> carries <code>nuts_gs</code>, so one call builds either:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu">energyRt</span><span class="fu">::</span><span class="fu"><a href="https://energyRt.org/reference/aggregate_model_regions.html" class="external-link">aggregate_model_regions</a></span><span class="op">(</span><span class="va">pypsa_eur_nuts3</span>, level <span class="op">=</span> <span class="st">"nuts1"</span><span class="op">)</span></span></code></pre></div>
-<p>Capacities and demand are summed, efficiencies and costs take a capacity-weighted mean, and corridors that fall inside one region are dropped. It takes a few seconds and gives 36 regions at NUTS0, 106 at NUTS1 and 289 at NUTS2.</p>
-</div>
-<div class="section level3">
-<h3 id="planned">Planned<a class="anchor" aria-label="anchor" href="#planned"></a>
-</h3>
-<table class="table">
-<colgroup>
-<col width="50%">
-<col width="50%">
-</colgroup>
-<tbody>
-<tr>
-<td><code>pypsa_eur_nuts3v</code></td>
-<td>the vintaged build at NUTS3 resolution — next in line</td>
-</tr>
-<tr>
-<td><code>pypsa_eur_250</code></td>
-<td>PyPSA k-means at the size normally used for continental studies</td>
-</tr>
-<tr>
-<td>transmission expansion</td>
-<td>the converter already maps extendable corridors (<code>expand_transmission = TRUE</code>); a shipped scenario is pending</td>
-</tr>
-</tbody>
-</table>
-<p>The <a href="https://optimal2050.github.io/reneuro/articles/about.html">About</a> article covers how each model was built, the four countries outside NUTS, and the region data that ships alongside.</p>
-</div>
+<p><code>pypsa_eur_nuts3</code> follows Eurostat’s NUTS3 regions rather than an algorithmic clustering, so it joins to published statistics; it is a <strong>source</strong> model — carve a study area from it or aggregate it to NUTS0/1/2 with <code><a href="https://energyRt.org/reference/aggregate_model_regions.html" class="external-link">energyRt::aggregate_model_regions()</a></code>. Its hourly weather ships as separate objects that <code><a href="reference/attach_weather.html">attach_weather()</a></code> puts back; the horizon series and <code>pypsa_eur_41v</code> reuse <code>pypsa_eur_41</code>’s weather the same way. The <a href="https://optimal2050.github.io/reneuro/articles/about.html">About</a> article covers how each model was built and what is planned next.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"optimal2050/reneuro"</span><span class="op">)</span></span></code></pre></div>
-<p><a href="https://energyRt.org" class="external-link"><code>energyRt</code></a> is not on CRAN; <code>pak</code> installs it from GitHub alongside <code>reneuro</code>. A solver is also required, and <strong>HiGHS through Julia or Python is the one to install</strong> — GLPK solves the five-node models below, but does not scale past them:</p>
-<ul>
-<li>
-<a href="https://energyRt.org" class="external-link">energyRt.org</a> — documentation, reference and articles</li>
-<li>
-<a href="https://energyRt.org/articles/install.html" class="external-link">Installation guide</a> — R package, back ends and solvers</li>
-<li>
-<a href="https://energyRt.org/reference/en_setup.html" class="external-link"><code>en_setup()</code></a> — installs the Julia and Python dependencies from R</li>
-</ul>
-<p>HiGHS can be used to solve sampled models (timeslices and/or regions) on an standard laptop, while full resolution models require commercial solvers, such as CPLEX or Gurobi.</p>
+<p><a href="https://energyRt.org" class="external-link"><code>energyRt</code></a> is not on CRAN; <code>pak</code> installs it from GitHub alongside <code>reneuro</code>. A solver is also required — see the <a href="https://energyRt.org/articles/install.html" class="external-link">installation guide</a> and <a href="https://energyRt.org/reference/en_setup.html" class="external-link"><code>en_setup()</code></a>. GLPK solves the five-node models; HiGHS (via Julia or Python) handles sampled larger models on a standard laptop, while full-resolution models call for commercial or GPU solvers.</p>
 </div>
 <div class="section level2">
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://optimal2050.github.io/reneuro/">reneuro</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://energyRt.org" class="external-link">energyRt</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># check the model</span></span>
 <span><span class="fu"><a href="https://energyRt.org/reference/report.html" class="external-link">report</a></span><span class="op">(</span><span class="va">pypsa_eur_5</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">scen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://energyRt.org/reference/interpolate_model.html" class="external-link">interpolate_model</a></span><span class="op">(</span><span class="va">pypsa_eur_5</span>, name <span class="op">=</span> <span class="st">"be"</span><span class="op">)</span></span>
-<span><span class="co"># GLPK at five nodes: this is the call that produced `be_solved`.</span></span>
-<span><span class="co"># Use solver_options$julia_highs (or $pyomo_highs) for anything larger.</span></span>
 <span><span class="va">scen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://energyRt.org/reference/write.html" class="external-link">write_script</a></span><span class="op">(</span><span class="va">scen</span>, solver <span class="op">=</span> <span class="va">solver_options</span><span class="op">$</span><span class="va">glpk</span><span class="op">)</span></span>
 <span><span class="va">scen</span> <span class="op">&lt;-</span> <span class="fu">read_solution</span><span class="op">(</span><span class="fu"><a href="https://energyRt.org/reference/solve_model.html" class="external-link">solve_scenario</a></span><span class="op">(</span><span class="va">scen</span>, wait <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://energyRt.org/reference/getData.html" class="external-link">getData</a></span><span class="op">(</span><span class="va">scen</span>, <span class="st">"vObjective"</span>, merge <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">value</span></span>
-<span></span>
-<span><span class="co"># quick look at the results</span></span>
 <span><span class="fu"><a href="https://energyRt.org/reference/report.html" class="external-link">report</a></span><span class="op">(</span><span class="va">scen</span><span class="op">)</span></span></code></pre></div>
 <p>The solved scenario also ships as <code>be_solved</code>, so the results can be explored without a solver installed.</p>
 </div>
@@ -246,7 +173,7 @@
 <div class="section level2">
 <h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
 </h2>
-<p>Contributions are welcome. Issues and pull requests may be opened at <a href="https://github.com/optimal2050/reneuro" class="external-link">github.com/optimal2050/reneuro</a>. The package follows the <a href="https://github.com/optimal2050/.github/blob/main/CONVENTIONS.md" class="external-link">optimal2050 conventions</a>.</p>
+<p>Issues and pull requests are welcome at <a href="https://github.com/optimal2050/reneuro" class="external-link">github.com/optimal2050/reneuro</a>; the package follows the <a href="https://github.com/optimal2050/.github/blob/main/CONVENTIONS.md" class="external-link">optimal2050 conventions</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="licence">Licence<a class="anchor" aria-label="anchor" href="#licence"></a>
@@ -302,7 +229,28 @@
 
 
 
-
-
-  </body>
+  <script> document.addEventListener("DOMContentLoaded", function () {
+  var n = 0, ids = {};
+  document.querySelectorAll("div.figure, figure").forEach(function (fg) {
+    var img = fg.querySelector("img");
+    var cap = fg.querySelector(".caption, figcaption");
+    if (!img || !cap) return;
+    n += 1;
+    var src = (img.getAttribute("src") || "").split("/").pop();
+    var dot = src.lastIndexOf(".");
+    if (dot > 0) src = src.slice(0, dot);
+    var base = src.replace(/[^a-zA-Z0-9_-]/g, "-");
+    if (base && !fg.id) fg.id = "fig-" + base;
+    ids[fg.id] = n;
+    var tag = document.createElement("span");
+    tag.className = "fig-number";
+    tag.textContent = "Figure " + n + ": ";
+    cap.insertBefore(tag, cap.firstChild);
+  });
+  document.querySelectorAll('a[href^="#fig-"]').forEach(function (a) {
+    var k = a.getAttribute("href").slice(1);
+    if (ids[k]) a.textContent = "Figure " + ids[k];
+  });
+}); </script>
+</body>
 </html>

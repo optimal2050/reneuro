@@ -9,3 +9,8 @@ README.html
 reports/
 drafts/
 levcosts/
+projects/
+data-raw/tyndp/*.xlsb
+data-raw/tyndp/*.xlsx
+data-raw/tyndp/*.zip
+data-raw/tyndp/__MACOSX/

@@ -11,6 +11,37 @@ url: https://optimal2050.github.io/reneuro/
 template:
   bootstrap: 5
   light-switch: true
+  includes:
+    # Figure numbering + cross-references for article pages. Every figure
+    # (div.figure with a caption) gets a "Figure N:" prefix and an id
+    # derived from its image filename ("fig-<basename>"); links written as
+    # [Figure](#fig-<basename>) get their text filled with the number.
+    after_body: >
+      <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var n = 0, ids = {};
+        document.querySelectorAll("div.figure, figure").forEach(function (fg) {
+          var img = fg.querySelector("img");
+          var cap = fg.querySelector(".caption, figcaption");
+          if (!img || !cap) return;
+          n += 1;
+          var src = (img.getAttribute("src") || "").split("/").pop();
+          var dot = src.lastIndexOf(".");
+          if (dot > 0) src = src.slice(0, dot);
+          var base = src.replace(/[^a-zA-Z0-9_-]/g, "-");
+          if (base && !fg.id) fg.id = "fig-" + base;
+          ids[fg.id] = n;
+          var tag = document.createElement("span");
+          tag.className = "fig-number";
+          tag.textContent = "Figure " + n + ": ";
+          cap.insertBefore(tag, cap.firstChild);
+        });
+        document.querySelectorAll('a[href^="#fig-"]').forEach(function (a) {
+          var k = a.getAttribute("href").slice(1);
+          if (ids[k]) a.textContent = "Figure " + ids[k];
+        });
+      });
+      </script>
   # The site takes its palette from the logo (man/figures/logo.png): EU blue
   # #003399 and EU gold #FFCC00, the two colours the mark is drawn in. This
   # leaves the *scales one-hue-per-sibling scheme deliberately -- reneuro is a
@@ -66,6 +97,8 @@ articles:
   - translation
   - data
   - articles/data-sources
+  - articles/scenarios
   - articles/report-model
   - articles/report-scenario
+  - articles/gpu-solving
   - about

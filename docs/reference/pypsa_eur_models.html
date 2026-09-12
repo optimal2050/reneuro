@@ -30,10 +30,12 @@ are loaded lazily, so they cost nothing until touched."><meta property="og:image
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/translation.html">Translation</a></li>
-    <li><a class="dropdown-item" href="../articles/data.html">The data</a></li>
-    <li><a class="dropdown-item" href="../articles/data-sources.html">The data sources</a></li>
+    <li><a class="dropdown-item" href="../articles/data.html">Data in PyPSA-Eur 41-node</a></li>
+    <li><a class="dropdown-item" href="../articles/data-sources.html">Data sources</a></li>
+    <li><a class="dropdown-item" href="../articles/scenarios.html">Scenarios</a></li>
     <li><a class="dropdown-item" href="../articles/report-model.html">Model report</a></li>
     <li><a class="dropdown-item" href="../articles/report-scenario.html">Scenario report</a></li>
+    <li><a class="dropdown-item" href="../articles/gpu-solving.html">Solving models on GPUs via Hugging Face</a></li>
     <li><a class="dropdown-item" href="../articles/about.html">About</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -209,8 +211,8 @@ can be compared against.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ commit      : chr "d6383ebf602767b1adbb676fe8a16e37a6e9f932"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ describe    : chr "v2026.02.0"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ dirty       : logi TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ built_on    : chr "2026-08-25"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ reneuro     : chr "0.1.0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ built_on    : chr "2026-09-03"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ reneuro     : chr "0.3.0.9000"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ object      : chr "pypsa_eur_5"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ source      : chr "base_s_5_elec.nc"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ convert_args:List of 1</span>
@@ -232,7 +234,27 @@ can be compared against.</p>
 
 
 
-
-
-  </body></html>
+  <script> document.addEventListener("DOMContentLoaded", function () {
+  var n = 0, ids = {};
+  document.querySelectorAll("div.figure, figure").forEach(function (fg) {
+    var img = fg.querySelector("img");
+    var cap = fg.querySelector(".caption, figcaption");
+    if (!img || !cap) return;
+    n += 1;
+    var src = (img.getAttribute("src") || "").split("/").pop();
+    var dot = src.lastIndexOf(".");
+    if (dot > 0) src = src.slice(0, dot);
+    var base = src.replace(/[^a-zA-Z0-9_-]/g, "-");
+    if (base && !fg.id) fg.id = "fig-" + base;
+    ids[fg.id] = n;
+    var tag = document.createElement("span");
+    tag.className = "fig-number";
+    tag.textContent = "Figure " + n + ": ";
+    cap.insertBefore(tag, cap.firstChild);
+  });
+  document.querySelectorAll('a[href^="#fig-"]').forEach(function (a) {
+    var k = a.getAttribute("href").slice(1);
+    if (ids[k]) a.textContent = "Figure " + ids[k];
+  });
+}); </script></body></html>
 

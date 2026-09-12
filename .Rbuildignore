@@ -23,3 +23,5 @@
 ^README\.html$
 ^vignettes/articles$
 ^vignettes/scenarios$
+^projects$
+^linopy-hf$

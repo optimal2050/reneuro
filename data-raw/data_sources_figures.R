@@ -23,10 +23,10 @@ dir.create(OUT, showWarnings = FALSE, recursive = TRUE)
 coast <- if (requireNamespace("rnaturalearth", quietly = TRUE)) {
   rnaturalearth::ne_coastline(scale = 50, returnclass = "sf")
 } else NULL
+# no titles/subtitles in the figures -- attribution and description live in
+# the article's fig.cap captions
 map_theme <- theme_void() +
   theme(plot.background = element_rect(fill = "white", colour = NA),
-        plot.title = element_text(size = 11, face = "bold"),
-        plot.subtitle = element_text(size = 8, colour = "grey30"),
         legend.position = "right")
 lims <- list(x = c(-12, 42), y = c(33, 72))
 
@@ -35,26 +35,20 @@ lims <- list(x = c(-12, 42), y = c(33, 72))
 # extracted from europe-2025-sarah3-era5.nc with xarray.
 if (file.exists(MEANS)) {
   m <- fread(MEANS)
-  base <- function(fill_lab, title, sub) {
-    g <- ggplot(m)
-    if (!is.null(coast)) g <- g + geom_sf(data = coast, colour = "grey40",
-                                          linewidth = 0.15)
-    g + coord_sf(xlim = lims$x, ylim = lims$y, expand = FALSE) +
-      labs(title = title, subtitle = sub, fill = fill_lab) + map_theme
+  base <- function(fill_lab) {
+    ggplot(m) + labs(fill = fill_lab) + map_theme
   }
-  p <- base("m/s", "Mean 100 m wind speed, 2025",
-            "ERA5 (CC-BY, Copernicus Climate Change Service)") +
+  p <- base("m/s") +
     geom_raster(aes(x, y, fill = wnd100m), interpolate = TRUE) +
-    scale_fill_viridis_c(option = "G")
+    energypal::scale_fill_energy_c("windatlas")
   if (!is.null(coast)) p <- p + geom_sf(data = coast, colour = "white",
                                         linewidth = 0.15)
   p <- p + coord_sf(xlim = lims$x, ylim = lims$y, expand = FALSE)
   ggsave(file.path(OUT, "cutout-wind.png"), p, width = 7, height = 6, dpi = 110)
 
-  p <- base("W/m^2", "Mean solar influx (direct + diffuse), 2025",
-            "SARAH-3 (CC-BY, EUMETSAT CM SAF) with ERA5 infill") +
+  p <- base("W/m^2") +
     geom_raster(aes(x, y, fill = influx), interpolate = TRUE) +
-    scale_fill_viridis_c(option = "A")
+    energypal::scale_fill_energy_c("solaratlas")
   if (!is.null(coast)) p <- p + geom_sf(data = coast, colour = "white",
                                         linewidth = 0.15)
   p <- p + coord_sf(xlim = lims$x, ylim = lims$y, expand = FALSE)
@@ -79,11 +73,7 @@ if (file.exists(DEM)) {
   p <- ggplot(wk, aes(week, GW, colour = country)) +
     geom_line(linewidth = 0.5) +
     scale_colour_viridis_d(option = "H", end = 0.9) +
-    labs(title = "Measured electricity demand, 2025 (weekly mean)",
-         subtitle = paste("ENTSO-E transparency platform; smaller countries",
-                          "with gaps (UA, MK, CY, AL) are template-filled",
-                          "in the workflow"),
-         x = NULL, y = "GW", colour = NULL) +
+    labs(x = NULL, y = "GW", colour = NULL) +
     theme_minimal() +
     theme(plot.background = element_rect(fill = "white", colour = NA))
   ggsave(file.path(OUT, "demand-entsoe.png"), p, width = 8, height = 4.2,
@@ -106,11 +96,9 @@ if (file.exists(PPL)) {
     geom_point(aes(lon, lat, size = Capacity / 1e3, colour = Fueltype),
                alpha = 0.5, stroke = 0) +
     scale_size_area(max_size = 5) +
-    scale_colour_viridis_d(option = "H", end = 0.92) +
+    energypal::scale_colour_energy("carriers") +
     coord_sf(xlim = lims$x, ylim = lims$y, expand = FALSE) +
-    labs(title = "The existing fleet (units >= 100 MW)",
-         subtitle = "powerplantmatching: GEM, JRC, ENTSO-E, GPD and more, deduplicated",
-         size = "GW", colour = NULL) +
+    labs(size = "GW", colour = NULL) +
     map_theme +
     guides(colour = guide_legend(override.aes = list(size = 3, alpha = 1)))
   ggsave(file.path(OUT, "fleet.png"), p, width = 7.5, height = 6, dpi = 110)

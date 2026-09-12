@@ -2,6 +2,8 @@
 
 export(attach_weather)
 export(benchmark_solvers)
+export(build_demand)
+export(grow_demand)
 export(open_solvers)
 export(reneuro_example)
 export(reneuro_example_geo)

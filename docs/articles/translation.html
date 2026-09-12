@@ -41,10 +41,12 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/translation.html">Translation</a></li>
-    <li><a class="dropdown-item" href="../articles/data.html">The data</a></li>
-    <li><a class="dropdown-item" href="../articles/data-sources.html">The data sources</a></li>
+    <li><a class="dropdown-item" href="../articles/data.html">Data in PyPSA-Eur 41-node</a></li>
+    <li><a class="dropdown-item" href="../articles/data-sources.html">Data sources</a></li>
+    <li><a class="dropdown-item" href="../articles/scenarios.html">Scenarios</a></li>
     <li><a class="dropdown-item" href="../articles/report-model.html">Model report</a></li>
     <li><a class="dropdown-item" href="../articles/report-scenario.html">Scenario report</a></li>
+    <li><a class="dropdown-item" href="../articles/gpu-solving.html">Solving models on GPUs via Hugging Face</a></li>
     <li><a class="dropdown-item" href="../articles/about.html">About</a></li>
   </ul>
 </li>
@@ -380,6 +382,64 @@ is already annuitised it maps to <code>@invcost$eac</code>, not to
 annuitise a second time.</p>
 </div>
 <div class="section level2">
+<h2 id="revised-assumptions">Revised assumptions<a class="anchor" aria-label="anchor" href="#revised-assumptions"></a>
+</h2>
+<p>Everything above translates PyPSA-Eur faithfully — same data, same
+assumptions, verified against the source model’s own solutions. Two
+assumption families are also <em>revised</em> in separate model
+versions, so the faithful model and the revised one can be solved side
+by side and the difference read as the effect of the assumption, never
+of the translation.</p>
+<div class="section level3">
+<h3 id="economic-retirement">Economic retirement<a class="anchor" aria-label="anchor" href="#economic-retirement"></a>
+</h3>
+<p>The overnight convention treats the existing fleet asymmetrically:
+non-extendable capacity survives to the planning year whole and free,
+while extendable carriers are implicitly retired in full and must be
+rebuilt at least to today’s size. The revised version replaces both
+halves with one consistent rule set:</p>
+<ul>
+<li>
+<strong>Long-lived, non-replicable assets</strong> — nuclear,
+geothermal, and the hydro chain (reservoir, run-of-river, pumped
+storage’s sibling dam) — keep their capacity with no investment option,
+paying explicit fixed O&amp;M.</li>
+<li>
+<strong>Everything else in the fleet can retire
+economically.</strong> Fixed O&amp;M is split out of PyPSA’s
+<code>capital_cost</code> annuity (which includes it), so the solver may
+retire capacity whose O&amp;M exceeds its value
+(<code>optimizeRetirement</code>), and new builds pay the pure annuity
+plus the same O&amp;M without double-counting. The fossil floors are
+gone: existing gas is free stock that can retire, not a rebuild
+obligation.</li>
+<li>
+<strong>Carbon-free floors stay.</strong> Wind, solar and offshore
+keep <code>cap.lo</code> = today’s capacity — a no-backsliding
+assumption — and pumped-hydro and battery storage join them, rebuilt at
+the cost table’s annuities. Reinvested capacity lives its technology
+lifetime.</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="demand">Demand<a class="anchor" aria-label="anchor" href="#demand"></a>
+</h3>
+<p>The measured 2025 load is a level, not a forecast: solved against
+2050 costs it understates what a 2050 system must build. The revision
+keeps the measured hourly shapes and levels at 2025 and grows them by
+the <strong>TYNDP 2024 scenarios</strong> (ENTSO-E/ENTSOG, CC-BY 4.0):
+National Trends+ (national plans; extrapolated beyond its 2040 horizon),
+and the carbon-neutrality pathways Distributed Energy and Global
+Ambition, which follow the National Trends path to 2030 and then diverge
+— the scenarios’ own construction. Growth factors are per country and
+milestone year (<code>tyndp_demand</code>), anchored so 2025 equals the
+measured load exactly; countries the TYNDP perimeter lacks take the
+average factor, marked as such. <code>scale_demand()</code> applies a
+scenario to any shipped model — one year for an overnight solve, all
+milestones for the multi-year models.</p>
+</div>
+</div>
+<div class="section level2">
 <h2 id="what-the-translation-does-not-do">What the translation does not do<a class="anchor" aria-label="anchor" href="#what-the-translation-does-not-do"></a>
 </h2>
 <p>The conversion reports rather than repairs. A parameter that cannot
@@ -425,7 +485,28 @@ aggregation rules</li>
 
 
 
-
-
-  </body>
+  <script> document.addEventListener("DOMContentLoaded", function () {
+  var n = 0, ids = {};
+  document.querySelectorAll("div.figure, figure").forEach(function (fg) {
+    var img = fg.querySelector("img");
+    var cap = fg.querySelector(".caption, figcaption");
+    if (!img || !cap) return;
+    n += 1;
+    var src = (img.getAttribute("src") || "").split("/").pop();
+    var dot = src.lastIndexOf(".");
+    if (dot > 0) src = src.slice(0, dot);
+    var base = src.replace(/[^a-zA-Z0-9_-]/g, "-");
+    if (base && !fg.id) fg.id = "fig-" + base;
+    ids[fg.id] = n;
+    var tag = document.createElement("span");
+    tag.className = "fig-number";
+    tag.textContent = "Figure " + n + ": ";
+    cap.insertBefore(tag, cap.firstChild);
+  });
+  document.querySelectorAll('a[href^="#fig-"]').forEach(function (a) {
+    var k = a.getAttribute("href").slice(1);
+    if (ids[k]) a.textContent = "Figure " + ids[k];
+  });
+}); </script>
+</body>
 </html>

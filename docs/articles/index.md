@@ -5,11 +5,15 @@
 - [Getting started with the
   model](https://optimal2050.github.io/reneuro/articles/reneuro.md):
 - [Translation](https://optimal2050.github.io/reneuro/articles/translation.md):
-- [The data](https://optimal2050.github.io/reneuro/articles/data.md):
-- [The data
+- [Data in PyPSA-Eur
+  41-node](https://optimal2050.github.io/reneuro/articles/data.md):
+- [Data
   sources](https://optimal2050.github.io/reneuro/articles/data-sources.md):
+- [Scenarios](https://optimal2050.github.io/reneuro/articles/scenarios.md):
 - [Model
   report](https://optimal2050.github.io/reneuro/articles/report-model.md):
 - [Scenario
   report](https://optimal2050.github.io/reneuro/articles/report-scenario.md):
+- [Solving models on GPUs via Hugging
+  Face](https://optimal2050.github.io/reneuro/articles/gpu-solving.md):
 - [About](https://optimal2050.github.io/reneuro/articles/about.md):

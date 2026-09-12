@@ -41,10 +41,12 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/translation.html">Translation</a></li>
-    <li><a class="dropdown-item" href="../articles/data.html">The data</a></li>
-    <li><a class="dropdown-item" href="../articles/data-sources.html">The data sources</a></li>
+    <li><a class="dropdown-item" href="../articles/data.html">Data in PyPSA-Eur 41-node</a></li>
+    <li><a class="dropdown-item" href="../articles/data-sources.html">Data sources</a></li>
+    <li><a class="dropdown-item" href="../articles/scenarios.html">Scenarios</a></li>
     <li><a class="dropdown-item" href="../articles/report-model.html">Model report</a></li>
     <li><a class="dropdown-item" href="../articles/report-scenario.html">Scenario report</a></li>
+    <li><a class="dropdown-item" href="../articles/gpu-solving.html">Solving models on GPUs via Hugging Face</a></li>
     <li><a class="dropdown-item" href="../articles/about.html">About</a></li>
   </ul>
 </li>
@@ -162,7 +164,7 @@ availability.</p>
 <span><span class="co">#&gt; List of 3</span></span>
 <span><span class="co">#&gt;  $ commit  : chr "d6383ebf602767b1adbb676fe8a16e37a6e9f932"</span></span>
 <span><span class="co">#&gt;  $ source  : chr "base_s_5_elec.nc"</span></span>
-<span><span class="co">#&gt;  $ built_on: chr "2026-08-25"</span></span></code></pre></div>
+<span><span class="co">#&gt;  $ built_on: chr "2026-09-03"</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="interpolate">2. Interpolate<a class="anchor" aria-label="anchor" href="#interpolate"></a>
@@ -194,7 +196,7 @@ the package:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># print() would round this to 9 significant digits; the gate is exact.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://energyRt.org/reference/getData.html" class="external-link">getData</a></span><span class="op">(</span><span class="va">be_solved</span>, <span class="st">"vObjective"</span>, merge <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">value</span>, digits <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "164664296.503735"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "164899752.517096"</span></span></code></pre></div>
 <p>The build script refuses to save a scenario whose objective differs
 from that figure, so it also serves as a regression test on the
 conversion.</p>
@@ -214,17 +216,17 @@ index columns resolved to names.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>GWh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1e3</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">GWh</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">8</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 2</span></span></span>
+<span><span class="co">#&gt; # A tibble: 8 × 2</span></span>
 <span><span class="co">#&gt;   process        GWh</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> E_CCGT       664. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> E_NUCLEAR    511. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> E_SOLAR      248  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> E_OFFWIND_AC 142. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> E_SOLAR_HSAT  70.9</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> E_ONWIND      55.3</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> E_WASTE       44.6</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> E_BIOMASS     18.7</span></span></code></pre></div>
+<span><span class="co">#&gt;   &lt;chr&gt;        &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 E_CCGT       668. </span></span>
+<span><span class="co">#&gt; 2 E_NUCLEAR    511  </span></span>
+<span><span class="co">#&gt; 3 E_SOLAR      256. </span></span>
+<span><span class="co">#&gt; 4 E_OFFWIND_AC 142. </span></span>
+<span><span class="co">#&gt; 5 E_SOLAR_HSAT  63  </span></span>
+<span><span class="co">#&gt; 6 E_ONWIND      55.3</span></span>
+<span><span class="co">#&gt; 7 E_WASTE       44.6</span></span>
+<span><span class="co">#&gt; 8 E_BIOMASS     18.6</span></span></code></pre></div>
 <p>Gas and nuclear supply most of the week, followed by solar and
 offshore wind. The same quantities are available from a PyPSA solve of
 the network, so the mix can be compared directly.</p>
@@ -270,14 +272,14 @@ demand, existing capacity and renewable potential.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>twh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">load_twh</span><span class="op">)</span>, wind_gw <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">pot_onwind</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1e3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">twh</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span></span>
+<span><span class="co">#&gt; # A tibble: 5 × 3</span></span>
 <span><span class="co">#&gt;   nuts0   twh wind_gw</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> DE     509.    490.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> FR     492.    969.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> IT     316.    504.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> GB     316.    439.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ES     246.    938.</span></span></code></pre></div>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 DE     509.    490.</span></span>
+<span><span class="co">#&gt; 2 FR     492.    969.</span></span>
+<span><span class="co">#&gt; 3 IT     316.    504.</span></span>
+<span><span class="co">#&gt; 4 GB     316.    439.</span></span>
+<span><span class="co">#&gt; 5 ES     246.    938.</span></span></code></pre></div>
 <p>The column used to aggregate or split by is a modelling choice.
 National demand divides by <code>load_twh</code> or <code>pop</code>, a
 wind target by <code>pot_onwind</code>; area is rarely the right weight
@@ -332,7 +334,28 @@ objects and their licences</li>
 
 
 
-
-
-  </body>
+  <script> document.addEventListener("DOMContentLoaded", function () {
+  var n = 0, ids = {};
+  document.querySelectorAll("div.figure, figure").forEach(function (fg) {
+    var img = fg.querySelector("img");
+    var cap = fg.querySelector(".caption, figcaption");
+    if (!img || !cap) return;
+    n += 1;
+    var src = (img.getAttribute("src") || "").split("/").pop();
+    var dot = src.lastIndexOf(".");
+    if (dot > 0) src = src.slice(0, dot);
+    var base = src.replace(/[^a-zA-Z0-9_-]/g, "-");
+    if (base && !fg.id) fg.id = "fig-" + base;
+    ids[fg.id] = n;
+    var tag = document.createElement("span");
+    tag.className = "fig-number";
+    tag.textContent = "Figure " + n + ": ";
+    cap.insertBefore(tag, cap.firstChild);
+  });
+  document.querySelectorAll('a[href^="#fig-"]').forEach(function (a) {
+    var k = a.getAttribute("href").slice(1);
+    if (ids[k]) a.textContent = "Figure " + ids[k];
+  });
+}); </script>
+</body>
 </html>

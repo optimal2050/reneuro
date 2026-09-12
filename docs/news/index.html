@@ -20,10 +20,12 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/translation.html">Translation</a></li>
-    <li><a class="dropdown-item" href="../articles/data.html">The data</a></li>
-    <li><a class="dropdown-item" href="../articles/data-sources.html">The data sources</a></li>
+    <li><a class="dropdown-item" href="../articles/data.html">Data in PyPSA-Eur 41-node</a></li>
+    <li><a class="dropdown-item" href="../articles/data-sources.html">Data sources</a></li>
+    <li><a class="dropdown-item" href="../articles/scenarios.html">Scenarios</a></li>
     <li><a class="dropdown-item" href="../articles/report-model.html">Model report</a></li>
     <li><a class="dropdown-item" href="../articles/report-scenario.html">Scenario report</a></li>
+    <li><a class="dropdown-item" href="../articles/gpu-solving.html">Solving models on GPUs via Hugging Face</a></li>
     <li><a class="dropdown-item" href="../articles/about.html">About</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -49,7 +51,14 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.0.9000" id="reneuro-0009000">reneuro 0.0.0.9000<a class="anchor" aria-label="anchor" href="#reneuro-0009000"></a></h2>
-<ul><li><p><code>pypsa_eur_289</code> and <code>pypsa_eur_1035</code> are no longer shipped. The coarser NUTS levels are derived from <code>pypsa_eur_nuts3</code> with <code><a href="https://energyRt.org/reference/aggregate_model_regions.html" class="external-link">energyRt::aggregate_model_regions()</a></code>, and subsetting starts from <code>pypsa_eur_nuts3</code> directly.</p></li>
+<ul><li><p><code>pypsa_eur_41v</code> reworked: the existing fleet is one <code>STOCK</code> vintage per carrier carrying the summed retirement path (the build-year bins were parameter-flat and are aggregated away); gas gains <code>NEW&lt;year&gt;</code> vintage windows with each assumption year’s efficiency, lifetime and annuity frozen, replacing an open path whose year-keyed efficiency read as a free retrofit of standing capacity; cost-only carriers keep a single year-keyed investment path. The fleet’s milestone totals are unchanged.</p></li>
+<li><p>Model <code>@name</code>s are upper-case (<code>PYPSA_EUR_41</code>, <code>PYPSA_EUR_41V</code>, …), as solver-set identifiers.</p></li>
+<li><p>New dataset <code>tyndp_demand</code>: electricity-demand growth factors by country, scenario and milestone year from the TYNDP 2024 scenarios (NT+, Distributed Energy, Global Ambition), anchored at the measured 2025 load.</p></li>
+<li><p>New <code><a href="../reference/grow_demand.html">grow_demand()</a></code> builds year-keyed demand from a base-year profile and any growth-factor table; <code><a href="../reference/grow_demand.html">build_demand()</a></code> wraps it with a source model, name, and optional year/region selection.</p></li>
+<li><p>New dataset <code>policy_paths</code>: three CO2-cap trajectories as factors on 2025 emissions (the EU ETS shape, the EU NDC pledges, linear net-zero 2050), and a Scenarios article showing carbon caps and a carbon tax built with plain constraints and taxes on the shipped models.</p></li>
+<li><p>The translation article gains a “Revised assumptions” section documenting the deliberate deviations shipped as separate model versions: economic retirement and TYNDP demand growth.</p></li>
+<li><p><code>nuts_load</code> and <code>nuts_lines</code> region codes are normalized to the same underscore convention as <code>nuts_gs</code>, so joins across the three datasets match for the non-NUTS countries (BA, MD, UA, XK).</p></li>
+<li><p><code>pypsa_eur_289</code> and <code>pypsa_eur_1035</code> are no longer shipped. The coarser NUTS levels are derived from <code>pypsa_eur_nuts3</code> with <code><a href="https://energyRt.org/reference/aggregate_model_regions.html" class="external-link">energyRt::aggregate_model_regions()</a></code>, and subsetting starts from <code>pypsa_eur_nuts3</code> directly.</p></li>
 <li><p>All shipped models are rebuilt with corrected calendar chronology: converter-built calendars ordered timeslices hour-major, so storage could not carry energy from one hour to the next. The converted Belgium model now reproduces PyPSA’s solution within 0.02%. <code>be_solved</code> solves to a new objective gate (164,899,752.517).</p></li>
 <li><p><code>convert_pypsa()</code> gains <code>expand_transmission</code>: corridors become investable at PyPSA’s line costs, for comparing against networks solved with transmission expansion.</p></li>
 <li><p>All four continental models are rebuilt on <strong>2025 weather and load</strong> (ENTSO-E measured demand, the <code>europe-2025-sarah3-era5</code> cutout). Regions, object names and the existing fleet are unchanged from the 2013 build; the demand year total moves from 3,356 to 3,163 TWh.</p></li>
@@ -61,6 +70,7 @@
 <li><p><code>pypsa_eur_41</code> also has its fuel costs separated: <code>varom</code> holds the true VOM and each fuel’s supply carries its price, taken from the cost table the network was built from. The objective is unchanged – the split is exact – and the fuel price is now a number you can vary. Its regions, object names and technology stock are unchanged; only trade and the cost split differ.</p></li>
 <li><p>Every technology and storage port carries its commodity’s unit.</p></li>
 <li><p><code>data-raw/pypsa_eur_41.R</code> builds it, so all six shipped models now have a build script. The docs name where each lives: this package’s <code>data-raw/</code> for the continental models, <code>reneuro.dev/data-raw/</code> for the Belgian ones.</p></li>
+<li><p>The website’s data documentation is reorganized: “Data in PyPSA-Eur 41-node” (what ships in the 41-node model, with mean capacity-factor, demand and network maps) and “Data sources” (the upstream inputs and the NUTS processing).</p></li>
 <li><p>A data-sources article shows the upstream inputs – the weather cutout, measured ENTSO-E demand, the plant fleet, the network – as maps and figures, with a source/licence table.</p></li>
 <li><p>Two website articles show what <code><a href="https://energyRt.org/reference/report.html" class="external-link">report()</a></code> produces: a model report for <code>pypsa_eur_41</code> and a scenario report for the same model solved on a sampled calendar. Each gives the call that derives it and then embeds the rendered report, built by <code>data-raw/example_reports.R</code>.</p></li>
 <li><p><code>pypsa_eur_nuts3</code>: the NUTS3 network over the full year, 1,035 regions and 8,760 hourly snapshots. Its weather profiles ship as seven <code>wx_nuts3_*</code> objects, since the model whole is 181 MB and past GitHub’s file limit; <code><a href="../reference/attach_weather.html">attach_weather()</a></code> puts back the ones a study needs and <code><a href="../reference/weather_resources.html">weather_resources()</a></code> lists them.</p></li>
@@ -85,7 +95,27 @@
 
 
 
-
-
-  </body></html>
+  <script> document.addEventListener("DOMContentLoaded", function () {
+  var n = 0, ids = {};
+  document.querySelectorAll("div.figure, figure").forEach(function (fg) {
+    var img = fg.querySelector("img");
+    var cap = fg.querySelector(".caption, figcaption");
+    if (!img || !cap) return;
+    n += 1;
+    var src = (img.getAttribute("src") || "").split("/").pop();
+    var dot = src.lastIndexOf(".");
+    if (dot > 0) src = src.slice(0, dot);
+    var base = src.replace(/[^a-zA-Z0-9_-]/g, "-");
+    if (base && !fg.id) fg.id = "fig-" + base;
+    ids[fg.id] = n;
+    var tag = document.createElement("span");
+    tag.className = "fig-number";
+    tag.textContent = "Figure " + n + ": ";
+    cap.insertBefore(tag, cap.firstChild);
+  });
+  document.querySelectorAll('a[href^="#fig-"]').forEach(function (a) {
+    var k = a.getAttribute("href").slice(1);
+    if (ids[k]) a.textContent = "Figure " + ids[k];
+  });
+}); </script></body></html>
 

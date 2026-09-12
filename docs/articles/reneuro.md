@@ -111,7 +111,7 @@ str(attr(pypsa_eur_5, "reneuro_provenance")[c("commit", "source", "built_on")])
 #> List of 3
 #>  $ commit  : chr "d6383ebf602767b1adbb676fe8a16e37a6e9f932"
 #>  $ source  : chr "base_s_5_elec.nc"
-#>  $ built_on: chr "2026-08-25"
+#>  $ built_on: chr "2026-09-03"
 ```
 
 ## 2. Interpolate
@@ -152,7 +152,7 @@ Those two chunks produced `be_solved`, which ships with the package:
 
 # print() would round this to 9 significant digits; the gate is exact.
 format(getData(be_solved, "vObjective", merge = TRUE)$value, digits = 16)
-#> [1] "164664296.503735"
+#> [1] "164899752.517096"
 ```
 
 The build script refuses to save a scenario whose objective differs from
@@ -177,14 +177,14 @@ getData(be_solved, "vTechAct", merge = TRUE, process = TRUE,
 #> # A tibble: 8 × 2
 #>   process        GWh
 #>   <chr>        <dbl>
-#> 1 E_CCGT       664. 
-#> 2 E_NUCLEAR    511. 
-#> 3 E_SOLAR      248  
+#> 1 E_CCGT       668. 
+#> 2 E_NUCLEAR    511  
+#> 3 E_SOLAR      256. 
 #> 4 E_OFFWIND_AC 142. 
-#> 5 E_SOLAR_HSAT  70.9
+#> 5 E_SOLAR_HSAT  63  
 #> 6 E_ONWIND      55.3
 #> 7 E_WASTE       44.6
-#> 8 E_BIOMASS     18.7
+#> 8 E_BIOMASS     18.6
 ```
 
 Gas and nuclear supply most of the week, followed by solar and offshore
