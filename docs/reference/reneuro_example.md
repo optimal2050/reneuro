@@ -28,5 +28,5 @@ reneuro_example()
 #> [2] "geo/regions_offshore_base_s_5.geojson"
 #> [3] "geo/regions_onshore_base_s_5.geojson" 
 reneuro_example("BE_base_s_5_elec.nc")
-#> [1] "C:/Users/admin/AppData/Local/Temp/Rtmpq2OcIp/temp_libpathd334162752f1/reneuro/extdata/BE_base_s_5_elec.nc"
+#> [1] "C:/Users/admin/AppData/Local/Temp/RtmpoBWA5I/temp_libpathc45860234431/reneuro/extdata/BE_base_s_5_elec.nc"
 ```

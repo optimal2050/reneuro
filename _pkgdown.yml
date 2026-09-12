@@ -60,7 +60,7 @@ template:
     primary: "#003399"
     secondary: "#FFCC00"
     link-color: "#003399"
-    navbar-bg: "#003399"
+    navbar-bg: "#003399"   # light mode; dark mode goes slate grey in extra.css
 
 # Pinned rather than `auto`: with `auto`, the first released version silently
 # switches pkgdown to devel mode and relocates the whole site into `r/dev/`.

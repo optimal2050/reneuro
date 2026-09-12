@@ -23,9 +23,10 @@
   --bs-link-hover-color-rgb: 166, 184, 219;
 }
 
-/* `navbar-bg` paints the bar #003399 in both themes, but pkgdown drives navbar
- * FOREGROUND from --bs-emphasis-color, which follows the page theme -- so in
- * light mode the links would come out near-black on navy. Set them explicitly.
+/* `navbar-bg` paints the bar #003399 in both themes; dark mode is re-painted
+ * slate grey below. pkgdown drives navbar FOREGROUND from
+ * --bs-emphasis-color, which follows the page theme -- so in light mode the
+ * links would come out near-black on navy. Set them explicitly.
  * (The toggler icon is a hard-coded dark-stroke SVG upstream, hence the
  * white-stroke replacement; it only shows at mobile widths.) */
 .navbar {
@@ -37,6 +38,13 @@
   --bs-navbar-disabled-color: rgba(255, 255, 255, .45);
   --bs-navbar-toggler-border-color: rgba(255, 255, 255, .3);
   --bs-navbar-toggler-icon-bg: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 30 30%27%3e%3cpath stroke=%27rgba%28255,255,255,0.85%29%27 stroke-linecap=%27round%27 stroke-miterlimit=%2710%27 stroke-width=%272%27 d=%27M4 7h22M4 15h22M4 23h22%27/%3e%3c/svg%3e");
+}
+
+/* Dark mode: the navy bar reads heavy against the dark body; paint it a
+ * shade darker than the body (#212529) instead. White foreground and gold
+ * accents keep their contrast. */
+[data-bs-theme="dark"] .navbar {
+  background-color: #1a1d20 !important;
 }
 
 /* The development version label renders as `text-danger`; that red is 2.40:1
