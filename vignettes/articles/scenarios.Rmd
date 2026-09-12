@@ -61,10 +61,16 @@ the same lever, and both can be present.
 The `policy_paths` dataset carries three sourced cap trajectories as
 factors relative to 2025 emissions:
 
-* **`current_policy`** — the EU ETS cap shape: linear reduction at the
+* **`ets_cap`** — the EU ETS cap shape: linear reduction at the
   Fit-for-55 rates (Directive (EU) 2023/959, 4.3 %/yr to 2027 and
   4.4 %/yr after), which takes the ETS-1 cap to zero around 2039; power
-  is ETS-covered, so the power cap follows it.
+  is ETS-covered, so the power cap follows it. Counterintuitively this
+  makes the *legislated* path the tightest of the three — the linear
+  reduction factors exhaust the cap a decade before the net-zero-2050
+  line. Two caveats keep it a shape rather than a hard ceiling:
+  allowances bank across years (the annual cap is not an annual
+  emissions limit), and the ETS-1 cap covers industry and aviation
+  alongside power.
 * **`ndc`** — the EU's economy-wide pledges mapped to 2025-relative
   factors: −55 % by 2030 vs 1990 (Climate Law), the 66.25–72.5 %
   indicative 2035 range of the NDC submitted to the UNFCCC in November
@@ -122,6 +128,9 @@ results pages as solves accumulate.
   — the revised EU ETS (linear reduction factors, rebasing).
 * [EU ETS emissions cap](https://climate.ec.europa.eu/areas-action/carbon-markets/eu-emissions-trading-system-eu-ets/eu-ets-emissions-cap_en)
   — European Commission.
+* [Understanding the EU ETS](https://www.cleanenergywire.org/factsheets/understanding-european-unions-emissions-trading-system)
+  — Clean Energy Wire factsheet; under the current linear reduction
+  factors the ETS-1 cap reaches zero by 2039.
 * [The EU's updated NDC, November 2025](https://www.consilium.europa.eu/en/press/press-releases/2025/11/05/paris-agreement-the-eu-submits-its-updated-ndc-with-an-indicative-target-for-2035-to-the-un-ahead-of-cop30/)
   — Council of the EU.
 * [The 2040 climate target](https://climate.ec.europa.eu/areas-action/climate-strategies-targets/2040-climate-target_en)

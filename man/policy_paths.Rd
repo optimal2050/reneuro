@@ -16,9 +16,11 @@ policy_paths
 }
 \description{
 Three cap paths as factors relative to 2025 emissions, for building
-carbon-cap scenarios (see the Scenarios article): \code{current_policy}
+carbon-cap scenarios (see the Scenarios article): \code{ets_cap}
 (the EU ETS cap shape under the Fit-for-55 linear reduction factors,
-zero around 2039), \code{ndc} (the EU's economy-wide pledges -- -55\% 2030,
+zero around 2039 -- deliberately the tightest of the three; note the
+cap is bankable, so it is not a hard annual emissions ceiling), \code{ndc}
+(the EU's economy-wide pledges -- -55\% 2030,
 the 2035 NDC midpoint, -90\% 2040, neutrality 2050 -- mapped to
 2025-relative factors) and \code{nz2050} (linear to zero at 2050).
 Multiply by a base-year emission level (the model's own solved 2025

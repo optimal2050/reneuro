@@ -5,7 +5,7 @@
 # are growth-factor-transparent like tyndp_demand.
 #
 # Anchors (all citable):
-# - current_policy: the EU ETS cap shape. Directive (EU) 2023/959: linear
+# - ets_cap: the EU ETS cap shape. Directive (EU) 2023/959: linear
 #   reduction factor 4.3%/yr (2024-2027) and 4.4%/yr (2028+) of the base
 #   amount, plus rebasings -90 Mt (2024) and -27 Mt (2026); -62% by 2030
 #   vs 2005. At these LRFs the ETS-1 cap reaches zero around 2039. Power
@@ -25,7 +25,7 @@ library(dplyr)
 
 YEARS <- seq(2025, 2050, 5)
 
-cp <- tibble(scenario = "current_policy", year = YEARS,
+cp <- tibble(scenario = "ets_cap", year = YEARS,
              factor = pmax(0, 1 - (YEARS - 2025) / (2039 - 2025)),
              method = ifelse(YEARS <= 2039, "ets_linear", "held_zero"))
 

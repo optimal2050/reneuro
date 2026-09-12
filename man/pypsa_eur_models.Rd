@@ -150,19 +150,24 @@ discounted. The series ships \strong{without weather}: all six share
 
 \code{pypsa_eur_41v} is the \strong{vintaged multi-year model}: one model over the
 2025--2050 horizon (five-year milestones) where each carrier is a single
-technology whose existing fleet is split into build-year vintages -- the
-17 \code{grouping_years_power} bins PyPSA's myopic mode uses -- each with its
-own efficiency (from that bin's cost table, clamped to 2025) and a
-milestone-by-milestone surviving-stock series from the same two retirement
-rules as the horizon series. Alongside the closed bins, each investable
-carrier has one open path with year-keyed investment costs from the six
-horizon cost tables, so build-year economics are endogenous. Carriers with
-no existing fleet (solar-hsat, offwind DC and floating) stay un-vintaged
-and investable. Demand is flat at 2025; like the horizon series it ships
-without weather -- \code{attach_weather(pypsa_eur_41v, from = pypsa_eur_41)}.
+technology with a \code{STOCK} vintage carrying the existing fleet's
+milestone-by-milestone surviving-stock series (announced retirements plus
+assumed lifetime aging, summed over PyPSA's build-year bins -- the bins
+themselves are parameter-flat under the 2025 cost-table clamp, so they are
+aggregated away) and, for investable carriers, open paths: where the
+assumption tables move a real parameter across the horizon (gas
+efficiency), one \verb{NEW<year>} vintage window per assumption year with that
+table's efficiency, lifetime and annuity frozen -- year-keyed efficiency
+inside a single open path would let standing capacity retrofit itself for
+free -- and where only cost varies (VRE), a single \code{NEW} path with
+year-keyed investment costs, so build-year economics stay endogenous.
+Carriers with no existing fleet (solar-hsat, offwind DC and floating) stay
+un-vintaged and investable. Demand is flat at 2025; like the horizon
+series it ships without weather --
+\code{attach_weather(pypsa_eur_41v, from = pypsa_eur_41)}.
 \code{energyRt::getVariants()} and \code{energyRt::variantSummary()} list the
-vintages; \code{attr(m, "reneuro_provenance")} records the bin table and the
-announced/assumed retirement split.
+vintages; \code{attr(m, "reneuro_provenance")} records the retirement-rule
+split and the aggregation.
 
 The continental models are built on \strong{2025 weather and load} (ENTSO-E
 measured demand; the \code{europe-2025-sarah3-era5} cutout). All were converted
