@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">reneuro</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.3.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.3.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,8 @@
 <li><a class="dropdown-item" href="../articles/translation.html">Translation</a></li>
     <li><a class="dropdown-item" href="../articles/data.html">Data in PyPSA-Eur 41-node</a></li>
     <li><a class="dropdown-item" href="../articles/data-sources.html">Data sources</a></li>
+    <li><a class="dropdown-item" href="../articles/wind-potential.html">Wind energy</a></li>
+    <li><a class="dropdown-item" href="../articles/solar-potential.html">Solar energy</a></li>
     <li><a class="dropdown-item" href="../articles/scenarios.html">Scenarios</a></li>
     <li><a class="dropdown-item" href="../articles/report-model.html">Model report</a></li>
     <li><a class="dropdown-item" href="../articles/report-scenario.html">Scenario report</a></li>
@@ -385,11 +387,29 @@ annuitise a second time.</p>
 <h2 id="revised-assumptions">Revised assumptions<a class="anchor" aria-label="anchor" href="#revised-assumptions"></a>
 </h2>
 <p>Everything above translates PyPSA-Eur faithfully — same data, same
-assumptions, verified against the source model’s own solutions. Two
-assumption families are also <em>revised</em> in separate model
-versions, so the faithful model and the revised one can be solved side
-by side and the difference read as the effect of the assumption, never
-of the translation.</p>
+assumptions, verified against the source model’s own solutions. Three
+assumption families are also <em>revised</em>, in model versions built
+beside the faithful one so the two can be solved side by side and the
+difference read as the effect of the assumption, never of the
+translation. The revised versions are not among the eleven models the
+package ships today: they arrive with the repository update and ship as
+separate data.</p>
+<div class="section level3">
+<h3 id="capacity-factors">Capacity factors<a class="anchor" aria-label="anchor" href="#capacity-factors"></a>
+</h3>
+<p>PyPSA-Eur offers each region’s whole eligible area at one blended,
+best-cells-weighted profile: all the land at the quality of the good
+sites. The revised layer replaces the blended VRE generators with
+resource clusters split into quality tiers — wind calibrated to the
+Global Wind Atlas along an aggregate park power curve, solar levels
+carved from the Global Solar Atlas — so capacity buys the tier it
+occupies, with the area each tier actually has. Fixed-tilt panels use a
+per-location optimal angle (measured effect vs the flat 35°: about zero
+in Europe — the change is kept for consistency with the atlas
+assumptions), and single-axis tracked and two-axis tracked variants
+compete alongside fixed panels at their own capacity factors, packing
+densities and costs. The construction is documented in the <a href="wind-potential.html">wind energy</a> and <a href="solar-potential.html">solar energy</a> articles.</p>
+</div>
 <div class="section level3">
 <h3 id="economic-retirement">Economic retirement<a class="anchor" aria-label="anchor" href="#economic-retirement"></a>
 </h3>
@@ -473,7 +493,7 @@ aggregation rules</li>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Oleg Lugovoy.</p>
+
 </div>
 
 <div class="pkgdown-footer-right">

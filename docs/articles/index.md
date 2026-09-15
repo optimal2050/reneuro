@@ -9,6 +9,10 @@
   41-node](https://optimal2050.github.io/reneuro/articles/data.md):
 - [Data
   sources](https://optimal2050.github.io/reneuro/articles/data-sources.md):
+- [Wind
+  energy](https://optimal2050.github.io/reneuro/articles/wind-potential.md):
+- [Solar
+  energy](https://optimal2050.github.io/reneuro/articles/solar-potential.md):
 - [Scenarios](https://optimal2050.github.io/reneuro/articles/scenarios.md):
 - [Model
   report](https://optimal2050.github.io/reneuro/articles/report-model.md):

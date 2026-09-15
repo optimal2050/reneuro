@@ -14,8 +14,9 @@ profiles are made, and the NUTS-level datasets (`nuts_gs`, `nuts_load`,
 `nuts_lines`) with the aggregation arithmetic that turns them into any
 coarser regional layer. The heavy inputs (a 6.7 GB weather cutout, a
 PyPSA-Eur clone) do not ship, so their figures are pre-rendered by
-`data-raw/data_sources_figures.R` and committed; everything drawn from
-shipped data is computed live on this page.
+`data-raw/data_sources_figures.R` and `data-raw/cf-workflow/` and
+committed; everything drawn from shipped data is computed live on this
+page.
 
 ## 1. Weather: the cutout
 
@@ -29,6 +30,15 @@ diffuse solar influx (SARAH-3 satellite data, aggregated from its native
 European latitudes. PyPSA-Eur turns it into per-region hourly capacity
 factors; those arrive in the models as the `weather` objects
 (`W_ONWIND`, `W_SOLAR`, …).
+
+These are one weather year. The horizon series reuses the same profiles
+to 2050, so 2025 sets both the variability and the potential throughout.
+The
+[wind](https://optimal2050.github.io/reneuro/articles/wind-potential.md)
+and
+[solar](https://optimal2050.github.io/reneuro/articles/solar-potential.md)
+articles take the potential from long-term atlases instead, keeping
+these hours for the variability.
 
 ``` r
 
@@ -56,6 +66,26 @@ record (CC-BY, EUMETSAT CM SAF) with ERA5 infill at high latitudes.
 
 The exact licence notices ship in
 `system.file("LICENSE.note", package = "reneuro")`.
+
+A second, much finer wind source complements the cutout: the [Global
+Wind Atlas](https://globalwindatlas.info) at 250 m, carved into
+capacity-factor bands for the quality-aware resource layer (see the
+[wind
+article](https://optimal2050.github.io/reneuro/articles/wind-potential.md)).
+Where the cutout gives one number per ~25 km cell, the atlas resolves
+individual ridgelines and coastal gradients:
+
+``` r
+
+fig("gwa_carved_map.png", "cf-pipeline")
+```
+
+![Global Wind Atlas IEC2 capacity factor at 250 m; land and sea shown,
+the land-eligibility screen applies
+downstream.](figures/cf-pipeline/gwa_carved_map.png)
+
+Global Wind Atlas IEC2 capacity factor at 250 m; land and sea shown, the
+land-eligibility screen applies downstream.
 
 ## 2. Demand: measured ENTSO-E series
 
@@ -169,6 +199,13 @@ carried through. A binning mechanism exists upstream
 tiers, but it is off by default and off in these builds — each region
 gets exactly one blended generator per carrier.
 
+The quality-aware alternative built beside the original is documented in
+the
+[wind](https://optimal2050.github.io/reneuro/articles/wind-potential.md)
+and
+[solar](https://optimal2050.github.io/reneuro/articles/solar-potential.md)
+potential articles.
+
 ## 6. The land itself
 
 The CORINE raster behind the exclusions, at CLC level 1, and what the
@@ -178,23 +215,23 @@ artificial surfaces. About half the wind-only area is forest.
 
 ``` r
 
-fig("corine_landtype.png", "data-sources")
+fig("corine_landtype.png", "cf-pipeline")
 ```
 
 ![CORINE land cover at CLC level 1 (~5 km modal aggregate of the 250 m
-raster).](figures/data-sources/corine_landtype.png)
+raster).](figures/cf-pipeline/corine_landtype.png)
 
 CORINE land cover at CLC level 1 (~5 km modal aggregate of the 250 m
 raster).
 
 ``` r
 
-fig("corine_eligibility.png", "data-sources")
+fig("corine_eligibility.png", "cf-pipeline")
 ```
 
 ![Land admitted by the PyPSA-Eur CORINE grid-code coding, per carrier.
 Inclusion only — Natura 2000, urban buffers and the other excluders
-apply on top.](figures/data-sources/corine_eligibility.png)
+apply on top.](figures/cf-pipeline/corine_eligibility.png)
 
 Land admitted by the PyPSA-Eur CORINE grid-code coding, per carrier.
 Inclusion only — Natura 2000, urban buffers and the other excluders
@@ -210,13 +247,13 @@ touches.
 
 ``` r
 
-fig("avail_map_onwind.png", "data-sources")
+fig("avail_map_onwind.png", "cf-pipeline")
 ```
 
 ![Available land for onshore wind: eligible share of each region-clipped
 cell after the land-use exclusions. The solid red line traces the CORINE
 raster coverage; outside it the shown fraction carries the flat 0.5
-derate.](figures/data-sources/avail_map_onwind.png)
+derate.](figures/cf-pipeline/avail_map_onwind.png)
 
 Available land for onshore wind: eligible share of each region-clipped
 cell after the land-use exclusions. The solid red line traces the CORINE
@@ -225,12 +262,12 @@ derate.
 
 ``` r
 
-fig("mwmax_map_onwind.png", "data-sources")
+fig("mwmax_map_onwind.png", "cf-pipeline")
 ```
 
 ![Installable onshore wind potential per cell: eligible area × 3 MW/km²
 (unfiltered; flat 0.5 derate outside the red CORINE coverage
-line).](figures/data-sources/mwmax_map_onwind.png)
+line).](figures/cf-pipeline/mwmax_map_onwind.png)
 
 Installable onshore wind potential per cell: eligible area × 3 MW/km²
 (unfiltered; flat 0.5 derate outside the red CORINE coverage line).
@@ -803,7 +840,17 @@ quantity.
   `LICENSE.note` for what is used and under which terms.
 - **Capacity-factor granularity is ~25–30 km.** Eligibility is known at
   100 m, but the resource is only known per 0.3° cell — a windy ridge
-  and a calm valley inside one cell are indistinguishable.
+  and a calm valley inside one cell are indistinguishable. This is the
+  gap the [wind-potential
+  layer](https://optimal2050.github.io/reneuro/articles/wind-potential.md)
+  closes with the 250 m atlas.
+- **The profiles are one weather year.** Potential and variability both
+  come from 2025, and the horizon series reuses those profiles unchanged
+  to 2050. The
+  [wind](https://optimal2050.github.io/reneuro/articles/wind-potential.md)
+  and
+  [solar](https://optimal2050.github.io/reneuro/articles/solar-potential.md)
+  articles take the potential from long-term atlases instead.
 
 ## 10. Sources at a glance
 
@@ -811,12 +858,18 @@ quantity.
 |----|----|----|----|
 | ERA5 (Copernicus C3S) | CC-BY | 2025 hourly | wind / hydro / temperature profiles → `weather` objects |
 | SARAH-3 (EUMETSAT CM SAF) | CC-BY | 2025 hourly | solar profiles → `weather` objects |
+| Global Wind Atlas (DTU) | CC-BY | v4 long-term | 250 m quality bands → the wind-potential layer |
+| Global Solar Atlas (Solargis / World Bank ESMAP) | CC-BY | v2 long-term | ~1 km PVOUT → the solar atlas check |
 | ENTSO-E transparency (+ NESO for GB) | open re-use | 2025 hourly | national load → `demand` |
 | powerplantmatching | GPL-3 code, mixed open registries | through 2024 | fleet → `stock`, `cap.lo` floors, retirement in the horizon series |
 | OpenStreetMap (+ TYNDP projects) | ODbL | 2026 extract | grid → `trade` corridors (the reason the data licence is ODbL) |
 | NUTS / JRC / Eurostat layers | EU open licences | mixed | region geometry + attributes → `nuts_gs` |
 | Natural Earth (via rnaturalearth) | public domain | 1:50m | coastlines and country contours on the figures |
 | technology-data v0.14.0 | CC-BY | 2020–2050 in 5-year steps | costs → `invcost` / `varom` / supply prices |
+
+The `vintage` column carries the split the potential articles turn on:
+the hourly sources supply variability, the long-term atlases supply the
+level.
 
 What is *not* here: the World Database on Protected Areas
 (non-redistributable; excluded, with the effect documented in

@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">reneuro</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.3.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.3.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,8 @@
 <li><a class="dropdown-item" href="../articles/translation.html">Translation</a></li>
     <li><a class="dropdown-item" href="../articles/data.html">Data in PyPSA-Eur 41-node</a></li>
     <li><a class="dropdown-item" href="../articles/data-sources.html">Data sources</a></li>
+    <li><a class="dropdown-item" href="../articles/wind-potential.html">Wind energy</a></li>
+    <li><a class="dropdown-item" href="../articles/solar-potential.html">Solar energy</a></li>
     <li><a class="dropdown-item" href="../articles/scenarios.html">Scenarios</a></li>
     <li><a class="dropdown-item" href="../articles/report-model.html">Model report</a></li>
     <li><a class="dropdown-item" href="../articles/report-scenario.html">Scenario report</a></li>
@@ -97,8 +99,9 @@ made, and the NUTS-level datasets (<code>nuts_gs</code>,
 arithmetic that turns them into any coarser regional layer. The heavy
 inputs (a 6.7 GB weather cutout, a PyPSA-Eur clone) do not ship, so
 their figures are pre-rendered by
-<code>data-raw/data_sources_figures.R</code> and committed; everything
-drawn from shipped data is computed live on this page.</p>
+<code>data-raw/data_sources_figures.R</code> and
+<code>data-raw/cf-workflow/</code> and committed; everything drawn from
+shipped data is computed live on this page.</p>
 <div class="section level2">
 <h2 id="weather-the-cutout">1. Weather: the cutout<a class="anchor" aria-label="anchor" href="#weather-the-cutout"></a>
 </h2>
@@ -113,6 +116,10 @@ is roughly 21 × 33 km at European latitudes. PyPSA-Eur turns it into
 per-region hourly capacity factors; those arrive in the models as the
 <code>weather</code> objects (<code>W_ONWIND</code>,
 <code>W_SOLAR</code>, …).</p>
+<p>These are one weather year. The horizon series reuses the same
+profiles to 2050, so 2025 sets both the variability and the potential
+throughout. The <a href="wind-potential.html">wind</a> and <a href="solar-potential.html">solar</a> articles take the potential from
+long-term atlases instead, keeping these hours for the variability.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">fig</span><span class="op">(</span><span class="st">"cutout-wind.png"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
@@ -131,6 +138,19 @@ record (CC-BY, EUMETSAT CM SAF) with ERA5 infill at high latitudes.
 </div>
 <p>The exact licence notices ship in
 <code>system.file("LICENSE.note", package = "reneuro")</code>.</p>
+<p>A second, much finer wind source complements the cutout: the <a href="https://globalwindatlas.info" class="external-link">Global Wind Atlas</a> at 250 m,
+carved into capacity-factor bands for the quality-aware resource layer
+(see the <a href="wind-potential.html">wind article</a>). Where the
+cutout gives one number per ~25 km cell, the atlas resolves individual
+ridgelines and coastal gradients:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">fig</span><span class="op">(</span><span class="st">"gwa_carved_map.png"</span>, <span class="st">"cf-pipeline"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="figures/cf-pipeline/gwa_carved_map.png" class="r-plt" alt="Global Wind Atlas IEC2 capacity factor at 250 m; land and sea shown, the land-eligibility screen applies downstream." width="800"><p class="caption">
+Global Wind Atlas IEC2 capacity factor at 250 m; land and sea shown, the
+land-eligibility screen applies downstream.
+</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="demand-measured-entso-e-series">2. Demand: measured ENTSO-E series<a class="anchor" aria-label="anchor" href="#demand-measured-entso-e-series"></a>
@@ -139,7 +159,7 @@ record (CC-BY, EUMETSAT CM SAF) with ERA5 infill at high latitudes.
 platform (with NESO for Great Britain). It lands in the models as each
 region’s <code>demand</code>, distributed below country level by a
 GDP/population proxy.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">fig</span><span class="op">(</span><span class="st">"demand-entsoe.png"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="figures/data-sources/demand-entsoe.png" class="r-plt" alt="Weekly-mean measured demand for the eight largest systems, ENTSO-E transparency platform. The workflow fills the few countries with gaps (UA, MK, CY, AL) from template years." width="440"><p class="caption">
@@ -150,7 +170,7 @@ transparency platform. The workflow fills the few countries with gaps
 </div>
 <p>The 2025 total across the modelled countries is 3,163 TWh — visible
 in the shipped models as the sum over the demand objects:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">objs</span> <span class="op">&lt;-</span> <span class="va">pypsa_eur_41</span><span class="op">@</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">@</span><span class="va">data</span></span>
 <span><span class="va">dem</span> <span class="op">&lt;-</span> <span class="va">objs</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span><span class="va">objs</span>, <span class="kw">function</span><span class="op">(</span><span class="va">o</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="st">""</span><span class="op">)</span> <span class="op">==</span> <span class="st">"demand"</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span><span class="va">dem</span>, <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">d</span><span class="op">@</span><span class="va">demand</span><span class="op">$</span><span class="va">demand</span><span class="op">)</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1e6</span>  <span class="co"># TWh</span></span>
@@ -167,7 +187,7 @@ they become the non-extendable <code>stock</code> (nuclear, coal, hydro,
 solar); in the <code>pypsa_eur_41_&lt;year&gt;</code> horizon series
 they also drive retirement, through announced closure dates where they
 exist and assumed lifetimes elsewhere.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">fig</span><span class="op">(</span><span class="st">"fleet.png"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="figures/data-sources/fleet.png" class="r-plt" alt="The existing fleet: units of 100 MW and above, sized by capacity, coloured by fuel — powerplantmatching (GEM, JRC, ENTSO-E, GPD and more, deduplicated)." width="412"><p class="caption">
@@ -234,6 +254,8 @@ potential is carried through. A binning mechanism exists upstream
 (<code>resource_classes</code>) that would split each region into
 capacity-factor tiers, but it is off by default and off in these builds
 — each region gets exactly one blended generator per carrier.</p>
+<p>The quality-aware alternative built beside the original is documented
+in the <a href="wind-potential.html">wind</a> and <a href="solar-potential.html">solar</a> potential articles.</p>
 </div>
 <div class="section level2">
 <h2 id="the-land-itself">6. The land itself<a class="anchor" aria-label="anchor" href="#the-land-itself"></a>
@@ -243,18 +265,18 @@ per-carrier grid-code inclusion admits from it. Wind’s base is
 agriculture <em>plus</em> forest and natural land; solar trades the
 forests for artificial surfaces. About half the wind-only area is
 forest.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">fig</span><span class="op">(</span><span class="st">"corine_landtype.png"</span>, <span class="st">"data-sources"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">fig</span><span class="op">(</span><span class="st">"corine_landtype.png"</span>, <span class="st">"cf-pipeline"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="figures/data-sources/corine_landtype.png" class="r-plt" alt="CORINE land cover at CLC level 1 (~5 km modal aggregate of the 250 m raster)." width="675"><p class="caption">
+<img src="figures/cf-pipeline/corine_landtype.png" class="r-plt" alt="CORINE land cover at CLC level 1 (~5 km modal aggregate of the 250 m raster)." width="675"><p class="caption">
 CORINE land cover at CLC level 1 (~5 km modal aggregate of the 250 m
 raster).
 </p>
 </div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">fig</span><span class="op">(</span><span class="st">"corine_eligibility.png"</span>, <span class="st">"data-sources"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">fig</span><span class="op">(</span><span class="st">"corine_eligibility.png"</span>, <span class="st">"cf-pipeline"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="figures/data-sources/corine_eligibility.png" class="r-plt" alt="Land admitted by the PyPSA-Eur CORINE grid-code coding, per carrier. Inclusion only — Natura 2000, urban buffers and the other excluders apply on top." width="675"><p class="caption">
+<img src="figures/cf-pipeline/corine_eligibility.png" class="r-plt" alt="Land admitted by the PyPSA-Eur CORINE grid-code coding, per carrier. Inclusion only — Natura 2000, urban buffers and the other excluders apply on top." width="675"><p class="caption">
 Land admitted by the PyPSA-Eur CORINE grid-code coding, per carrier.
 Inclusion only — Natura 2000, urban buffers and the other excluders
 apply on top.
@@ -269,20 +291,20 @@ cutout’s own resolution. Dark cells are excluded (urban fabric and its
 buffer for wind, forests for solar, protected areas for both); the
 eligible remainder is dominated by agricultural land, which no exclusion
 touches.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">fig</span><span class="op">(</span><span class="st">"avail_map_onwind.png"</span>, <span class="st">"data-sources"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">fig</span><span class="op">(</span><span class="st">"avail_map_onwind.png"</span>, <span class="st">"cf-pipeline"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="figures/data-sources/avail_map_onwind.png" class="r-plt" alt="Available land for onshore wind: eligible share of each region-clipped cell after the land-use exclusions. The solid red line traces the CORINE raster coverage; outside it the shown fraction carries the flat 0.5 derate." width="600"><p class="caption">
+<img src="figures/cf-pipeline/avail_map_onwind.png" class="r-plt" alt="Available land for onshore wind: eligible share of each region-clipped cell after the land-use exclusions. The solid red line traces the CORINE raster coverage; outside it the shown fraction carries the flat 0.5 derate." width="600"><p class="caption">
 Available land for onshore wind: eligible share of each region-clipped
 cell after the land-use exclusions. The solid red line traces the CORINE
 raster coverage; outside it the shown fraction carries the flat 0.5
 derate.
 </p>
 </div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">fig</span><span class="op">(</span><span class="st">"mwmax_map_onwind.png"</span>, <span class="st">"data-sources"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">fig</span><span class="op">(</span><span class="st">"mwmax_map_onwind.png"</span>, <span class="st">"cf-pipeline"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="figures/data-sources/mwmax_map_onwind.png" class="r-plt" alt="Installable onshore wind potential per cell: eligible area × 3 MW/km² (unfiltered; flat 0.5 derate outside the red CORINE coverage line)." width="600"><p class="caption">
+<img src="figures/cf-pipeline/mwmax_map_onwind.png" class="r-plt" alt="Installable onshore wind potential per cell: eligible area × 3 MW/km² (unfiltered; flat 0.5 derate outside the red CORINE coverage line)." width="600"><p class="caption">
 Installable onshore wind potential per cell: eligible area × 3 MW/km²
 (unfiltered; flat 0.5 derate outside the red CORINE coverage line).
 </p>
@@ -307,7 +329,7 @@ impedances have to be recomputed rather than combined.</p>
 <div class="section level3">
 <h3 id="nested-levels">Nested levels<a class="anchor" aria-label="anchor" href="#nested-levels"></a>
 </h3>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gs</span> <span class="op">&lt;-</span> <span class="va">nuts_gs</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span><span class="fu">geoscales</span><span class="fu">::</span><span class="fu"><a href="https://optimal2050.github.io/geoscales/r/reference/geoscale_geoframes.html" class="external-link">geoscale_geoframes</a></span><span class="op">(</span><span class="va">gs</span><span class="op">)</span>,</span>
 <span>       <span class="kw">function</span><span class="op">(</span><span class="va">f</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu">geoscales</span><span class="fu">::</span><span class="fu"><a href="https://optimal2050.github.io/geoscales/r/reference/geoscale_regions.html" class="external-link">geoscale_regions</a></span><span class="op">(</span><span class="va">gs</span>, <span class="va">f</span><span class="op">)</span><span class="op">)</span>, <span class="fl">0L</span><span class="op">)</span></span>
@@ -322,7 +344,7 @@ continental commodity balance can be declared.
 <code>newCommodity(geoframe = "europe")</code> gives one Europe-wide CO2
 allowance or gas market; without it the coarsest balance is per country,
 i.e. 36 separate markets.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://optimal2050.github.io/geoscales/r/" class="external-link">geoscales</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">lt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://optimal2050.github.io/geoscales/r/reference/geoscale_leaftable.html" class="external-link">geoscale_leaftable</a></span><span class="op">(</span><span class="va">nuts_gs</span><span class="op">)</span><span class="op">)</span></span>
@@ -341,7 +363,7 @@ capacity (<code>cap_mw</code>).
 <p>The same hierarchy as an icicle plot. The NUTS3 row is omitted: at
 1,477 atoms most rectangles are thinner than their own outline, so the
 level reads as a solid band and adds nothing:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gs2</span> <span class="op">&lt;-</span> <span class="fu">geoscales</span><span class="fu">::</span><span class="fu"><a href="https://optimal2050.github.io/geoscales/r/reference/geoscale_from_leaftable.html" class="external-link">geoscale_from_leaftable</a></span><span class="op">(</span></span>
 <span>  <span class="va">lt</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>km2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">km2</span><span class="op">)</span>, .by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">europe</span>, <span class="va">nuts0</span>, <span class="va">nuts1</span>, <span class="va">nuts2</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  geoframes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"europe"</span>, <span class="st">"nuts0"</span>, <span class="st">"nuts1"</span>, <span class="st">"nuts2"</span><span class="op">)</span>,</span>
@@ -357,7 +379,7 @@ widths are area shares.
 all and are filled from OpenStreetMap <code>adm1</code>. Those regions
 become the atoms, and the levels above them are <strong>padded</strong>
 (<code>MD0</code>, <code>MD00</code>):</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu">geoscales</span><span class="fu">::</span><span class="fu"><a href="https://optimal2050.github.io/geoscales/r/reference/geoscale_leaftable.html" class="external-link">geoscale_leaftable</a></span><span class="op">(</span><span class="va">gs</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Every aggregation below is "roll the atoms up to a coarser geoframe", which is</span></span>
@@ -386,7 +408,7 @@ level: Luxembourg is <code>LU → LU0 → LU00 → LU000</code>, and no NUTS
 country produces an identity pair. The padding here follows that
 convention. “NUTS1” and “NUTS2” for these four countries remain
 stand-ins rather than real administrative levels.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu">geoscales</span><span class="fu">::</span><span class="fu"><a href="https://optimal2050.github.io/geoscales/r/reference/geoscale_geoframes.html" class="external-link">geoscale_geoframes</a></span><span class="op">(</span><span class="va">gs</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1L</span><span class="op">)</span>,</span>
 <span>       <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Logic.html" class="external-link">isTRUE</a></span><span class="op">(</span><span class="fu">geoscales</span><span class="fu">::</span><span class="fu"><a href="https://optimal2050.github.io/geoscales/r/reference/geoscale_nests.html" class="external-link">geoscale_nests</a></span><span class="op">(</span><span class="va">gs</span>, <span class="va">f</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">f</span><span class="op">[</span><span class="va">i</span> <span class="op">+</span> <span class="fl">1L</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -400,7 +422,7 @@ parents and its balance is added into both.</p>
 </h3>
 <p>The leaftable holds 14 data columns per region, in two families. The
 family determines what a column can be used for.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">lt</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"region"</span>, <span class="fu">geoscales</span><span class="fu">::</span><span class="fu"><a href="https://optimal2050.github.io/geoscales/r/reference/geoscale_geoframes.html" class="external-link">geoscale_geoframes</a></span><span class="op">(</span><span class="va">gs</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "km2"               "pop"               "gdp"              </span></span>
 <span><span class="co">#&gt;  [4] "gdp_total"         "load_twh"          "peak_mw"          </span></span>
@@ -492,7 +514,7 @@ substation buses:</p>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">geoscales</span><span class="fu">::</span><span class="fu"><a href="https://optimal2050.github.io/geoscales/r/reference/geoscale_weights.html" class="external-link">geoscale_weights</a></span><span class="op">(</span><span class="va">gs</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "km2"        "pop"        "gdp_total"  "load_twh"   "cap_mw"    </span></span>
 <span><span class="co">#&gt; [6] "pot_onwind" "pot_solar"</span></span></code></pre></div>
@@ -500,7 +522,7 @@ substation buses:</p>
 intensive one back up. Seven columns are declared as weights, and the
 choice changes the result. German demand split by area differs from the
 same demand split by population or by measured demand:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">de</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">lt</span>, <span class="va">nuts0</span> <span class="op">==</span> <span class="st">"DE"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"km2"</span>, <span class="st">"pop"</span>, <span class="st">"load_twh"</span>, <span class="st">"pot_onwind"</span><span class="op">)</span>,</span>
@@ -514,7 +536,7 @@ the caller’s to make.</p>
 million, which is not a quantity; the population-weighted mean, ~41,800
 EUR, is its GDP per capita, and <code>gdp_total</code> ships as the
 extensive money weight:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lt</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">nuts0</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>plain_sum <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">gdp</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -538,7 +560,7 @@ fixed-tilt and single-axis-tracking photovoltaics on the same land, and
 separate columns so no summing rule is imposed; the offshore columns are
 excluded from the weight set because they are zero for every landlocked
 country.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lt</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>regions <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>            no_substation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n_buses</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span>,</span>
@@ -549,7 +571,7 @@ country.</p>
 442 NUTS3 regions contain none. Every model column is zero there; the
 geographic columns are unaffected. The same applies at coarser
 levels:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nuts2"</span>, <span class="st">"nuts1"</span>, <span class="st">"nuts0"</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">l</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">lt</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span>group <span class="op">=</span> <span class="va">.data</span><span class="op">[[</span><span class="va">l</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -566,14 +588,14 @@ levels:</p>
 weight summing to zero over a group divides by zero when averaging into
 it; the affected groups are recorded on the object rather than
 substituted:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">gs</span>, <span class="st">"weight_degeneracy"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; NULL</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="load">Load<a class="anchor" aria-label="anchor" href="#load"></a>
 </h3>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">nuts_load</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    level region    load_twh  peak_gw n_buses</span></span>
 <span><span class="co">#&gt; 1 europe EUROPE 3356.475513 543.3607    4356</span></span>
@@ -584,7 +606,7 @@ sum, and it must agree with what was computed independently at each
 level:</p>
 <details><summary>
 Show code
-</summary><div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fine</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">nuts_load</span>, <span class="va">level</span> <span class="op">==</span> <span class="st">"nuts3"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">agg_load</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">col</span><span class="op">)</span> <span class="op">{</span></span>
@@ -613,7 +635,7 @@ Show code
 <p>Peak is not extensive:</p>
 <details><summary>
 Show code
-</summary><div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pk</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fine_lv</span>, <span class="va">coarse_lv</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">nuts_load</span>, <span class="va">level</span> <span class="op">==</span> <span class="va">fine_lv</span><span class="op">)</span></span>
 <span>  <span class="va">m</span> <span class="op">&lt;-</span> <span class="fu">parent_of</span><span class="op">(</span><span class="va">coarse_lv</span>, from <span class="op">=</span> <span class="va">fine_lv</span><span class="op">)</span></span>
@@ -647,7 +669,7 @@ distinct profiles. 442 regions carry no demand
 substation buses).</p>
 <details><summary>
 Show the map helpers
-</summary><div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">level_sf</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">lv</span><span class="op">)</span> <span class="op">{</span></span>
@@ -675,7 +697,7 @@ Show the map helpers
 <span><span class="va">BOX</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">11</span>, <span class="fl">41</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">34</span>, <span class="fl">71</span><span class="op">)</span><span class="op">)</span>   <span class="co"># crop overseas territories</span></span></code></pre></div>
 </details><details><summary>
 Show code
-</summary><div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">LEVELS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nuts0"</span>, <span class="st">"nuts1"</span>, <span class="st">"nuts2"</span>, <span class="st">"nuts3"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">maps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">LEVELS</span>, <span class="kw">function</span><span class="op">(</span><span class="va">l</span><span class="op">)</span> <span class="op">{</span></span>
@@ -704,7 +726,7 @@ the parent itself carries no demand.
 </h3>
 <p><code>nuts_lines</code> holds every <code>base_s</code> line whose
 ends fall in different NUTS3 regions. The rest were dropped:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">nuts_lines</span>, <span class="st">"reneuro_provenance"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>lines_total <span class="op">=</span> <span class="va">p</span><span class="op">$</span><span class="va">lines_total</span>, intra_nuts3_dropped <span class="op">=</span> <span class="va">p</span><span class="op">$</span><span class="va">lines_intra_dropped</span>,</span>
 <span>  shipped <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">nuts_lines</span><span class="op">)</span><span class="op">)</span></span>
@@ -715,7 +737,7 @@ network’s capacity. The finest level available discards more than half
 the grid.</p>
 <details><summary>
 Show the aggregation code
-</summary><div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">centroids</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">level</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">s</span> <span class="op">&lt;-</span> <span class="fu">level_sf</span><span class="op">(</span><span class="va">level</span><span class="op">)</span></span>
 <span>  <span class="va">cc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html" class="external-link">st_coordinates</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_centroid</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">s</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -762,7 +784,7 @@ inherited;</li>
 <code>x</code> is rescaled by the length ratio, then
 <strong>parallel-combined</strong> as <code>1 / Σ(1/x)</code>.</li>
 </ul>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">LEVELS</span>, <span class="kw">function</span><span class="op">(</span><span class="va">l</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">a</span> <span class="op">&lt;-</span> <span class="fu">agg_lines</span><span class="op">(</span><span class="va">l</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>level <span class="op">=</span> <span class="va">l</span>, corridors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">a</span><span class="op">)</span>,</span>
@@ -794,7 +816,7 @@ ignores N-1 security and loop flows. PyPSA-Eur compensates with a flat
 and do not cancel.</p>
 <details><summary>
 Show code
-</summary><div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">LEVELS</span>, <span class="kw">function</span><span class="op">(</span><span class="va">l</span><span class="op">)</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu">agg_lines</span><span class="op">(</span><span class="va">l</span><span class="op">)</span>,</span>
 <span>                                                    level <span class="op">=</span> <span class="va">l</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">nets</span><span class="op">$</span><span class="va">level</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">nets</span><span class="op">$</span><span class="va">level</span>, levels <span class="op">=</span> <span class="va">LEVELS</span><span class="op">)</span></span>
@@ -940,7 +962,14 @@ under which terms.</li>
 <strong>Capacity-factor granularity is ~25–30 km.</strong>
 Eligibility is known at 100 m, but the resource is only known per 0.3°
 cell — a windy ridge and a calm valley inside one cell are
-indistinguishable.</li>
+indistinguishable. This is the gap the <a href="wind-potential.html">wind-potential layer</a> closes with the 250
+m atlas.</li>
+<li>
+<strong>The profiles are one weather year.</strong> Potential and
+variability both come from 2025, and the horizon series reuses those
+profiles unchanged to 2050. The <a href="wind-potential.html">wind</a>
+and <a href="solar-potential.html">solar</a> articles take the potential
+from long-term atlases instead.</li>
 </ul>
 </div>
 <div class="section level2">
@@ -972,6 +1001,18 @@ objects</td>
 <td>CC-BY</td>
 <td>2025 hourly</td>
 <td>solar profiles → <code>weather</code> objects</td>
+</tr>
+<tr class="odd">
+<td>Global Wind Atlas (DTU)</td>
+<td>CC-BY</td>
+<td>v4 long-term</td>
+<td>250 m quality bands → the wind-potential layer</td>
+</tr>
+<tr class="even">
+<td>Global Solar Atlas (Solargis / World Bank ESMAP)</td>
+<td>CC-BY</td>
+<td>v2 long-term</td>
+<td>~1 km PVOUT → the solar atlas check</td>
 </tr>
 <tr class="odd">
 <td>ENTSO-E transparency (+ NESO for GB)</td>
@@ -1016,6 +1057,9 @@ prices</td>
 </tr>
 </tbody>
 </table>
+<p>The <code>vintage</code> column carries the split the potential
+articles turn on: the hourly sources supply variability, the long-term
+atlases supply the level.</p>
 <p>What is <em>not</em> here: the World Database on Protected Areas
 (non-redistributable; excluded, with the effect documented in
 <code>LICENSE.note</code>) and the OPSD demand series (replaced by the
@@ -1028,7 +1072,7 @@ prices</td>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Oleg Lugovoy.</p>
+
 </div>
 
 <div class="pkgdown-footer-right">

@@ -58,6 +58,7 @@ stale_keys <- function() {
 stopifnot(stale_keys() == 0L)
 
 for (a in c("reneuro", "data", "translation", "articles/data-sources",
+            "articles/wind-potential", "articles/solar-potential",
             "articles/scenarios", "articles/gpu-solving",
             "articles/report-model", "articles/report-scenario", "about")) {
   r <- try(pkgdown::build_article(a, pkg = ".", new_process = FALSE),

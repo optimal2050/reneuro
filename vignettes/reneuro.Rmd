@@ -220,4 +220,8 @@ region are dropped and the rest merge. It gives 36 regions at `"nuts0"`, 106 at
 
 * `vignette("data")` — the shipped datasets and their aggregation rules
 * `vignette("about")` — how each model was built, solver benchmarks, references
+* [wind energy](wind-potential.html),
+  [solar energy](solar-potential.html) — the quality-aware resource
+  layer built beside the replica: long-term atlases for the resource level,
+  the ERA5 cutout for the hourly variability
 * `?pypsa_eur_models`, `?nuts_gs` — the shipped objects and their licences

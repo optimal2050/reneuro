@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">reneuro</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.3.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.3.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,6 +22,8 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/translation.html">Translation</a></li>
     <li><a class="dropdown-item" href="../articles/data.html">Data in PyPSA-Eur 41-node</a></li>
     <li><a class="dropdown-item" href="../articles/data-sources.html">Data sources</a></li>
+    <li><a class="dropdown-item" href="../articles/wind-potential.html">Wind energy</a></li>
+    <li><a class="dropdown-item" href="../articles/solar-potential.html">Solar energy</a></li>
     <li><a class="dropdown-item" href="../articles/scenarios.html">Scenarios</a></li>
     <li><a class="dropdown-item" href="../articles/report-model.html">Model report</a></li>
     <li><a class="dropdown-item" href="../articles/report-scenario.html">Scenario report</a></li>
@@ -51,12 +53,13 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.0.9000" id="reneuro-0009000">reneuro 0.0.0.9000<a class="anchor" aria-label="anchor" href="#reneuro-0009000"></a></h2>
-<ul><li><p><code>pypsa_eur_41v</code> reworked: the existing fleet is one <code>STOCK</code> vintage per carrier carrying the summed retirement path (the build-year bins were parameter-flat and are aggregated away); gas gains <code>NEW&lt;year&gt;</code> vintage windows with each assumption year’s efficiency, lifetime and annuity frozen, replacing an open path whose year-keyed efficiency read as a free retrofit of standing capacity; cost-only carriers keep a single year-keyed investment path. The fleet’s milestone totals are unchanged.</p></li>
+<ul><li><p><code>pypsa_eur_41v</code> reworked: the existing fleet is one <code>STOCK</code> vintage per carrier carrying the summed retirement path, and gas gains <code>NEW&lt;year&gt;</code> vintage windows that freeze each assumption year’s efficiency, lifetime and annuity. The fleet’s milestone totals are unchanged.</p></li>
 <li><p>Model <code>@name</code>s are upper-case (<code>PYPSA_EUR_41</code>, <code>PYPSA_EUR_41V</code>, …), as solver-set identifiers.</p></li>
 <li><p>New dataset <code>tyndp_demand</code>: electricity-demand growth factors by country, scenario and milestone year from the TYNDP 2024 scenarios (NT+, Distributed Energy, Global Ambition), anchored at the measured 2025 load.</p></li>
 <li><p>New <code><a href="../reference/grow_demand.html">grow_demand()</a></code> builds year-keyed demand from a base-year profile and any growth-factor table; <code><a href="../reference/grow_demand.html">build_demand()</a></code> wraps it with a source model, name, and optional year/region selection.</p></li>
+<li><p>In <code>policy_paths</code> the ETS-shape scenario is named <code>ets_cap</code> (was <code>current_policy</code>): the legislated linear reduction factors make it the tightest of the three paths, and the old name misread as a contradiction.</p></li>
 <li><p>New dataset <code>policy_paths</code>: three CO2-cap trajectories as factors on 2025 emissions (the EU ETS shape, the EU NDC pledges, linear net-zero 2050), and a Scenarios article showing carbon caps and a carbon tax built with plain constraints and taxes on the shipped models.</p></li>
-<li><p>The translation article gains a “Revised assumptions” section documenting the deliberate deviations shipped as separate model versions: economic retirement and TYNDP demand growth.</p></li>
+<li><p>The translation article gains a “Revised assumptions” section documenting the deliberate deviations shipped as separate model versions: atlas-anchored capacity factors, economic retirement, and TYNDP demand growth.</p></li>
 <li><p><code>nuts_load</code> and <code>nuts_lines</code> region codes are normalized to the same underscore convention as <code>nuts_gs</code>, so joins across the three datasets match for the non-NUTS countries (BA, MD, UA, XK).</p></li>
 <li><p><code>pypsa_eur_289</code> and <code>pypsa_eur_1035</code> are no longer shipped. The coarser NUTS levels are derived from <code>pypsa_eur_nuts3</code> with <code><a href="https://energyRt.org/reference/aggregate_model_regions.html" class="external-link">energyRt::aggregate_model_regions()</a></code>, and subsetting starts from <code>pypsa_eur_nuts3</code> directly.</p></li>
 <li><p>All shipped models are rebuilt with corrected calendar chronology: converter-built calendars ordered timeslices hour-major, so storage could not carry energy from one hour to the next. The converted Belgium model now reproduces PyPSA’s solution within 0.02%. <code>be_solved</code> solves to a new objective gate (164,899,752.517).</p></li>
@@ -70,7 +73,9 @@
 <li><p><code>pypsa_eur_41</code> also has its fuel costs separated: <code>varom</code> holds the true VOM and each fuel’s supply carries its price, taken from the cost table the network was built from. The objective is unchanged – the split is exact – and the fuel price is now a number you can vary. Its regions, object names and technology stock are unchanged; only trade and the cost split differ.</p></li>
 <li><p>Every technology and storage port carries its commodity’s unit.</p></li>
 <li><p><code>data-raw/pypsa_eur_41.R</code> builds it, so all six shipped models now have a build script. The docs name where each lives: this package’s <code>data-raw/</code> for the continental models, <code>reneuro.dev/data-raw/</code> for the Belgian ones.</p></li>
-<li><p>The website’s data documentation is reorganized: “Data in PyPSA-Eur 41-node” (what ships in the 41-node model, with mean capacity-factor, demand and network maps) and “Data sources” (the upstream inputs and the NUTS processing).</p></li>
+<li><p>The website’s data documentation is reorganized into four articles: “Data in PyPSA-Eur 41-node” (what ships in the 41-node model, with mean capacity-factor, demand and network maps), “Data sources” (the upstream inputs and the NUTS processing), and new “Wind energy” and “Solar energy” articles.</p></li>
+<li><p>The wind article documents a quality-aware resource layer: the Global Wind Atlas beside the cutout, carved wind-quality areas over the full atlas window, an eligibility threshold and resource clusters with capacity-factor tiers, and speed-domain calibration along an aggregate park power curve.</p></li>
+<li><p>The solar article compares the cutout with the Global Solar Atlas (the gap is flat – no calibration applied) and splits the solar supply into yield levels with the same carving machinery.</p></li>
 <li><p>A data-sources article shows the upstream inputs – the weather cutout, measured ENTSO-E demand, the plant fleet, the network – as maps and figures, with a source/licence table.</p></li>
 <li><p>Two website articles show what <code><a href="https://energyRt.org/reference/report.html" class="external-link">report()</a></code> produces: a model report for <code>pypsa_eur_41</code> and a scenario report for the same model solved on a sampled calendar. Each gives the call that derives it and then embeds the rendered report, built by <code>data-raw/example_reports.R</code>.</p></li>
 <li><p><code>pypsa_eur_nuts3</code>: the NUTS3 network over the full year, 1,035 regions and 8,760 hourly snapshots. Its weather profiles ship as seven <code>wx_nuts3_*</code> objects, since the model whole is 181 MB and past GitHub’s file limit; <code><a href="../reference/attach_weather.html">attach_weather()</a></code> puts back the ones a study needs and <code><a href="../reference/weather_resources.html">weather_resources()</a></code> lists them.</p></li>
@@ -84,7 +89,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Oleg Lugovoy.</p>
+
 </div>
 
 <div class="pkgdown-footer-right">

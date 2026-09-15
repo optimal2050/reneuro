@@ -189,10 +189,29 @@ second time.
 ## Revised assumptions
 
 Everything above translates PyPSA-Eur faithfully — same data, same
-assumptions, verified against the source model's own solutions. Two
-assumption families are also *revised* in separate model versions, so the
-faithful model and the revised one can be solved side by side and the
-difference read as the effect of the assumption, never of the translation.
+assumptions, verified against the source model's own solutions. Three
+assumption families are also *revised*, in model versions built beside the
+faithful one so the two can be solved side by side and the difference read as
+the effect of the assumption, never of the translation. The revised versions
+are not among the eleven models the package ships today: they arrive with the
+repository update and ship as separate data.
+
+### Capacity factors
+
+PyPSA-Eur offers each region's whole eligible area at one blended,
+best-cells-weighted profile: all the land at the quality of the good
+sites. The revised layer replaces the blended VRE generators with
+resource clusters split into quality tiers — wind calibrated to the
+Global Wind Atlas along an aggregate park power curve, solar levels
+carved from the Global Solar Atlas — so capacity buys the tier it
+occupies, with the area each tier actually has. Fixed-tilt panels use
+a per-location optimal angle (measured effect vs the flat 35°: about
+zero in Europe — the change is kept for consistency with the atlas
+assumptions), and single-axis tracked and two-axis tracked variants
+compete alongside fixed panels at their own capacity factors, packing
+densities and costs. The construction is documented in the
+[wind energy](wind-potential.html) and
+[solar energy](solar-potential.html) articles.
 
 ### Economic retirement
 

@@ -11,12 +11,12 @@ Source:
 [`inst/CITATION`](https://github.com/optimal2050/reneuro/blob/HEAD/inst/CITATION)
 
 Lugovoy O (2026). *reneuro: A European Energy System Model*. R package
-version 0.3.0.9000, <https://optimal2050.github.io/reneuro/>.
+version 0.3.1.9000, <https://optimal2050.github.io/reneuro/>.
 
     @Manual{,
       title = {reneuro: A European Energy System Model},
       author = {Oleg Lugovoy},
       year = {2026},
-      note = {R package version 0.3.0.9000},
+      note = {R package version 0.3.1.9000},
       url = {https://optimal2050.github.io/reneuro/},
     }

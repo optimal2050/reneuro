@@ -275,6 +275,13 @@ seconds.
   — the shipped datasets and their aggregation rules
 - [`vignette("about")`](https://optimal2050.github.io/reneuro/articles/about.md)
   — how each model was built, solver benchmarks, references
+- [wind
+  energy](https://optimal2050.github.io/reneuro/articles/wind-potential.md),
+  [solar
+  energy](https://optimal2050.github.io/reneuro/articles/solar-potential.md)
+  — the quality-aware resource layer built beside the replica: long-term
+  atlases for the resource level, the ERA5 cutout for the hourly
+  variability
 - [`?pypsa_eur_models`](https://optimal2050.github.io/reneuro/reference/pypsa_eur_models.md),
   [`?nuts_gs`](https://optimal2050.github.io/reneuro/reference/nuts_gs.md)
   — the shipped objects and their licences

@@ -117,7 +117,10 @@ ggplot(cf_map("W_SOLAR")) +
 ```
 
 The blending is optimistic by construction — every region offers its
-whole eligible area at close to its best-sites capacity factor.
+whole eligible area at close to its best-sites capacity factor. The
+[wind](wind-potential.html) and
+[solar](solar-potential.html) articles document the
+quality-aware layer built to refine this.
 
 ## Demand
 

@@ -1,12 +1,9 @@
 # reneuro 0.0.0.9000
 
 * `pypsa_eur_41v` reworked: the existing fleet is one `STOCK` vintage per
-  carrier carrying the summed retirement path (the build-year bins were
-  parameter-flat and are aggregated away); gas gains `NEW<year>` vintage
-  windows with each assumption year's efficiency, lifetime and annuity
-  frozen, replacing an open path whose year-keyed efficiency read as a free
-  retrofit of standing capacity; cost-only carriers keep a single year-keyed
-  investment path. The fleet's milestone totals are unchanged.
+  carrier carrying the summed retirement path, and gas gains `NEW<year>`
+  vintage windows that freeze each assumption year's efficiency, lifetime and
+  annuity. The fleet's milestone totals are unchanged.
 * Model `@name`s are upper-case (`PYPSA_EUR_41`, `PYPSA_EUR_41V`, ...), as
   solver-set identifiers.
 * New dataset `tyndp_demand`: electricity-demand growth factors by country,
@@ -15,13 +12,16 @@
 * New `grow_demand()` builds year-keyed demand from a base-year profile and
   any growth-factor table; `build_demand()` wraps it with a source model,
   name, and optional year/region selection.
+* In `policy_paths` the ETS-shape scenario is named `ets_cap` (was
+  `current_policy`): the legislated linear reduction factors make it the
+  tightest of the three paths, and the old name misread as a contradiction.
 * New dataset `policy_paths`: three CO2-cap trajectories as factors on 2025
   emissions (the EU ETS shape, the EU NDC pledges, linear net-zero 2050),
   and a Scenarios article showing carbon caps and a carbon tax built with
   plain constraints and taxes on the shipped models.
 * The translation article gains a "Revised assumptions" section documenting
-  the deliberate deviations shipped as separate model versions: economic
-  retirement and TYNDP demand growth.
+  the deliberate deviations shipped as separate model versions: atlas-anchored
+  capacity factors, economic retirement, and TYNDP demand growth.
 
 * `nuts_load` and `nuts_lines` region codes are normalized to the same
   underscore convention as `nuts_gs`, so joins across the three datasets
@@ -75,10 +75,19 @@
   build script. The docs name where each lives: this package's `data-raw/`
   for the continental models, `reneuro.dev/data-raw/` for the Belgian ones.
 
-* The website's data documentation is reorganized: "Data in PyPSA-Eur
-  41-node" (what ships in the 41-node model, with mean capacity-factor,
-  demand and network maps) and "Data sources" (the upstream inputs and
-  the NUTS processing).
+* The website's data documentation is reorganized into four articles:
+  "Data in PyPSA-Eur 41-node" (what ships in the 41-node model, with mean
+  capacity-factor, demand and network maps), "Data sources" (the upstream
+  inputs and the NUTS processing), and new "Wind energy" and "Solar energy"
+  articles.
+* The wind article documents a quality-aware resource layer: the Global
+  Wind Atlas beside the cutout, carved wind-quality areas over the full
+  atlas window, an eligibility threshold and resource clusters with
+  capacity-factor tiers, and speed-domain calibration along an aggregate
+  park power curve.
+* The solar article compares the cutout with the Global Solar Atlas (the
+  gap is flat -- no calibration applied) and splits the solar supply into
+  yield levels with the same carving machinery.
 * A data-sources article shows the upstream inputs -- the weather cutout,
   measured ENTSO-E demand, the plant fleet, the network -- as maps and
   figures, with a source/licence table.

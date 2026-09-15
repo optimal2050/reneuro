@@ -10,8 +10,10 @@ articles:
   articles/report-model: report-model.html
   articles/report-scenario: report-scenario.html
   articles/scenarios: scenarios.html
+  articles/solar-potential: solar-potential.html
   translation: translation.html
-last_built: 2026-09-12T23:36Z
+  articles/wind-potential: wind-potential.html
+last_built: 2026-09-15T20:34Z
 urls:
   reference: https://optimal2050.github.io/reneuro/reference
   article: https://optimal2050.github.io/reneuro/articles

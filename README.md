@@ -82,6 +82,14 @@ explored without a solver installed.
   sources](https://optimal2050.github.io/reneuro/articles/data-sources.html)
   — the upstream inputs as maps and figures, with the source and licence
   table
+- [Wind
+  energy](https://optimal2050.github.io/reneuro/articles/wind-potential.html)
+  — a quality-aware wind resource layer built beside the replica, with the
+  Global Wind Atlas setting the long-term level and ERA5 the hourly
+  variability
+- [Solar
+  energy](https://optimal2050.github.io/reneuro/articles/solar-potential.html)
+  — the solar half of that layer, checked against the Global Solar Atlas
 - [About](https://optimal2050.github.io/reneuro/articles/about.html) —
   how the models were built, solver benchmarks, references and licences
 

@@ -118,7 +118,11 @@ Mean solar capacity factor of the blended regional profile (`W_SOLAR`),
 2025.
 
 The blending is optimistic by construction — every region offers its
-whole eligible area at close to its best-sites capacity factor.
+whole eligible area at close to its best-sites capacity factor. The
+[wind](https://optimal2050.github.io/reneuro/articles/wind-potential.md)
+and
+[solar](https://optimal2050.github.io/reneuro/articles/solar-potential.md)
+articles document the quality-aware layer built to refine this.
 
 ## Demand
 

@@ -8,6 +8,18 @@
 # around an older installed `reneuro` shadowing this source tree.
 url: https://optimal2050.github.io/reneuro/
 
+# The default footer carries a "Developed by <authors>." line on every page;
+# authorship belongs on the home page and in DESCRIPTION, not under each
+# article. `left` must name a component -- an empty YAML list reaches pkgdown
+# 2.2.1 as a list and fails every page with "invalid subscript type" -- so it
+# points at a component defined as empty text.
+footer:
+  structure:
+    left: blank
+    right: built_with
+  components:
+    blank: ""
+
 template:
   bootstrap: 5
   light-switch: true
@@ -97,6 +109,8 @@ articles:
   - translation
   - data
   - articles/data-sources
+  - articles/wind-potential
+  - articles/solar-potential
   - articles/scenarios
   - articles/report-model
   - articles/report-scenario
