@@ -109,8 +109,15 @@ articles:
   - translation
   - data
   - articles/data-sources
+  - articles/regions
+  - articles/energy-supply
   - articles/wind-potential
   - articles/solar-potential
+  - articles/capacity-stock
+  - articles/transmission
+  - articles/demand
+  - articles/storage
+  - articles/electricity
   - articles/scenarios
   - articles/report-model
   - articles/report-scenario
