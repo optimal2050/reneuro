@@ -1,11 +1,98 @@
 # reneuro 0.0.0.9000
 
+* New `build_scales()`, `attach_scales()` and `join_scales()` group solved
+  results by frames parsed from the model's own process and commodity names --
+  carrier, tier, cluster, vintage and a report label. Both name grammars are
+  handled, and the optional `_VIN` suffix no longer has to be stripped by hand.
+  `build_scales()` returns the scales, `attach_scales()` also stores them in
+  `@misc$scales`, and `join_scales()` accepts either. Three name grammars,
+  export and import objects, and the optional `_VIN` suffix are all covered.
+* `data-raw/compare_41q_extract.R` labels carriers and tiers from the process
+  scale instead of its own regex cascade, and now warns by name when a
+  technology in the results is absent from the model.
+* `tech_ms`'s `fuel` frame is no longer described as the model commodity: it
+  carries powerplantmatching's vocabulary, which shares no names with the
+  model's.
+* New article "Regions and calendars": the two geoscales, what a region
+  carries, `recast_geoscale()`, the shipped calendars and the sampled subsets.
+  It states the two rules that are easy to violate silently -- the calendar
+  must be finer than any storage is long, and objects must name timeslices the
+  calendar carries, or the objective collapses to zero without error.
+* The articles are shorter and documentation-style throughout.
+* New article "Storage": the four storage objects every model carries, their
+  three separately-sized capacities, and where `duration` comes from. Hydro
+  reservoir durations span 6 hours to 17,544 -- a 6-hour floor applied where
+  data is missing (including Ukraine's 7.2 GW) and, at the other end, small
+  clustered power divided into a coarse country reservoir figure, giving
+  Belgium 12.7 MW of hydro against 200 GWh.
+* New article "Demand": the measured 2025 year, the TYNDP 2024 growth paths,
+  and extreme paths multiplying demand 2x, 3x and 5x by 2050 -- from 3,356 TWh
+  to between 6,713 and 16,782 TWh, against TYNDP's 4,372-5,625. It also states
+  the two ceilings on useful spatial resolution: 1,477 NUTS3 regions share 36
+  distinct load shapes, and 442 of them carry no demand at all.
+* New article "Transmission", comparing the four datasets that describe the
+  same European grid: OpenStreetMap (what the models use), the ENTSO-E
+  interactive map via GridKit, the TYNDP 2020 project pipeline, and Ember's
+  market NTC. Over the 79 shared live borders the models carry 377 GW where
+  Ember reports 112 GW -- and every border where the two agree is a DC link,
+  every DC link agrees.
+* `transmission = "ember"` in that article re-caps each corridor to market
+  NTC, apportioned across bus pairs by thermal share. The default `"pypsa"`
+  leaves the shipped corridors untouched.
+* New article "Energy supply": what each fuel costs, how much of it there is,
+  and where. It corrects the shipped models' assumption that every fuel is
+  unlimited at one continental price, and solves standalone through a
+  stand-in electricity carrier.
+* New dataset `biomass_potential`: the JRC ENSPRESO biomass assessment for
+  the 36 modelled countries -- potential and cost by commodity, scenario and
+  year. 2050 totals run 2,171 TWh (`ENS_Low`) to 5,877 TWh (`ENS_High`)
+  against a flat 9.35 EUR/MWh unlimited supply today.
+* New `data-raw/modules/build_modules.R`: articles are now the source of
+  truth for the assembly, and this harvests them by tangling. Each article
+  declares the objects it must leave behind, so one that stops producing a
+  declared object fails the build instead of drifting silently.
+* `vignette("translation")` no longer claims fuel supplies are priced at
+  zero. That was true before `convert_pypsa(costs = )`; every shipped
+  continental model now carries the price on the supply.
+* New article "Capacity stock": where the existing fleet comes from, what the
+  commissioning year is worth, and why the converted network has none. PyPSA's
+  generator aggregation sets `build_year = 0` and `lifetime = Inf`, so a
+  `.nc` carries an undated, immortal fleet; the unit list one step upstream
+  dates 93.5% of capacity back to 1898.
+* New `capacity_stock()` aggregates a `powerplants_s_<N>.csv` unit list to any
+  combination of region, technology level and build-year cohort, re-aggregating
+  the technology axis through `tech_ms` and the region axis through a geoscale.
+* New datasets `tech_ms` and `fuel_ms`: the technology and carrier taxonomies
+  as `multiscales` scales. `tech_ms` has 45 atoms -- the `(Fueltype,
+  Technology)` pair, since neither column identifies a technology on its own --
+  under five frames, of which `class` and `origin` deliberately cross-cut.
+* New dataset `jrc_units`: per-unit efficiency and commissioning year from
+  JRC-PPDB-OPEN, covering 55% of thermal capacity. Check `eff_source` before
+  treating a value as a measurement; `ramp_up` and `min_load` ship for
+  inspection but should not be loaded (see `?jrc_units`).
+* The fleet rules moved from `data-raw/retire.R` and `data-raw/vintages.R`
+  into `R/fleet.R`, documented. The two scripts remain as shims, so existing
+  build scripts are unchanged.
+* `apply_retirement()` no longer skips carriers silently. It reports the
+  84.4 GW with no generator technology and warns on the 5.47 GW not covered by
+  `known_missing` -- blank-`Technology` hydro and gas, `other`, and a literal
+  `"Steam Turbine"` carrier that previously escaped ageing unnoticed.
+* `capacity_stock()` keeps units with no `DateIn` as an explicit undated group
+  rather than letting `aggregate()` drop them -- 6.5% of capacity.
 * `pypsa_eur_41v` reworked: the existing fleet is one `STOCK` vintage per
   carrier carrying the summed retirement path, and gas gains `NEW<year>`
   vintage windows that freeze each assumption year's efficiency, lifetime and
   annuity. The fleet's milestone totals are unchanged.
-* Model `@name`s are upper-case (`PYPSA_EUR_41`, `PYPSA_EUR_41V`, ...), as
-  solver-set identifiers.
+* Every shipped model now has its own upper-case `@name`. Nine of the eleven
+  previously carried the converter default `"pypsa"`, which collided in
+  scenario directory names (`EX41_2050-pypsa-...`).
+* `pypsa_eur_5` and `pypsa_eur_5cp` can be interpolated again. Their stored
+  calendar predated the annualised-`ANNUAL` convention, so
+  `interpolate_model(pypsa_eur_5, name = "be")` -- the documented quick
+  start -- stopped on a guard.
+* Shipped models rebuilt on the current converter: `E_BIOMASS` variable cost
+  is exactly zero rather than ~3.6e-15, and `weather` slots carry the
+  `transform` column. No other values change.
 * New dataset `tyndp_demand`: electricity-demand growth factors by country,
   scenario and milestone year from the TYNDP 2024 scenarios (NT+, Distributed
   Energy, Global Ambition), anchored at the measured 2025 load.

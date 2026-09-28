@@ -23,6 +23,46 @@
   --bs-link-hover-color-rgb: 166, 184, 219;
 }
 
+/* DARK-MODE PAGE BACKGROUND. bslib's default is the neutral #212529; these
+ * make the page a dark blue of the logo's family without approaching the
+ * logo's own #0A1840, which stays reserved for the navbar.
+ *
+ * CHOICE B is active. Measured: white 13.45:1, the dark link #7E9FDA 5.03:1,
+ * and -- the deciding number -- 1.28:1 against the navbar, where the current
+ * neutral body gives 1.12:1. B separates from the bar by SATURATION (27.5%
+ * against the bar's 73%) as well as luminance, so the bar keeps an edge.
+ *
+ * ALTERNATIVE E is kept commented in place rather than deleted. It is the
+ * richer, darker blue (white 15.97:1) and it reads well -- but it shares the
+ * navbar's hue (222 against 224) at nearly the same lightness, so the bar
+ * DISAPPEARS into it (1.08:1 with no hue separation left). E is therefore a
+ * PAIRED change: switching it on also requires the darker navbar below, or
+ * the header stops reading as a header. */
+:root[data-bs-theme="dark"] {
+
+  --bs-body-bg: #252F41;                  /* B  slate navy */
+  --bs-body-bg-rgb: 37, 47, 65;
+  --bs-secondary-bg: #1D2432;             /* cards, table stripes */
+  --bs-tertiary-bg: #1D2432;              /* code blocks */
+  --bs-border-color: #334159;
+
+  /* --- alternative E: midnight (needs the paired navbar below) ---
+  --bs-body-bg: #16213B;
+  --bs-body-bg-rgb: 22, 33, 59;
+  --bs-secondary-bg: #10182A;
+  --bs-tertiary-bg: #10182A;
+  --bs-border-color: #203157;
+  */
+}
+
+/* Paired navbar for alternative E only. #0A1840 is the dark logo's own field
+ * and stays the default; against E it gives 1.08:1 and vanishes, so E needs
+ * #05091C (1.24:1, white 19.77:1) instead.
+[data-bs-theme="dark"] .navbar {
+  background-color: #05091C !important;
+}
+*/
+
 /* `navbar-bg` paints the bar #003399 in both themes; dark mode is re-painted
  * slate grey below. pkgdown drives navbar FOREGROUND from
  * --bs-emphasis-color, which follows the page theme -- so in light mode the
@@ -42,9 +82,17 @@
 
 /* Dark mode: the navy bar reads heavy against the dark body; paint it a
  * shade darker than the body (#212529) instead. White foreground and gold
- * accents keep their contrast. */
+ * accents keep their contrast.
+ *
+ * 2026-09-26: recoloured to #0A1840, the DARK LOGO's own field, sampled as
+ * 41.9% of the opaque pixels of man/figures/logo-dark.png, so the mark sits
+ * on its own background. Measured contrast: white 17.25:1, gold #FFCC00
+ * 11.41:1, the logo gold #FFD074 11.93:1, muted white 9.38:1 -- all past AA
+ * and marginally better than the #1a1d20 grey it replaces (16.93, 11.20).
+ * It separates from the body (#212529) by HUE, not luminance (1.12:1), so
+ * the edge nearly vanishes in greyscale; nothing should depend on it. */
 [data-bs-theme="dark"] .navbar {
-  background-color: #1a1d20 !important;
+  background-color: #0A1840 !important;
 }
 
 /* The development version label renders as `text-danger`; that red is 2.40:1

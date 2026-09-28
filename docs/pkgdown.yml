@@ -3,17 +3,24 @@ pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   about: about.html
+  articles/capacity-stock: capacity-stock.html
   articles/data-sources: data-sources.html
   data: data.html
+  articles/demand: demand.html
+  articles/electricity: electricity.html
+  articles/energy-supply: energy-supply.html
   articles/gpu-solving: gpu-solving.html
+  articles/regions: regions.html
   reneuro: reneuro.html
   articles/report-model: report-model.html
   articles/report-scenario: report-scenario.html
   articles/scenarios: scenarios.html
   articles/solar-potential: solar-potential.html
+  articles/storage: storage.html
   translation: translation.html
+  articles/transmission: transmission.html
   articles/wind-potential: wind-potential.html
-last_built: 2026-09-15T20:34Z
+last_built: 2026-09-28T21:27Z
 urls:
   reference: https://optimal2050.github.io/reneuro/reference
   article: https://optimal2050.github.io/reneuro/articles

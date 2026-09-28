@@ -6,8 +6,8 @@
 
 **A European energy system optimization model with an R interface.**
 
-> **Note:** the repository is under an update — expected **September
-> 25**.
+> **Note:** the repository is under an update — the new version is
+> expected **October 2-5**.
 
 `r·en·euro` provides a European energy system model built on
 [energyRt](https://energyRt.org). It was developed as teaching material
@@ -84,8 +84,8 @@ explored without a solver installed.
   table
 - [Wind
   energy](https://optimal2050.github.io/reneuro/articles/wind-potential.html)
-  — a quality-aware wind resource layer built beside the replica, with the
-  Global Wind Atlas setting the long-term level and ERA5 the hourly
+  — a quality-aware wind resource layer built beside the replica, with
+  the Global Wind Atlas setting the long-term level and ERA5 the hourly
   variability
 - [Solar
   energy](https://optimal2050.github.io/reneuro/articles/solar-potential.html)
