@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">reneuro</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.3.1.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.3.2.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,8 +46,15 @@
 <li><a class="dropdown-item" href="articles/translation.html">Translation</a></li>
     <li><a class="dropdown-item" href="articles/data.html">Data in PyPSA-Eur 41-node</a></li>
     <li><a class="dropdown-item" href="articles/data-sources.html">Data sources</a></li>
+    <li><a class="dropdown-item" href="articles/regions.html">Regions and calendars</a></li>
+    <li><a class="dropdown-item" href="articles/energy-supply.html">Energy supply</a></li>
     <li><a class="dropdown-item" href="articles/wind-potential.html">Wind energy</a></li>
     <li><a class="dropdown-item" href="articles/solar-potential.html">Solar energy</a></li>
+    <li><a class="dropdown-item" href="articles/capacity-stock.html">Capacity stock</a></li>
+    <li><a class="dropdown-item" href="articles/transmission.html">Transmission</a></li>
+    <li><a class="dropdown-item" href="articles/demand.html">Demand</a></li>
+    <li><a class="dropdown-item" href="articles/storage.html">Storage</a></li>
+    <li><a class="dropdown-item" href="articles/electricity.html">Electricity</a></li>
     <li><a class="dropdown-item" href="articles/scenarios.html">Scenarios</a></li>
     <li><a class="dropdown-item" href="articles/report-model.html">Model report</a></li>
     <li><a class="dropdown-item" href="articles/report-scenario.html">Scenario report</a></li>
@@ -85,7 +92,7 @@
 </div>
 <p><strong>A European energy system optimization model with an R interface.</strong></p>
 <blockquote>
-<p><strong>Note:</strong> the repository is under an update — expected <strong>September 25</strong>.</p>
+<p><strong>Note:</strong> the repository is under an update — the new version is expected <strong>October 2-5</strong>.</p>
 </blockquote>
 <p><code>r·en·euro</code> provides a European energy system model built on <a href="https://energyRt.org" class="external-link">energyRt</a>. It was developed as teaching material for a modelling course, to replicate <a href="https://github.com/PyPSA/pypsa-eur" class="external-link">PyPSA-Eur</a>, an established open model of the European power system, at several spatial resolutions.</p>
 <p>Eleven models ship with the package, ready to solve — all built on <strong>2025 weather and load</strong> (the <code>europe-2025-sarah3-era5</code> cutout; measured ENTSO-E demand). They need neither Python nor a PyPSA-Eur clone, and are lazy-loaded, so they cost nothing until touched.</p>
@@ -152,7 +159,7 @@
 <span></span>
 <span><span class="va">scen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://energyRt.org/reference/interpolate_model.html" class="external-link">interpolate_model</a></span><span class="op">(</span><span class="va">pypsa_eur_5</span>, name <span class="op">=</span> <span class="st">"be"</span><span class="op">)</span></span>
 <span><span class="va">scen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://energyRt.org/reference/write.html" class="external-link">write_script</a></span><span class="op">(</span><span class="va">scen</span>, solver <span class="op">=</span> <span class="va">solver_options</span><span class="op">$</span><span class="va">glpk</span><span class="op">)</span></span>
-<span><span class="va">scen</span> <span class="op">&lt;-</span> <span class="fu">read_solution</span><span class="op">(</span><span class="fu"><a href="https://energyRt.org/reference/solve_model.html" class="external-link">solve_scenario</a></span><span class="op">(</span><span class="va">scen</span>, wait <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">scen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://energyRt.org/reference/read.html" class="external-link">read_solution</a></span><span class="op">(</span><span class="fu"><a href="https://energyRt.org/reference/solve_model.html" class="external-link">solve_scenario</a></span><span class="op">(</span><span class="va">scen</span>, wait <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://energyRt.org/reference/getData.html" class="external-link">getData</a></span><span class="op">(</span><span class="va">scen</span>, <span class="st">"vObjective"</span>, merge <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">value</span></span>
 <span><span class="fu"><a href="https://energyRt.org/reference/report.html" class="external-link">report</a></span><span class="op">(</span><span class="va">scen</span><span class="op">)</span></span></code></pre></div>
