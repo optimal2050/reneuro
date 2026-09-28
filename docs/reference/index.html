@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">reneuro</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.3.1.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.3.2.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,8 +22,15 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/translation.html">Translation</a></li>
     <li><a class="dropdown-item" href="../articles/data.html">Data in PyPSA-Eur 41-node</a></li>
     <li><a class="dropdown-item" href="../articles/data-sources.html">Data sources</a></li>
+    <li><a class="dropdown-item" href="../articles/regions.html">Regions and calendars</a></li>
+    <li><a class="dropdown-item" href="../articles/energy-supply.html">Energy supply</a></li>
     <li><a class="dropdown-item" href="../articles/wind-potential.html">Wind energy</a></li>
     <li><a class="dropdown-item" href="../articles/solar-potential.html">Solar energy</a></li>
+    <li><a class="dropdown-item" href="../articles/capacity-stock.html">Capacity stock</a></li>
+    <li><a class="dropdown-item" href="../articles/transmission.html">Transmission</a></li>
+    <li><a class="dropdown-item" href="../articles/demand.html">Demand</a></li>
+    <li><a class="dropdown-item" href="../articles/storage.html">Storage</a></li>
+    <li><a class="dropdown-item" href="../articles/electricity.html">Electricity</a></li>
     <li><a class="dropdown-item" href="../articles/scenarios.html">Scenarios</a></li>
     <li><a class="dropdown-item" href="../articles/report-model.html">Model report</a></li>
     <li><a class="dropdown-item" href="../articles/report-scenario.html">Scenario report</a></li>
@@ -62,6 +69,13 @@
 
       <dl><dt>
 
+          <code><a href="attach_scales.html">attach_scales()</a></code>
+
+        </dt>
+        <dd>Attach process and commodity scales to a model or scenario</dd>
+
+        <dt>
+
           <code><a href="attach_weather.html">attach_weather()</a></code>
 
         </dt>
@@ -83,10 +97,87 @@
 
         <dt>
 
+          <code><a href="biomass_potential.html">biomass_potential</a></code>
+
+        </dt>
+        <dd>Biomass potential and cost, from ENSPRESO</dd>
+
+        <dt>
+
+          <code><a href="biomass_supply.html">biomass_supply()</a></code>
+
+        </dt>
+        <dd>Biomass supply objects from ENSPRESO, one per feedstock</dd>
+
+        <dt>
+
+          <code><a href="build_scales.html">build_scales()</a></code>
+
+        </dt>
+        <dd>Build process and commodity scales from a model's own names</dd>
+
+        <dt>
+
+          <code><a href="capacity_stock.html">capacity_stock()</a></code>
+
+        </dt>
+        <dd>Installed capacity by region, technology and commissioning cohort</dd>
+
+        <dt>
+
+          <code><a href="ember_fleet.html">ember_fleet</a></code>
+
+        </dt>
+        <dd>Observed power-sector capacity and generation, 48 countries</dd>
+
+        <dt>
+
+          <code><a href="fuel_ms.html">fuel_ms</a></code>
+
+        </dt>
+        <dd>Energy carrier taxonomy, as a nested scale</dd>
+
+        <dt>
+
+          <code><a href="fuel_reference.html">fuel_reference()</a></code>
+
+        </dt>
+        <dd>Observed fuel use as a reference quantity bound</dd>
+
+        <dt>
+
           <code><a href="grow_demand.html">grow_demand()</a></code> <code><a href="grow_demand.html">build_demand()</a></code>
 
         </dt>
         <dd>Build multi-year demand from a base-year profile and growth factors</dd>
+
+        <dt>
+
+          <code><a href="join_scales.html">join_scales()</a></code>
+
+        </dt>
+        <dd>Join scale frames onto a solved result</dd>
+
+        <dt>
+
+          <code><a href="jrc_units.html">jrc_units</a></code>
+
+        </dt>
+        <dd>Thermal-unit efficiency and commissioning year, from JRC-PPDB-OPEN</dd>
+
+        <dt>
+
+          <code><a href="locate_plants.html">locate_plants()</a></code>
+
+        </dt>
+        <dd>Place plants on the resource layer's (cluster, tier) atoms</dd>
+
+        <dt>
+
+          <code><a href="model_regions.html">model_regions()</a></code>
+
+        </dt>
+        <dd>Model region set at the two supported footprints</dd>
 
         <dt>
 
@@ -139,6 +230,13 @@
 
         <dt>
 
+          <code><a href="readmit_locations.html">readmit_locations()</a></code>
+
+        </dt>
+        <dd>Re-admit plants the resource layer filtered out</dd>
+
+        <dt>
+
           <code><a href="reneuro_example.html">reneuro_example()</a></code>
 
         </dt>
@@ -150,6 +248,13 @@
 
         </dt>
         <dd>Directory holding the example GeoJSON region layers</dd>
+
+        <dt>
+
+          <code><a href="tech_ms.html">tech_ms</a></code>
+
+        </dt>
+        <dd>Power-plant technology taxonomy, as a nested scale</dd>
 
         <dt>
 
