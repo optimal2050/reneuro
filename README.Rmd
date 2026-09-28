@@ -13,7 +13,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 
 **A European energy system optimization model with an R interface.**
 
-> **Note:** the repository is under an update — expected **September 25**.
+> **Note:** the repository is under an update — the new version is expected **October 2-5**.
 
 `r·en·euro` provides a European energy system model built on
 [energyRt](https://energyRt.org). It was developed as teaching material for a
